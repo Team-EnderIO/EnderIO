@@ -3,7 +3,6 @@ package com.enderio.enderio.client.content.travel;
 import com.enderio.enderio.api.travel.TravelRenderer;
 import com.enderio.enderio.client.EnderIOClient;
 import com.enderio.enderio.client.foundation.renderer.OutlineBuffer;
-import com.enderio.enderio.compat.ModCompatHelper;
 import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.content.travel.travel_anchor.AnchorTravelTarget;
 import com.enderio.enderio.content.travel.travel_anchor.PaintedTravelAnchorBlockEntity;
@@ -189,20 +188,28 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
                 poseStack.scale(-s, s, -s);
             }
 
+            // Draw the backdrop before the item: rendering the item switches the shared buffer, which ends the batch
+            // renderBuffer writes to.
+            {
+                poseStack.pushPose();
+
+                float s = 1.5F;
+                poseStack.scale(s, s, s);
+                poseStack.translate(-0.5, -0.5, -2);
+                poseStack.rotateAround(Axis.ZN.rotationDegrees(45), 0.5F, 0.5F, 0.5F);
+
+                for (BakedQuad quad : BACKDROP_QUADS.get()) {
+                    renderBuffer.putBulkData(poseStack.last(), quad, outlineR, outlineG, outlineB, 1, packedLight, OverlayTexture.NO_OVERLAY);
+                }
+
+                poseStack.popPose();
+            }
+
             ItemStack stack = travelData.icon().getDefaultInstance();
             BakedModel bakedmodel = minecraft.getItemRenderer().getModel(stack, minecraft.level, null, 0);
             minecraft
                 .getItemRenderer()
                 .render(stack, ItemDisplayContext.GUI, false, poseStack, OutlineBuffer.INSTANCE, packedLight, OverlayTexture.NO_OVERLAY, bakedmodel);
-
-            float s = 1.5F;
-            poseStack.scale(s, s, s);
-            poseStack.translate(-0.5, -0.5, -2);
-            poseStack.rotateAround(Axis.ZN.rotationDegrees(45), 0.5F, 0.5F, 0.5F);
-
-            for (BakedQuad quad : BACKDROP_QUADS.get()) {
-                renderBuffer.putBulkData(poseStack.last(), quad, outlineR, outlineG, outlineB, 1, packedLight, OverlayTexture.NO_OVERLAY);
-            }
 
             poseStack.popPose();
         }
@@ -233,26 +240,10 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             int textBg = (int) (textOpacitySetting * 255) << 24;
             float halfWidth = (float) (-minecraft.font.width(textComponent) / 2);
 
-            var mode1 = Font.DisplayMode.SEE_THROUGH;
-            var mode2 = Font.DisplayMode.NORMAL;
-            int textBg1 = textBg;
-            int textBg2 = 0;
-
-            if (ModCompatHelper.hasIris()) {
-                // required for text to render correctly, possibly an Iris bug
-                // is there a better way to draw text?
-                var _m = mode1;
-                mode1 = mode2;
-                mode2 = _m;
-
-                int _t = textBg1;
-                textBg1 = textBg2;
-                textBg2 = _t;
-            }
             Matrix4f matrix4f = poseStack.last().pose();
 
-            minecraft.font.drawInBatch(textComponent, halfWidth, 0, textColor, false, matrix4f, buffer, mode1, textBg1, packedLight);
-            minecraft.font.drawInBatch(textComponent, halfWidth, 0, textColor, false, matrix4f, buffer, mode2, textBg2, packedLight);
+            minecraft.font.drawInBatch(textComponent, halfWidth, 0, textColor, false, matrix4f, buffer, Font.DisplayMode.SEE_THROUGH, textBg, packedLight);
+            minecraft.font.drawInBatch(textComponent, halfWidth, 0, textColor, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
 
             poseStack.popPose();
         }

@@ -6,8 +6,11 @@ import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.api.travel.TravelTargetType;
 import com.enderio.enderio.client.content.keymaps.KeymapHandler;
+import com.enderio.enderio.compat.ModCompatHelper;
 import com.enderio.enderio.content.travel.TravelHandler;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import net.irisshaders.iris.api.v0.IrisApi;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -20,6 +23,7 @@ import net.neoforged.fml.ModLoader;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.RenderLevelStageEvent;
 import org.jetbrains.annotations.Nullable;
+import org.joml.Matrix4fStack;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -54,13 +58,25 @@ public class TravelTargetRendering {
     public static void renderLevel(RenderLevelStageEvent event) {
         ClientLevel level = Minecraft.getInstance().level;
         LocalPlayer player = Minecraft.getInstance().player;
-        if (level == null || player == null || event.getStage() != RenderLevelStageEvent.Stage.AFTER_TRIPWIRE_BLOCKS) {
+        if (level == null || player == null) {
             return;
         }
 
+        // Render after the entire level, this ensures compatibiltiy with Iris.
+        if (event.getStage() != RenderLevelStageEvent.Stage.AFTER_LEVEL) {
+            return;
+        }
+        
         if (!TravelHandler.canTeleport(player) && !KeymapHandler.showTravelTargets()) {
             return;
         }
+
+        // At AFTER_LEVEL the camera rotation is no longer on the RenderSystem model view stack, so restore it.
+        PoseStack poseStack = event.getPoseStack();
+        Matrix4fStack modelViewStack = RenderSystem.getModelViewStack();
+        modelViewStack.pushMatrix();
+        modelViewStack.mul(event.getModelViewMatrix());
+        RenderSystem.applyModelViewMatrix();
 
         boolean itemTeleport = TravelHandler.canItemTeleport(player) || KeymapHandler.showTravelTargets();
 
@@ -74,7 +90,6 @@ public class TravelTargetRendering {
                 continue;
             }
 
-            PoseStack poseStack = event.getPoseStack();
             poseStack.pushPose();
             Camera mainCamera = Minecraft.getInstance().gameRenderer.getMainCamera();
             Vec3 projectedView = mainCamera.getPosition();
@@ -93,5 +108,12 @@ public class TravelTargetRendering {
             render(target, event.getLevelRenderer(), poseStack, distanceSquared, active, partialTick);
             poseStack.popPose();
         }
+
+        // Nothing else flushes the buffer between AFTER_LEVEL and doEntityOutline, so flush now.
+        Minecraft.getInstance().renderBuffers().bufferSource().endBatch();
+
+        // Pop the matrix.
+        modelViewStack.popMatrix();
+        RenderSystem.applyModelViewMatrix();
     }
 }
