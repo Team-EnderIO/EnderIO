@@ -144,8 +144,8 @@ dependencies {
 
     // Sodium + Iris to test shader compatibility
     compileOnly(libs.iris)
-//    localRuntime(libs.sodium)
-//    localRuntime(libs.iris)
+    localRuntime(libs.sodium)
+    localRuntime(libs.iris)
 
     // Unit tests
     testImplementation(libs.junitJupiter)

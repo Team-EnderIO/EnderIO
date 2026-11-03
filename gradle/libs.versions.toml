@@ -12,7 +12,7 @@ laserio = "5648871"
 ftbLibrary = { strictly = "[26.1.1.1-SNAPSHOT, 26.2)", prefer = "26.1.1.1-SNAPSHOT" }
 ftbUltimine = { strictly = "[26.1, 26.2)", prefer = "26.1.0.1-SNAPSHOT" }
 curios = "17.0.0-beta.3+26.3"
-sodium = "mc26.3-0.9.3-alpha.1-neoforge"
+sodium = "mc26.3-0.9.3-beta.1-neoforge"
 iris = "1.11.7+26.3-neoforge"
 mockito = "5.23.0"
 
