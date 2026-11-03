@@ -44,26 +44,43 @@ jobs:
             enderio/build/libs/*.jar
 
       - name: Discord Notification Success
-        uses: tsickert/discord-webhook@v7.0.0
+        uses: sarisia/actions-status-discord@v1
         with:
-          webhook-url: ${{ secrets.NIGHTLY_DISCORD_WEBHOOK }}
-          embed-title: New Nightly Build built from ${{ github.ref_name }}
-          embed-description: A new nightly build of Ender IO has been built from the following commit. If you play with this, please remember to report issues! ```${{ github.event.head_commit.message }}```
-          avatar-url: https://raw.githubusercontent.com/Team-EnderIO/EnderIO/dev/1.20.1/doc/img/enderface.png
+          webhook: ${{ secrets.NIGHTLY_DISCORD_WEBHOOK }}
+          title: "Ender IO nightly build for Minecraft ${{ github.ref_name }}"
+          description: |
+            A new nightly build of Ender IO has been built for Minecraft `${{ github.ref_name }}`. If you play with this, please remember to report issues!
+            [Download build #${{ github.run_number }}](https://nightly.link/${{ github.repository }}/actions/runs/${{ github.run_id }}/nightly-build.zip)
+
+            **Latest commit**
+            ```
+            ${{ github.event.head_commit.message }}
+            ```
+          avatar_url: https://raw.githubusercontent.com/Team-EnderIO/EnderIO/dev/1.20.1/doc/img/enderface.png
           username: Ender IO Nightowl
-          embed-footer-text: Build number ${{ github.run_number }} from ${{ github.ref_name }}
-          embed-url: https://nightly.link/${{ github.repository }}/actions/runs/${{ github.run_id }}/nightly-build.zip # NOTE: Must match "name" of the artifact as set above.
-          embed-color: 5763719
+          url: https://nightly.link/${{ github.repository }}/actions/runs/${{ github.run_id }}/nightly-build.zip # NOTE: Must match "name" of the artifact as set above.
+          color: 0x57F287
+          noprefix: true
+          nodetail: true
+          nocontext: true
 
       - name: Discord Notification Failure
         if: failure()
-        uses: tsickert/discord-webhook@v7.0.0
+        uses: sarisia/actions-status-discord@v1
         with:
-          webhook-url: ${{ secrets.NIGHTLY_DISCORD_WEBHOOK }}
-          embed-title: Nightly Build Failed from ${{ github.ref_name }}
-          embed-description: The nightly build failed to compile at this commit. ```${{ github.event.head_commit.message }}```
-          avatar-url: https://raw.githubusercontent.com/Team-EnderIO/EnderIO/dev/1.20.1/doc/img/gray-enderface.png
+          webhook: ${{ secrets.NIGHTLY_DISCORD_WEBHOOK }}
+          title: "Nightly build failed for Minecraft ${{ github.ref_name }}"
+          description: |
+            The nightly build (#${{ github.run_number }}) for Minecraft `${{ github.ref_name }}` failed to compile at this commit. [View the run](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+
+            **Latest commit**
+            ```
+            ${{ github.event.head_commit.message }}
+            ```
+          avatar_url: https://raw.githubusercontent.com/Team-EnderIO/EnderIO/dev/1.20.1/doc/img/gray-enderface.png
           username: Ender IO Nightowl
-          embed-footer-text: Build number ${{ github.run_number }} from ${{ github.ref_name }}
-          embed-url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-          embed-color: 15548997
+          url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          color: 0xED4245
+          noprefix: true
+          nodetail: true
+          nocontext: true
