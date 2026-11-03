@@ -1,7 +1,7 @@
 pluginManagement {
     plugins {
-        id("net.neoforged.moddev") version "2.0.124"
-        id("net.neoforged.moddev.repositories") version "2.0.124"
+        id("net.neoforged.moddev") version "2.0.148"
+        id("net.neoforged.moddev.repositories") version "2.0.148"
     }
 
     repositories {
