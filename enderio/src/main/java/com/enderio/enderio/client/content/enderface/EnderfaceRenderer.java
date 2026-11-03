@@ -1,7 +1,9 @@
 package com.enderio.enderio.client.content.enderface;
 
+import com.enderio.core.client.AlwaysOnTopSubmitNodeCollector;
 import com.enderio.enderio.api.travel.TravelRenderer;
 import com.enderio.enderio.content.enderface.EnderfaceTravelTarget;
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.client.Minecraft;
 
@@ -11,9 +13,8 @@ import net.minecraft.client.Minecraft;
 public class EnderfaceRenderer implements TravelRenderer<EnderfaceTravelTarget> {
 
     @Override
-    public void render(EnderfaceTravelTarget travelData, net.minecraft.client.renderer.LevelRenderer levelRenderer,
-            com.mojang.blaze3d.vertex.PoseStack poseStack,
-            double distanceSquared, boolean active, float partialTick) {
+    public void submit(EnderfaceTravelTarget travelData, PoseStack poseStack, AlwaysOnTopSubmitNodeCollector collector, double distanceSquared, boolean active,
+        float partialTick) {
         Minecraft minecraft = Minecraft.getInstance();
 
         // Render the block outline (the line highlight) — this still works

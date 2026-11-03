@@ -1,5 +1,7 @@
 package com.enderio.enderio.client.content.travel;
 
+import com.enderio.core.client.AlwaysOnTopSubmitNodeCollector;
+import com.enderio.core.client.TravelRendererUtil;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.travel.RegisterTravelRenderersEvent;
 import com.enderio.enderio.api.travel.TravelRenderer;
@@ -12,16 +14,19 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.util.context.ContextKey;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModLoader;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.ExtractLevelRenderStateEvent;
+import net.neoforged.neoforge.client.event.SubmitCustomGeometryEvent;
 import org.jspecify.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -46,10 +51,10 @@ public class TravelTargetRendering {
         return (TravelRenderer<T>) RENDERERS.get(type);
     }
 
-    public static <T extends TravelTarget> void render(T target, LevelRenderer levelRender, PoseStack poseStack,
+    public static <T extends TravelTarget> void submit(T target, PoseStack poseStack, AlwaysOnTopSubmitNodeCollector collector,
             double distanceSquared, boolean isActive, float partialTick) {
         // noinspection unchecked
-        getRenderer((TravelTargetType<T>) target.type()).render(target, levelRender, poseStack, distanceSquared,
+        getRenderer((TravelTargetType<T>) target.type()).submit(target, poseStack, collector, distanceSquared,
                 isActive, partialTick);
     }
 
@@ -85,6 +90,33 @@ public class TravelTargetRendering {
         }
         if (!renderStates.isEmpty()) {
             event.getRenderState().setRenderData(DATA_KEY, renderStates);
+        }
+    }
+
+    @SubscribeEvent
+    public static void submitTargets(SubmitCustomGeometryEvent event) {
+        List<ExtractTravelTarget> renderStates = event.getLevelRenderState().getRenderData(DATA_KEY);
+        if (renderStates == null) {
+            return;
+        }
+
+        SubmitNodeCollector submitNodeCollector = event.getSubmitNodeCollector();
+        PoseStack poseStack = event.getPoseStack();
+        Vec3 projectedView = event.getLevelRenderState().cameraRenderState.pos;
+
+        // Furthest first, anything rendered later draws over the earlier targets
+        renderStates.sort(Comparator.comparingDouble(ExtractTravelTarget::distanceSquared).reversed());
+        int order = 1;
+        for (ExtractTravelTarget state : renderStates) {
+            poseStack.pushPose();
+            poseStack.translate(
+                state.target().pos().getX() - projectedView.x,
+                state.target().pos().getY() - projectedView.y,
+                state.target().pos().getZ() - projectedView.z);
+
+            submit(state.target(), poseStack, new AlwaysOnTopSubmitNodeCollector(submitNodeCollector, order), state.distanceSquared(), state.active(), state.partialTick());
+            poseStack.popPose();
+            order += TravelRendererUtil.ORDERS_PER_TARGET;
         }
     }
 }

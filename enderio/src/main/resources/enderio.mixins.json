@@ -6,8 +6,7 @@
         "PlayerMixin"
     ],
     "client" : [
-//        "GliderRotationMixin",
-//        "LevelRendererMixin"
+//        "GliderRotationMixin"
     ],
     "minVersion" : "0.8"
 }
