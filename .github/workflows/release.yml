@@ -154,7 +154,7 @@ jobs:
           webhook: ${{ secrets.RELEASE_DISCORD_WEBHOOK }}
           title: "Released ${{ github.event.release.name }} for Minecraft ${{ github.event.release.target_commitish }}"
           description: |
-            Version `${{ github.event.release.tag_name }}` for Minecraft `${{ github.event.release.target_commitish }}` is out! Click [here](${{ github.event.release.html_url }}) to download.
+            Version `${{ github.event.release.tag_name }}` for Minecraft `${{ github.event.release.target_commitish }}` is out!
 
             **Changelog**
             ${{ steps.truncatedChangelog.outputs.string }}

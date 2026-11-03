@@ -58,7 +58,7 @@ jobs:
             ```
           avatar_url: https://raw.githubusercontent.com/Team-EnderIO/EnderIO/dev/1.20.1/doc/img/enderface.png
           username: Ender IO Nightowl
-          url: https://nightly.link/${{ github.repository }}/actions/runs/${{ github.run_id }}/nightly-build.zip # NOTE: Must match "name" of the artifact as set above.
+          url: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
           color: 0x57F287
           noprefix: true
           nodetail: true
