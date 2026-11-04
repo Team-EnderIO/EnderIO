@@ -1,6 +1,8 @@
 package com.enderio.enderio.client.content.filters.redstone;
 
 import com.enderio.core.client.gui.screen.EnderContainerScreen;
+import com.enderio.core.client.gui.widgets.IconButton;
+import com.enderio.enderio.content.filters.AbstractFilterMenu;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.client.foundation.widgets.DyeColorPickerWidget;
 import com.enderio.enderio.content.conduits.ConduitLang;
@@ -23,10 +25,12 @@ public class RedstoneDoubleChannelFilterScreen extends EnderContainerScreen<Reds
     @Override
     protected void init() {
         super.init();
+        addRenderableWidget(new IconButton(getLeftPos() + 3, getTopPos() + 3, 16, 16, EnderIO.id("icon/back"), null,
+            input -> handleButtonPress(AbstractFilterMenu.BACK_BUTTON_ID)));
         addRenderableWidget(new DyeColorPickerWidget(this.leftPos + 15, this.topPos + 30,
-                getMenu().getChannels()::getFirstChannel, getMenu()::setFirstChannel, ConduitLang.REDSTONE_CHANNEL));
+                getMenu()::getFirstChannel, getMenu()::setFirstChannel, ConduitLang.REDSTONE_CHANNEL));
         addRenderableWidget(new DyeColorPickerWidget(this.leftPos + 15 + 60, this.topPos + 30,
-                getMenu().getChannels()::getSecondChannel, getMenu()::setSecondChannel, ConduitLang.REDSTONE_CHANNEL));
+                getMenu()::getSecondChannel, getMenu()::setSecondChannel, ConduitLang.REDSTONE_CHANNEL));
     }
 
     @Override
