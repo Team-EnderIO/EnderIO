@@ -1,0 +1,30 @@
+name: Test Report
+
+# Publishes the results of "Game and Unit Tests". This runs in a separate workflow so that it has
+# a token with write access even when the tests were run for a pull request from a fork.
+# https://github.com/dorny/test-reporter#recommended-setup-for-public-repositories
+
+on:
+  workflow_run:
+    workflows: ['Game and Unit Tests']
+    types:
+      - completed
+
+permissions:
+  contents: read
+  actions: read
+  checks: write
+
+jobs:
+  report:
+    name: Report Test Results
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report Test Results
+        uses: dorny/test-reporter@v3
+        with:
+          artifact: test-results
+          name: Test Results
+          path: '**/*.xml'
+          reporter: java-junit
+          fail-on-error: false

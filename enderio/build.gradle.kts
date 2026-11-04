@@ -232,6 +232,9 @@ neoForge {
             type = "gameTestServer"
             loadedMods = listOf(modEnderio, modEnderioGametests)
             sourceSet = sourceSets["gametest"]
+
+            // Where the test framework's JUnitSummaryDumper writes its XML, for CI reporting.
+            systemProperty("enderio.gametest.junit_dir", layout.buildDirectory.dir("test-results/gameTestServer").get().asFile.absolutePath)
         }
 
         // Useful for debugging tests, but will include the gametest datapack so I separated the run config.

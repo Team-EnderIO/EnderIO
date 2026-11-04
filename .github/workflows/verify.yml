@@ -54,4 +54,15 @@ jobs:
         run: ./gradlew runGameTestServer
 
       - name: Run Unit Tests with Gradle
+        # Run even if game tests failed so both reports are produced
+        if: ${{ !cancelled() }}
         run: ./gradlew test
+
+      # Upload for test-report to pick up
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: test-results
+          path: '**/build/test-results/**/*.xml'
+          if-no-files-found: warn

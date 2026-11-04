@@ -18,8 +18,11 @@ import net.neoforged.testframework.conf.ClientConfiguration;
 import net.neoforged.testframework.conf.Feature;
 import net.neoforged.testframework.conf.FrameworkConfiguration;
 import net.neoforged.testframework.impl.MutableTestFramework;
+import net.neoforged.testframework.summary.GitHubActionsStepSummaryDumper;
+import net.neoforged.testframework.summary.JUnitSummaryDumper;
 import org.lwjgl.glfw.GLFW;
 
+import java.nio.file.Path;
 import java.util.function.UnaryOperator;
 
 @Mod(EnderIOTests.MOD_ID)
@@ -40,6 +43,8 @@ public class EnderIOTests {
                         .openManagerKey(GLFW.GLFW_KEY_M)
                         .build())
                 .enable(Feature.CLIENT_SYNC, Feature.TEST_STORE)
+            // TODO: Review the local publish path
+            .dumpers(new JUnitSummaryDumper(Path.of(System.getProperty("enderio.gametest.junit_dir", "../build/test-results/gameTestServer"))), new GitHubActionsStepSummaryDumper())
                 .build()
                 .create();
 
