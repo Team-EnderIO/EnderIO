@@ -34,7 +34,7 @@ public class TravelAnchorBlockEntity extends MachineBlockEntity {
     public TravelAnchorBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState) {
         super(type, worldPosition, blockState, false);
 
-        travelTargetDataSlot = addDataSlot(
+        travelTargetDataSlot = addClientWritableDataSlot(
                 AnchorTravelTarget.DATA_SLOT_TYPE.create(this::getOrCreateTravelTarget, this::setTravelTarget));
     }
 

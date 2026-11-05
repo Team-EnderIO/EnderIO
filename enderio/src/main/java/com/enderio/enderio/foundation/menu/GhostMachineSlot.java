@@ -43,6 +43,18 @@ public class GhostMachineSlot extends MachineSlot {
         return stack;
     }
 
+    /**
+     * Sets or clears the ghost item from an untrusted source (e.g. a network packet).
+     * Applies the same placement and stack size rules as a player placing the item.
+     */
+    public void setGhost(ItemStack stack) {
+        if (stack.isEmpty()) {
+            set(ItemStack.EMPTY);
+        } else if (mayPlace(stack)) {
+            set(stack.copyWithCount(Math.min(stack.getCount(), getMaxStackSize())));
+        }
+    }
+
     @Override
     public ItemStack remove(int amount) {
         set(ItemStack.EMPTY);

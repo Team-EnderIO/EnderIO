@@ -60,8 +60,8 @@ public class RedstoneTimerFilter implements RedstoneInputFilter {
 
     public record Component(int ticks, int maxTicks) {
         public static final Codec<Component> CODEC = RecordCodecBuilder.create(instance ->
-            instance.group(ExtraCodecs.POSITIVE_INT.fieldOf("ticks").forGetter(r -> r.maxTicks),
-                    ExtraCodecs.POSITIVE_INT.fieldOf("maxTicks").forGetter(r -> r.maxTicks))
+            instance.group(ExtraCodecs.NON_NEGATIVE_INT.fieldOf("ticks").forGetter(Component::ticks),
+                    ExtraCodecs.POSITIVE_INT.fieldOf("maxTicks").forGetter(Component::maxTicks))
                 .apply(instance, Component::new)
         );
 

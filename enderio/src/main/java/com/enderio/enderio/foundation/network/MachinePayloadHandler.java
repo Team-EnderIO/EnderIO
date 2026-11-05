@@ -3,7 +3,7 @@ package com.enderio.enderio.foundation.network;
 import com.enderio.enderio.api.io.IOConfigurable;
 import com.enderio.enderio.content.enderface.EnderfaceBlockEntity;
 import com.enderio.enderio.content.storage.crafter.CrafterMenu;
-import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
+import com.enderio.enderio.foundation.menu.GhostMachineSlot;
 import com.enderio.enderio.foundation.network.packets.ClientboundFarmStationSoulPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundPoweredSpawnerSoulPacket;
 import com.enderio.enderio.foundation.network.packets.ClientboundSolarSoulPacket;
@@ -20,6 +20,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 public class MachinePayloadHandler {
@@ -56,9 +58,14 @@ public class MachinePayloadHandler {
 
         public void updateCrafterTemplate(ServerboundUpdateCrafterTemplatePacket packet, IPayloadContext context) {
             context.enqueueWork(() -> {
-                if (context.player().containerMenu instanceof CrafterMenu crafterMenu) {
+                if (context.player().containerMenu instanceof CrafterMenu crafterMenu
+                    && crafterMenu.stillValid(context.player())
+                    && packet.recipeInputs().size() <= CrafterMenu.INPUT_COUNT) {
                     for (int i = 0; i < packet.recipeInputs().size(); i++) {
-                        crafterMenu.slots.get(CrafterMenu.INPUTS_INDEX + i).set(packet.recipeInputs().get(i));
+                        // Only the ghost template slots may be written to.
+                        if (crafterMenu.slots.get(CrafterMenu.INPUTS_INDEX + i) instanceof GhostMachineSlot ghostSlot) {
+                            ghostSlot.setGhost(packet.recipeInputs().get(i));
+                        }
                     }
                 }
             });
@@ -66,7 +73,14 @@ public class MachinePayloadHandler {
 
         public void handleCycleIOConfigPacket(ServerboundCycleIOConfigPacket packet, IPayloadContext context) {
             context.enqueueWork(() -> {
-                var level = context.player().level();
+                var player = context.player();
+                var level = player.level();
+
+                // Never load chunks or touch blocks the player cannot reach.
+                if (!level.hasChunkAt(packet.pos()) || !player.canInteractWithBlock(packet.pos(), player.blockInteractionRange())) {
+                    return;
+                }
+
                 BlockEntity be = level.getBlockEntity(packet.pos());
 
                 if (be instanceof IOConfigurable ioConfigurable) {
@@ -79,6 +93,15 @@ public class MachinePayloadHandler {
             context.enqueueWork(() -> {
                 var pos = packet.getHitResult().getBlockPos();
                 var level = context.player().level();
+
+                // Don't act on unloaded chunks, and make sure the hit location actually lies on the targeted block.
+                if (!level.hasChunkAt(pos)
+                    || !level.isInWorldBounds(pos)
+                    || packet.getHitResult().getType() != HitResult.Type.BLOCK
+                    || packet.getHitResult().getLocation().distanceToSqr(Vec3.atCenterOf(pos)) > 3.0) {
+                    return;
+                }
+
                 if (EnderfaceBlockEntity.canPlayerInteractWithBlock(context.player(), level, pos)) {
                     var state = level.getBlockState(pos);
                     state.useWithoutItem(level, context.player(), packet.getHitResult());

@@ -175,6 +175,11 @@ public class ConduitMenu extends BaseEnderMenu {
     }
 
     public void handleConnectionConfigUpdate(SetConduitConnectionConfigPacket packet) {
+        // Ignore configs which don't belong to this conduit type.
+        if (packet.connectionConfig().type() != conduit.value().type().connectionConfigType()) {
+            return;
+        }
+
         connectionAccessor.setConnectionConfig(conduit, side, packet.connectionConfig());
     }
 
@@ -220,6 +225,10 @@ public class ConduitMenu extends BaseEnderMenu {
 
     public void tryOpenFilterMenu(int slot) {
         if (getPlayerInventory().player instanceof ServerPlayer serverPlayer) {
+            if (conduitInventory == null || slot < 0 || slot >= conduitInventory.getSlots()) {
+                return;
+            }
+
             var stack = conduitInventory.getStackInSlot(slot);
             var menuProvider = stack.getCapability(EnderIOCapabilities.FILTER_MENU_PROVIDER);
             if (menuProvider != null) {
