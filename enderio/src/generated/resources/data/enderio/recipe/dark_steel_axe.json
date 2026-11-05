@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "I": {
+      "tag": "c:ingots/dark_steel"
+    },
+    "S": {
+      "tag": "c:rods/wooden"
+    }
+  },
+  "pattern": [
+    "II",
+    "IS",
+    " S"
+  ],
+  "result": {
+    "count": 1,
+    "id": "enderio:dark_steel_axe"
+  }
+}

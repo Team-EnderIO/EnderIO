@@ -29,6 +29,10 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         tag(BlockTags.CLIMBABLE).add(EIOBlocks.DARK_STEEL_LADDER.get());
+
+        // TODO: Temporary, need to decide where they sit
+        tag(EIOTags.Blocks.INCORRECT_FOR_DARK_STEEL_TOOL).addTag(BlockTags.INCORRECT_FOR_DIAMOND_TOOL);
+        tag(EIOTags.Blocks.INCORRECT_FOR_END_STEEL_TOOL).addTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL);
         tag(BlockTags.DOORS).add(EIOBlocks.DARK_STEEL_DOOR.get());
         tag(BlockTags.TRAPDOORS).add(EIOBlocks.DARK_STEEL_TRAPDOOR.get());
         tag(BlockTags.WITHER_IMMUNE).add(EIOBlocks.REINFORCED_OBSIDIAN.get());

@@ -21,8 +21,8 @@ import java.util.Optional;
 
 public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProvider, IDarkSteelItem {
     public DarkSteelSwordItem(Properties properties) {
-        super(DarkSteelTiers.DARK_STEEL_TIER,
-                properties.attributes(createAttributes(DarkSteelTiers.DARK_STEEL_TIER, 3, -2.4F))
+        super(ArmoryTiers.DARK_STEEL_TIER,
+                properties.attributes(createAttributes(ArmoryTiers.DARK_STEEL_TIER, 3, -2.4F))
                         .component(EIODataComponents.TRAVEL_ITEM, false));
     }
 

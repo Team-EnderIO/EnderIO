@@ -528,6 +528,20 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.CONDUIT_PROBE.get(), "Conduit Probe");
 
         add(EIOItems.DARK_STEEL_SWORD.get(), "The Ender");
+        add(EIOItems.DARK_STEEL_PICKAXE.get(), "Dark Steel Pickaxe");
+        add(EIOItems.DARK_STEEL_AXE.get(), "Dark Steel Axe");
+        add(EIOItems.DARK_STEEL_HELMET.get(), "Dark Steel Helmet");
+        add(EIOItems.DARK_STEEL_CHESTPLATE.get(), "Dark Steel Chestplate");
+        add(EIOItems.DARK_STEEL_LEGGINGS.get(), "Dark Steel Leggings");
+        add(EIOItems.DARK_STEEL_BOOTS.get(), "Dark Steel Boots");
+
+        add(EIOItems.END_STEEL_SWORD.get(), "The Ender Mk2");
+        add(EIOItems.END_STEEL_PICKAXE.get(), "End Steel Pickaxe");
+        add(EIOItems.END_STEEL_AXE.get(), "End Steel Axe");
+        add(EIOItems.END_STEEL_HELMET.get(), "End Steel Helmet");
+        add(EIOItems.END_STEEL_CHESTPLATE.get(), "End Steel Chestplate");
+        add(EIOItems.END_STEEL_LEGGINGS.get(), "End Steel Leggings");
+        add(EIOItems.END_STEEL_BOOTS.get(), "End Steel Boots");
 
         // Filters
         add(EIOItems.BASIC_ITEM_FILTER.get(), "Basic Item Filter");

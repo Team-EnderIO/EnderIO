@@ -14,6 +14,7 @@ import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.integrations.Integrations;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIOAttachments;
+import com.enderio.enderio.init.EIOArmorMaterials;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
@@ -95,6 +96,7 @@ public class EnderIO {
         // registered.
         EIODataComponents.register(modEventBus);
         EIOCreativeTabs.register(modEventBus);
+        EIOArmorMaterials.register(modEventBus);
         EIOItems.register(modEventBus);
         EIOBlocks.register(modEventBus);
         EIOBlockEntities.register(modEventBus);

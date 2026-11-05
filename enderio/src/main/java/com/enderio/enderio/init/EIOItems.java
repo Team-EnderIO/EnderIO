@@ -4,6 +4,7 @@ import com.enderio.core.common.registries.ItemDeferredRegister;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
+import com.enderio.enderio.content.armory.ArmoryTiers;
 import com.enderio.enderio.content.armory.DarkSteelSwordItem;
 import com.enderio.enderio.content.broken_spawner.BrokenSpawnerItem;
 import com.enderio.enderio.content.capacitors.CapacitorItem;
@@ -30,10 +31,16 @@ import com.enderio.enderio.content.tools.vials.VoidVialItem;
 import com.enderio.enderio.content.travel.TravelStaffItem;
 import com.enderio.enderio.foundation.item.CreativeTabIconItem;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ArmorItem;
+import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.Rarity;
+import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.item.component.ItemLore;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredItem;
@@ -221,8 +228,43 @@ public class EIOItems {
     public static final DeferredItem<ColdFireIgniter> COLD_FIRE_IGNITER = ITEMS.registerItem("cold_fire_igniter", ColdFireIgniter::new);
     public static final DeferredItem<ConduitProbeItem> CONDUIT_PROBE = ITEMS.registerItem("conduit_probe", ConduitProbeItem::new);
 
+    // endregion
+
+    // region Armory
+
     public static final DeferredItem<DarkSteelSwordItem> DARK_STEEL_SWORD = ITEMS.registerItem("dark_steel_sword", DarkSteelSwordItem::new,
         new Item.Properties().durability(2000));
+    public static final DeferredItem<PickaxeItem> DARK_STEEL_PICKAXE = ITEMS.registerItem("dark_steel_pickaxe",
+        props -> new PickaxeItem(ArmoryTiers.DARK_STEEL_TIER, props.attributes(PickaxeItem.createAttributes(ArmoryTiers.DARK_STEEL_TIER, 1.0f, -2.8f))));
+    public static final DeferredItem<AxeItem> DARK_STEEL_AXE = ITEMS.registerItem("dark_steel_axe",
+        props -> new AxeItem(ArmoryTiers.DARK_STEEL_TIER, props.attributes(AxeItem.createAttributes(ArmoryTiers.DARK_STEEL_TIER, 5.0f, -3.0f))));
+
+    private static final int DARK_STEEL_DURABILITY_MULTIPLIER = 35;
+    public static final DeferredItem<ArmorItem> DARK_STEEL_HELMET = armor("dark_steel_helmet", EIOArmorMaterials.DARK_STEEL,
+        ArmorItem.Type.HELMET, DARK_STEEL_DURABILITY_MULTIPLIER);
+    public static final DeferredItem<ArmorItem> DARK_STEEL_CHESTPLATE = armor("dark_steel_chestplate", EIOArmorMaterials.DARK_STEEL,
+        ArmorItem.Type.CHESTPLATE, DARK_STEEL_DURABILITY_MULTIPLIER);
+    public static final DeferredItem<ArmorItem> DARK_STEEL_LEGGINGS = armor("dark_steel_leggings", EIOArmorMaterials.DARK_STEEL,
+        ArmorItem.Type.LEGGINGS, DARK_STEEL_DURABILITY_MULTIPLIER);
+    public static final DeferredItem<ArmorItem> DARK_STEEL_BOOTS = armor("dark_steel_boots", EIOArmorMaterials.DARK_STEEL,
+        ArmorItem.Type.BOOTS, DARK_STEEL_DURABILITY_MULTIPLIER);
+
+    public static final DeferredItem<SwordItem> END_STEEL_SWORD = ITEMS.registerItem("end_steel_sword",
+        props -> new SwordItem(ArmoryTiers.END_STEEL_TIER, props.attributes(SwordItem.createAttributes(ArmoryTiers.END_STEEL_TIER, 3, -2.4f))));
+    public static final DeferredItem<PickaxeItem> END_STEEL_PICKAXE = ITEMS.registerItem("end_steel_pickaxe",
+        props -> new PickaxeItem(ArmoryTiers.END_STEEL_TIER, props.attributes(PickaxeItem.createAttributes(ArmoryTiers.END_STEEL_TIER, 1.0f, -2.8f))));
+    public static final DeferredItem<AxeItem> END_STEEL_AXE = ITEMS.registerItem("end_steel_axe",
+        props -> new AxeItem(ArmoryTiers.END_STEEL_TIER, props.attributes(AxeItem.createAttributes(ArmoryTiers.END_STEEL_TIER, 3.0f, -3.0f))));
+
+    private static final int END_STEEL_DURABILITY_MULTIPLIER = 50;
+    public static final DeferredItem<ArmorItem> END_STEEL_HELMET = armor("end_steel_helmet", EIOArmorMaterials.END_STEEL,
+        ArmorItem.Type.HELMET, END_STEEL_DURABILITY_MULTIPLIER);
+    public static final DeferredItem<ArmorItem> END_STEEL_CHESTPLATE = armor("end_steel_chestplate", EIOArmorMaterials.END_STEEL,
+        ArmorItem.Type.CHESTPLATE, END_STEEL_DURABILITY_MULTIPLIER);
+    public static final DeferredItem<ArmorItem> END_STEEL_LEGGINGS = armor("end_steel_leggings", EIOArmorMaterials.END_STEEL,
+        ArmorItem.Type.LEGGINGS, END_STEEL_DURABILITY_MULTIPLIER);
+    public static final DeferredItem<ArmorItem> END_STEEL_BOOTS = armor("end_steel_boots", EIOArmorMaterials.END_STEEL,
+        ArmorItem.Type.BOOTS, END_STEEL_DURABILITY_MULTIPLIER);
 
     // endregion
 
@@ -283,6 +325,12 @@ public class EIOItems {
         CreativeTabIconItem::new, new Item.Properties().component(DataComponents.ENCHANTMENT_GLINT_OVERRIDE, true));
 
     // endregion
+
+    private static DeferredItem<ArmorItem> armor(String name, Holder<ArmorMaterial> material, ArmorItem.Type type,
+        int durabilityMultiplier) {
+        return ITEMS.registerItem(name, props -> new ArmorItem(material, type, props),
+            new Item.Properties().durability(type.getDurability(durabilityMultiplier)));
+    }
 
     private static DeferredItem<Item> basic(String name) {
         return ITEMS.registerItem(name, Item::new);

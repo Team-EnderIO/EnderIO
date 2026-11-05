@@ -48,7 +48,7 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
             .addTag(EIOTags.Items.BLOCKS_SOULARIUM)
             .addTag(EIOTags.Items.BLOCKS_VIBRANT_ALLOY);
 
-        tag(ItemTags.SWORDS).add(EIOItems.DARK_STEEL_SWORD.get());
+        addArmoryTags();
 
         addCrystalTags();
         addGearTags();
@@ -63,6 +63,23 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
         addReagentTags();
 
         addBlockItemTags();
+    }
+
+    private void addArmoryTags() {
+        tag(ItemTags.SWORDS).add(EIOItems.DARK_STEEL_SWORD.get(), EIOItems.END_STEEL_SWORD.get());
+        tag(ItemTags.PICKAXES).add(EIOItems.DARK_STEEL_PICKAXE.get(), EIOItems.END_STEEL_PICKAXE.get());
+        tag(ItemTags.AXES).add(EIOItems.DARK_STEEL_AXE.get(), EIOItems.END_STEEL_AXE.get());
+
+        tag(ItemTags.HEAD_ARMOR).add(EIOItems.DARK_STEEL_HELMET.get(), EIOItems.END_STEEL_HELMET.get());
+        tag(ItemTags.CHEST_ARMOR).add(EIOItems.DARK_STEEL_CHESTPLATE.get(), EIOItems.END_STEEL_CHESTPLATE.get());
+        tag(ItemTags.LEG_ARMOR).add(EIOItems.DARK_STEEL_LEGGINGS.get(), EIOItems.END_STEEL_LEGGINGS.get());
+        tag(ItemTags.FOOT_ARMOR).add(EIOItems.DARK_STEEL_BOOTS.get(), EIOItems.END_STEEL_BOOTS.get());
+
+        tag(ItemTags.TRIMMABLE_ARMOR).add(
+            EIOItems.DARK_STEEL_HELMET.get(), EIOItems.DARK_STEEL_CHESTPLATE.get(),
+            EIOItems.DARK_STEEL_LEGGINGS.get(), EIOItems.DARK_STEEL_BOOTS.get(),
+            EIOItems.END_STEEL_HELMET.get(), EIOItems.END_STEEL_CHESTPLATE.get(),
+            EIOItems.END_STEEL_LEGGINGS.get(), EIOItems.END_STEEL_BOOTS.get());
     }
 
     private void addIngotTags() {
