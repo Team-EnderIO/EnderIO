@@ -9,6 +9,7 @@ import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.api.soul.Soul;
+import com.enderio.enderio.content.armory.ItemDarkSteelUpgrades;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.filters.fluid.EnderFluidFilter;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilter;
@@ -128,6 +129,9 @@ public class EIODataComponents {
     // endregion
 
     // region Tools
+
+    public static final DataComponentType<ItemDarkSteelUpgrades> DARK_STEEL_UPGRADES = register("dark_steel_upgrades",
+        builder -> builder.persistent(ItemDarkSteelUpgrades.CODEC).networkSynchronized(ItemDarkSteelUpgrades.STREAM_CODEC));
 
     public static final DataComponentType<Boolean> TOGGLED = register("toggled",
         builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));

@@ -2,10 +2,12 @@ package com.enderio.enderio.init;
 
 import com.enderio.core.common.registries.ItemDeferredRegister;
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.api.EnderIODataComponents;
+import com.enderio.enderio.api.armory.WeaponBeheading;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.content.armory.ArmoryTiers;
-import com.enderio.enderio.content.armory.DarkSteelSwordItem;
+import com.enderio.enderio.content.armory.items.DarkSteelSwordItem;
 import com.enderio.enderio.content.broken_spawner.BrokenSpawnerItem;
 import com.enderio.enderio.content.capacitors.CapacitorItem;
 import com.enderio.enderio.content.capacitors.LootCapacitorItem;
@@ -233,7 +235,7 @@ public class EIOItems {
     // region Armory
 
     public static final DeferredItem<DarkSteelSwordItem> DARK_STEEL_SWORD = ITEMS.registerItem("dark_steel_sword", DarkSteelSwordItem::new,
-        new Item.Properties().durability(2000));
+        new Item.Properties().durability(2000).component(EnderIODataComponents.WEAPON_BEHEADING, new WeaponBeheading(0.07f)));
     public static final DeferredItem<PickaxeItem> DARK_STEEL_PICKAXE = ITEMS.registerItem("dark_steel_pickaxe",
         props -> new PickaxeItem(ArmoryTiers.DARK_STEEL_TIER, props.attributes(PickaxeItem.createAttributes(ArmoryTiers.DARK_STEEL_TIER, 1.0f, -2.8f))));
     public static final DeferredItem<AxeItem> DARK_STEEL_AXE = ITEMS.registerItem("dark_steel_axe",
@@ -250,7 +252,8 @@ public class EIOItems {
         ArmorItem.Type.BOOTS, DARK_STEEL_DURABILITY_MULTIPLIER);
 
     public static final DeferredItem<SwordItem> END_STEEL_SWORD = ITEMS.registerItem("end_steel_sword",
-        props -> new SwordItem(ArmoryTiers.END_STEEL_TIER, props.attributes(SwordItem.createAttributes(ArmoryTiers.END_STEEL_TIER, 3, -2.4f))));
+        props -> new SwordItem(ArmoryTiers.END_STEEL_TIER, props.attributes(SwordItem.createAttributes(ArmoryTiers.END_STEEL_TIER, 3, -2.4f))
+            .component(EnderIODataComponents.WEAPON_BEHEADING, new WeaponBeheading(0.07f))));
     public static final DeferredItem<PickaxeItem> END_STEEL_PICKAXE = ITEMS.registerItem("end_steel_pickaxe",
         props -> new PickaxeItem(ArmoryTiers.END_STEEL_TIER, props.attributes(PickaxeItem.createAttributes(ArmoryTiers.END_STEEL_TIER, 1.0f, -2.8f))));
     public static final DeferredItem<AxeItem> END_STEEL_AXE = ITEMS.registerItem("end_steel_axe",

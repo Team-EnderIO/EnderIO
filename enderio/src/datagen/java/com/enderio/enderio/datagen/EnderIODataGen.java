@@ -11,6 +11,7 @@ import com.enderio.enderio.datagen.client.models.block.AthenaProvider;
 import com.enderio.enderio.datagen.common.advancement.EIOAdvancementGenerator;
 import com.enderio.enderio.datagen.common.advancement.MachinesAdvancementGenerator;
 import com.enderio.enderio.datagen.common.data_maps.GrindingBallDataMapProvider;
+import com.enderio.enderio.datagen.common.data_maps.MobHeadDropDataMapProvider;
 import com.enderio.enderio.datagen.common.data_maps.RangeExtenderDataMapProvider;
 import com.enderio.enderio.datagen.common.data_maps.ReagentDataMapProvider;
 import com.enderio.enderio.datagen.common.datapack_registries.ConduitsBootstrap;
@@ -81,6 +82,7 @@ public class EnderIODataGen {
         generator.addProvider(event.includeServer(), new EnderIORecipeProvider(packOutput, lookupProvider));
 
         generator.addProvider(event.includeServer(), new GrindingBallDataMapProvider(packOutput, lookupProvider));
+        generator.addProvider(event.includeServer(), new MobHeadDropDataMapProvider(packOutput, lookupProvider));
         generator.addProvider(event.includeServer(), new ReagentDataMapProvider(packOutput, lookupProvider));
         generator.addProvider(event.includeServer(), new RangeExtenderDataMapProvider(packOutput, lookupProvider));
 
