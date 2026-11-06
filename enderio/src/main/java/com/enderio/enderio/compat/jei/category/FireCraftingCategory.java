@@ -6,8 +6,6 @@ import com.enderio.enderio.compat.jei.JEILang;
 import com.enderio.enderio.compat.jei.JEIUtils;
 import com.enderio.enderio.content.fire_crafting.FireCraftingRecipe;
 import com.enderio.enderio.init.EIOFluids;
-import com.mojang.blaze3d.vertex.PoseStack;
-import mezz.jei.api.gui.ITickTimer;
 import mezz.jei.api.gui.builder.IIngredientAcceptor;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
@@ -19,52 +17,39 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.category.AbstractRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.renderer.block.BlockModelRenderState;
-import net.minecraft.client.renderer.block.model.BlockDisplayContext;
-import net.minecraft.client.renderer.texture.OverlayTexture;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @author TagnumElite
  */
 public class FireCraftingCategory extends AbstractRecipeCategory<RecipeHolder<FireCraftingRecipe>> {
 
-    public static final IRecipeType<RecipeHolder<FireCraftingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID,
-            "fire_crafting", FireCraftingRecipe.class);
+    public static final IRecipeType<RecipeHolder<FireCraftingRecipe>> TYPE = JEIUtils.createRecipeType(EnderIO.MOD_ID, "fire_crafting",
+        FireCraftingRecipe.class);
 
     private static final Identifier BG_LOCATION = EnderIO.id("textures/gui/jei_infinity.png");
     private final IDrawableStatic background;
 
-    private final ITickTimer timer;
-    private final Map<Identifier, Integer> blockIdx = new HashMap<>();
-    private int changed = 0;
-    private boolean alternateFire = false;
-
     public FireCraftingCategory(IGuiHelper guiHelper) {
         super(TYPE, JEILang.FIRE_CRAFTING_TITLE, guiHelper.createDrawable(BG_LOCATION, 109, 0, 16, 16), 109, 62);
         this.background = guiHelper.createDrawable(BG_LOCATION, 0, 0, 109, 62);
-        this.timer = guiHelper.createTickTimer(40, 1, false);
     }
 
     @Override
-    public void getTooltip(ITooltipBuilder tooltipBuilder, RecipeHolder<FireCraftingRecipe> recipe, IRecipeSlotsView recipeSlotsView, double mouseX, double mouseY) {
+    public void getTooltip(ITooltipBuilder tooltipBuilder, RecipeHolder<FireCraftingRecipe> recipe, IRecipeSlotsView recipeSlotsView, double mouseX,
+        double mouseY) {
         // Middle Right, above the tooltip icon
         if (mouseX >= 87 && mouseX <= 105 && mouseY >= 25 && mouseY <= 38) {
             List<ResourceKey<Level>> validDimensions = recipe.value().dimensions();
@@ -97,24 +82,21 @@ public class FireCraftingCategory extends AbstractRecipeCategory<RecipeHolder<Fi
         IIngredientAcceptor<?> block = builder.addInvisibleIngredients(RecipeIngredientRole.CRAFTING_STATION);
         block.add(Ingredient.of(recipe.value().getAllBaseBlocks().toArray(Block[]::new)));
 
-        IRecipeSlotBuilder output = builder.addSlot(RecipeIngredientRole.OUTPUT, 88, 39)
-                .addRichTooltipCallback((slotView, tooltip) -> {
-                    slotView.getDisplayedItemStack().ifPresent(stack -> {
-                        // Gross way of getting the index.
-                        int index = slotView.getItemStacks().toList().indexOf(stack);
-                        var result = recipe.value().results().get(index);
+        IRecipeSlotBuilder output = builder.addSlot(RecipeIngredientRole.OUTPUT, 88, 39).addRichTooltipCallback((slotView, tooltip) -> {
+            slotView.getDisplayedItemStack().ifPresent(stack -> {
+                // Gross way of getting the index.
+                int index = slotView.getItemStacks().toList().indexOf(stack);
+                var result = recipe.value().results().get(index);
 
-                        tooltip.add(TooltipUtil.withArgs(JEILang.FIRE_CRAFTING_CHANCE,
-                                Math.round(result.chance() * 100)));
+                tooltip.add(TooltipUtil.withArgs(JEILang.FIRE_CRAFTING_CHANCE, Math.round(result.chance() * 100)));
 
-                        if (result.minCount() != result.maxCount()) {
-                            tooltip.add(TooltipUtil.withArgs(JEILang.FIRE_CRAFTING_DROPS,
-                                    result.minCount() + "-" + result.maxCount()));
-                        } else {
-                            tooltip.add(TooltipUtil.withArgs(JEILang.FIRE_CRAFTING_DROPS, result.minCount()));
-                        }
-                    });
-                });
+                if (result.minCount() != result.maxCount()) {
+                    tooltip.add(TooltipUtil.withArgs(JEILang.FIRE_CRAFTING_DROPS, result.minCount() + "-" + result.maxCount()));
+                } else {
+                    tooltip.add(TooltipUtil.withArgs(JEILang.FIRE_CRAFTING_DROPS, result.minCount()));
+                }
+            });
+        });
 
         for (var result : recipe.value().results()) {
             output.add(result.result().create().copyWithCount(1));
@@ -125,54 +107,23 @@ public class FireCraftingCategory extends AbstractRecipeCategory<RecipeHolder<Fi
     }
 
     @Override
-    public void draw(RecipeHolder<FireCraftingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics,
-            double mouseX, double mouseY) {
+    public void draw(RecipeHolder<FireCraftingRecipe> recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor graphics, double mouseX, double mouseY) {
         background.draw(graphics);
-        if (timer.getValue() != changed) { //!Screen.hasShiftDown() &&
-//            EnderIO.LOGGER.debug("Block {} IDX: {}, ({} - {}) {}", recipe.getId(), blockIdx.get(recipe.getId()), timer.getValue(), changed, blockIdx);
-//            blockIdx.put(recipe.getId(), blockIdx.get(recipe.getId()) + 1);
-            alternateFire = !alternateFire;
-            changed = timer.getValue();
+
+        var alternateFire = false;
+
+        var slot = recipeSlotsView.findSlotByName("catalyst");
+        if (slot.isPresent()) {
+            alternateFire = slot.get().getDisplayedItemStack().get().is(EIOFluids.FIRE_WATER.bucket());
         }
 
         List<Block> blocks = recipe.value().getAllBaseBlocks();
-        Block block = blocks.get(0);
+        var scissorArea = graphics.peekScissorStack();
+        var renderRect = new ScreenRectangle(5, 5, 52, 52).transformMaxBounds(graphics.pose());
+        renderRect = scissorArea != null ? scissorArea.intersection(renderRect) : renderRect;
 
-        // Borrowed a bunch of rendering code from Patchouli$PageMultiblock
-
-//        graphics.pose().pushMatrix();
-//        graphics.pose().translate(31, 31);
-//        graphics.pose().scale(20F, 20F);
-//
-//        // Initial eye pos somewhere off in the distance in the -Z direction
-//        Vector4f eye = new Vector4f(0, 0, -100, 1);
-//        Matrix4f rotMat = new Matrix4f();
-//        rotMat.identity();
-//
-//        // For each GL rotation done, track the opposite to keep the eye pos accurate
-////        graphics.pose().mulPose(Axis.XP.rotationDegrees(-30F));
-////        rotMat.rotation(Axis.XP.rotationDegrees(30F));
-////        graphics.pose().mulPose(Axis.YP.rotationDegrees(-45F));
-////        rotMat.rotation(Axis.YP.rotationDegrees(45F));
-//
-//        // Finally apply the rotations
-//        eye.mul(rotMat);
-//        eye.div(eye.w);
-//
-//        // Block Render
-        renderBlock(graphics, block);
-//
-//        graphics.pose().popMatrix();
+        graphics.submitPictureInPictureRenderState(
+            FireCraftingRenderer.State.create(renderRect, scissorArea, blocks.get(0).defaultBlockState(), alternateFire));
     }
 
-    private void renderBlock(GuiGraphicsExtractor graphics, Block block) {
-        // 26.2-port: Block display rendering was rewritten on the new submit-node API.
-        //   FeatureRenderDispatcher.getSubmitNodeStorage() was removed (the SubmitNodeStorage
-        //   is now an internal field of the dispatcher). The JEI recipe preview is disabled
-        //   until the new pipeline is implemented.
-        // graphics.pose().pushMatrix();
-        // BlockState state = block.defaultBlockState();
-        // graphics.pose().pushMatrix();
-        // ...
-    }
 }
