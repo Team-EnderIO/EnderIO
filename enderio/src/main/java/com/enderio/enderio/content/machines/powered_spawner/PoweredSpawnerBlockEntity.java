@@ -10,6 +10,7 @@ import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.QuadraticScalable;
 import com.enderio.enderio.api.io.energy.EnergyIOMode;
 import com.enderio.enderio.api.soul.Soul;
+import com.enderio.enderio.api.soul.SoulResource;
 import com.enderio.enderio.api.soul.binding.SoulBindable;
 import com.enderio.enderio.config.machines.MachinesConfig;
 import com.enderio.enderio.content.machines.MachinesLang;
@@ -50,8 +51,10 @@ import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.fml.LogicalSide;
 import net.neoforged.neoforge.common.extensions.IOwnedSpawner;
+import net.neoforged.neoforge.transfer.access.ItemAccess;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.SnapshotJournal;
+import net.neoforged.neoforge.transfer.transaction.Transaction;
 import net.neoforged.neoforge.transfer.transaction.TransactionContext;
 import org.jspecify.annotations.Nullable;
 
@@ -262,12 +265,26 @@ public class PoweredSpawnerBlockEntity extends PoweredMachineBlockEntity impleme
         return ItemStorageLayout.builder()
             .add(CAPACITOR, MachineSlotTemplates.capacitor())
             .add(INPUT, SlotTemplates.input(64), b ->
-                b.filter((_, itemResource) -> {
-                    var soulHandler = itemResource.toStack().getCapability(EnderIOCapabilities.SOUL_HANDLER_ITEM);
-                    return soulHandler != null && soulHandler.tryInsertSoul(getSoulForCapture(), true);
-                }))
+                b.filter((_, itemResource) -> isValidInput(itemResource, SoulResource.of(getSoulForCapture()))))
             .add(OUTPUT, SlotTemplates.output(64))
             .build();
+    }
+
+    private static boolean isValidInput(ItemResource resource, SoulResource soulForCapture) {
+        var soulHandler = ItemAccess.forStack(resource.toStack()).getCapability(EnderIOCapabilities.Soul.ITEM);
+        if (soulHandler == null) {
+            return false;
+        }
+
+        // Manual check as we're probably in a transaction.
+        for (int slot = 0; slot < soulHandler.size(); slot++) {
+            // See if there's a slot that is empty and will accept this soul.
+            if (soulHandler.isValid(slot, soulForCapture) && soulHandler.getAmountAsInt(slot) < soulHandler.getCapacityAsInt(slot, soulForCapture)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private Soul getSoulForCapture() {

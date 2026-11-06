@@ -35,6 +35,7 @@ import java.util.stream.Stream;
  * Represents a stored soul, derived from a {@link LivingEntity}.
  * @param entityTag the entity's NBT tag.
  */
+// TODO: Consider making this only accept EntityType<? extends LivingEntity>?
 public record Soul(@Nullable EntityType<?> entityType, CompoundTag entityTag) implements Resource {
 
     // Keys that should not be compared or saved

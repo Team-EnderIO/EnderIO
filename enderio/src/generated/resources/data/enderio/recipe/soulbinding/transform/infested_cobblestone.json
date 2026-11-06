@@ -1,0 +1,11 @@
+{
+  "type": "enderio:soul_binding",
+  "energy": 10000,
+  "experience": 0,
+  "input": "minecraft:cobblestone",
+  "input_soul": "minecraft:silverfish",
+  "output": {
+    "id": "minecraft:infested_cobblestone"
+  },
+  "output_mode": "transform"
+}

@@ -1,5 +1,6 @@
 {
   "type": "enderio:soul_binding",
+  "output_mode": "transform",
   "energy": 10,
   "experience": 1,
   "input": "minecraft:cobblestone",

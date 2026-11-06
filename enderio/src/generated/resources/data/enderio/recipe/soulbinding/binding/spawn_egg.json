@@ -1,0 +1,16 @@
+{
+  "type": "enderio:soul_binding",
+  "energy": 288000,
+  "experience": 8,
+  "input": "minecraft:egg",
+  "output_mode": "bind",
+  "soul_source": {
+    "neoforge:ingredient_type": "neoforge:difference",
+    "base": {
+      "neoforge:ingredient_type": "enderio:any_bindable_soul_source"
+    },
+    "subtracted": {
+      "neoforge:ingredient_type": "enderio:any_spawn_egg"
+    }
+  }
+}

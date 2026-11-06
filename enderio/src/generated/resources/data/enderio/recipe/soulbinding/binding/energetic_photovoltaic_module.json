@@ -1,0 +1,10 @@
+{
+  "type": "enderio:soul_binding",
+  "energy": 12800,
+  "experience": 8,
+  "input": "enderio:energetic_photovoltaic_module",
+  "input_soul": {
+    "type": "enderio:has_solar_soul_data"
+  },
+  "output_mode": "bind"
+}

@@ -1,0 +1,11 @@
+{
+  "type": "enderio:soul_binding",
+  "energy": 51200,
+  "experience": 4,
+  "input": "enderio:z_logic_controller",
+  "input_soul": "minecraft:zombie",
+  "output": {
+    "id": "enderio:frank_n_zombie"
+  },
+  "output_mode": "transform"
+}

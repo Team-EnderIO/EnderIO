@@ -1,0 +1,11 @@
+{
+  "type": "enderio:soul_binding",
+  "energy": 51200,
+  "experience": 4,
+  "input": "#c:gems/emerald",
+  "input_soul": "minecraft:villager",
+  "output": {
+    "id": "enderio:enticing_crystal"
+  },
+  "output_mode": "transform"
+}

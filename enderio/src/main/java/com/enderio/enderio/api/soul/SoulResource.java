@@ -13,6 +13,10 @@ public final class SoulResource implements Resource {
 
     public static final SoulResource EMPTY = new SoulResource(Soul.EMPTY);
 
+    public static SoulResource of(Soul soul) {
+        return new SoulResource(soul.copy());
+    }
+
     private final Soul innerSoul;
 
     private SoulResource(Soul innerSoul) {

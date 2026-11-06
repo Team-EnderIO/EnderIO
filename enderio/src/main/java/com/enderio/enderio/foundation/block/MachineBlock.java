@@ -1,14 +1,9 @@
 package com.enderio.enderio.foundation.block;
 
-import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.api.soul.Soul;
-import com.enderio.enderio.api.soul.binding.SoulBindable;
-import com.enderio.enderio.api.soul.storage.SoulHandler;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
@@ -24,7 +19,6 @@ import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
-import net.neoforged.neoforge.transfer.transaction.Transaction;
 import org.jspecify.annotations.Nullable;
 
 import java.util.function.Supplier;

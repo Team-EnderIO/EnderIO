@@ -33,6 +33,7 @@ public interface MachineRecipe<T extends RecipeInput> extends Recipe<T> {
      * Get the results of this machine, for display or verification purposes only.
      * @return
      */
+    // TODO: 26.3: Remove/replace with RecipeDisplay.
     List<OutputStack> getResultStacks(RegistryAccess registryAccess);
 
     /**

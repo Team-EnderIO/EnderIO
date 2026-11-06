@@ -86,7 +86,7 @@ public class TooltipHandler {
 
     private static void addSoulBindableTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
         var soulBindable = ItemAccess.forStack(itemStack).getCapability(EnderIOCapabilities.SOUL_BINDABLE_ITEM);
-        if (soulBindable != null && soulBindable.canBeBound()) {
+        if (soulBindable != null && soulBindable.canBeBound() && soulBindable.shouldDisplayTooltip()) {
             var soul = soulBindable.boundSoul();
 
             if (soul.hasEntity()) {
