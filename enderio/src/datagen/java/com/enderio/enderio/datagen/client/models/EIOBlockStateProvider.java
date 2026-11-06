@@ -329,6 +329,9 @@ public class EIOBlockStateProvider extends ModelProvider {
         // VAT
         machineBlock(blockModels, EIOBlocks.VAT.get());
 
+        // Killer Joe
+        machineBlock(blockModels, EIOBlocks.KILLER_JOE.get());
+
         // Block Detector
         directionalAndPowered(blockModels, EIOBlocks.BLOCK_DETECTOR.get());
 

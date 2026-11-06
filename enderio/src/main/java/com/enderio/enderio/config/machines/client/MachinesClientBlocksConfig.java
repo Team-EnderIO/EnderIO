@@ -15,6 +15,7 @@ public class MachinesClientBlocksConfig {
     public final ModConfigSpec.ConfigValue<String> ATTRACTOR_RANGE_COLOR;
     public final ModConfigSpec.ConfigValue<String> WIRELESS_CHARGER_RANGE_COLOR;
     public final ModConfigSpec.ConfigValue<String> FARM_RANGE_COLOR;
+    public final ModConfigSpec.ConfigValue<String> KILLER_JOE_RANGE_COLOR;
 
     public MachinesClientBlocksConfig(ModConfigSpec.Builder builder) {
         builder.push("blocks");
@@ -40,6 +41,8 @@ public class MachinesClientBlocksConfig {
                 .define("wirelessChargerRangeColor", "C7CC2A");
         FARM_RANGE_COLOR = builder.comment("The color of the range box of the Farming Station")
             .define("farmingStationRangeColor", "00FF00");
+        KILLER_JOE_RANGE_COLOR = builder.comment("The color of the range box of the Killer Joe")
+            .define("killerJoeRangeColor", "8B0000");
         builder.pop();
     }
 }
