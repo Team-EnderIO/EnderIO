@@ -1,6 +1,9 @@
 package com.enderio.enderio.content.armory.items;
 
 import com.enderio.core.client.item.AdvancedTooltipProvider;
+import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgradableItem;
+import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelUpgradeHookType;
+import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelUpgradeHookTypes;
 import com.enderio.enderio.api.armory.upgrades.hooks.tools.CanPerformActionHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.tools.GetDestroySpeedHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.tools.IsCorrectToolForDropsHook;
@@ -16,7 +19,16 @@ import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.ItemAbility;
 
-public class DarkSteelAxeItem extends AxeItem implements AdvancedTooltipProvider, IDarkSteelItem {
+import java.util.Set;
+
+public class DarkSteelAxeItem extends AxeItem implements AdvancedTooltipProvider, IDarkSteelItem, DarkSteelUpgradableItem {
+    private static final Set<DarkSteelUpgradeHookType<?>> AVAILABLE_HOOKS = Set.of(
+        DarkSteelUpgradeHookTypes.CAN_PERFORM_ACTION,
+        DarkSteelUpgradeHookTypes.USE_ON,
+        DarkSteelUpgradeHookTypes.GET_DESTROY_SPEED,
+        DarkSteelUpgradeHookTypes.IS_CORRECT_TOOL_FOR_DROPS
+    );
+
     public DarkSteelAxeItem(Properties properties) {
         super(ArmoryTiers.DARK_STEEL_TIER,
                 properties.attributes(createAttributes(ArmoryTiers.DARK_STEEL_TIER, 5.0F, -3.0F))
@@ -53,5 +65,10 @@ public class DarkSteelAxeItem extends AxeItem implements AdvancedTooltipProvider
     @Override
     public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
         return IsCorrectToolForDropsHook.isCorrectToolForDrops(DarkSteelHelper.getUpgradeContainer(stack), DarkSteelHelper.getHookContext(stack), state);
+    }
+
+    @Override
+    public Set<DarkSteelUpgradeHookType<?>> availableHookTypes() {
+        return AVAILABLE_HOOKS;
     }
 }

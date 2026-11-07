@@ -79,11 +79,14 @@ public sealed abstract class AdditionalToolRulesEffect extends DarkSteelUpgradeE
         }
     }
 
+    private static final List<DarkSteelUpgradeHookType<?>> HOOKS = List.of(DarkSteelUpgradeHookTypes.GET_DESTROY_SPEED,
+        DarkSteelUpgradeHookTypes.IS_CORRECT_TOOL_FOR_DROPS);
+
     protected abstract List<Tool.Rule> getRules(DarkSteelHookContext context);
 
     @Override
     public List<DarkSteelUpgradeHookType<?>> getActiveHooks() {
-        return List.of(DarkSteelUpgradeHookTypes.GET_DESTROY_SPEED, DarkSteelUpgradeHookTypes.IS_CORRECT_TOOL_FOR_DROPS);
+        return HOOKS;
     }
 
     @Override

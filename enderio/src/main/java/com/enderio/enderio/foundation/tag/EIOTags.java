@@ -142,6 +142,8 @@ public class EIOTags {
         // region Armory
 
         public static final TagKey<Item> DARK_STEEL_UPGRADABLE = tag("dark_steel_upgradable");
+        public static final TagKey<Item> DARK_STEEL_UPGRADABLE_TOOLS = tag("dark_steel_upgradable_tools");
+        public static final TagKey<Item> DARK_STEEL_UPGRADABLE_ARMOR = tag("dark_steel_upgradable_armor");
 
         // endregion
 

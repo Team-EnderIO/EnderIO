@@ -21,12 +21,15 @@ public class ShovelBlockTransformationEffect extends DarkSteelUpgradeEffect impl
 
     public static final MapCodec<ShovelBlockTransformationEffect> CODEC = MapCodec.unit(INSTANCE);
 
+    private static final List<DarkSteelUpgradeHookType<?>> HOOKS = List.of(DarkSteelUpgradeHookTypes.CAN_PERFORM_ACTION,
+        DarkSteelUpgradeHookTypes.USE_ON);
+
     private ShovelBlockTransformationEffect() {
     }
 
     @Override
     public List<DarkSteelUpgradeHookType<?>> getActiveHooks() {
-        return List.of(DarkSteelUpgradeHookTypes.CAN_PERFORM_ACTION, DarkSteelUpgradeHookTypes.USE_ON);
+        return HOOKS;
     }
 
     @Override

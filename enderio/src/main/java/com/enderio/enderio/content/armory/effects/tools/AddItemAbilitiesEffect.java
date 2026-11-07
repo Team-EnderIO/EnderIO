@@ -20,6 +20,8 @@ public final class AddItemAbilitiesEffect extends DarkSteelUpgradeEffect impleme
             Codec.list(Codec.string(1, 255), 1, 255).fieldOf("item_abilities").forGetter(AddItemAbilitiesEffect::abilityNames)
         ).apply(inst, AddItemAbilitiesEffect::new));
 
+    private static final List<DarkSteelUpgradeHookType<?>> HOOKS = List.of(DarkSteelUpgradeHookTypes.CAN_PERFORM_ACTION);
+
     private final List<ItemAbility> abilities;
 
     public AddItemAbilitiesEffect(ItemAbility... abilities) {
@@ -40,7 +42,7 @@ public final class AddItemAbilitiesEffect extends DarkSteelUpgradeEffect impleme
 
     @Override
     public List<DarkSteelUpgradeHookType<?>> getActiveHooks() {
-        return List.of(DarkSteelUpgradeHookTypes.CAN_PERFORM_ACTION);
+        return HOOKS;
     }
 
     @Override

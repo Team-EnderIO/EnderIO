@@ -158,31 +158,9 @@ public class EIOCapabilityProviders {
         );
 
         // Energy
-        ICapabilityProvider<ItemStack, Void, DarkSteelEnergyStorage> darkSteelEnergyStorageProvider = (itemStack, ignored) ->
-            new CapacitorBackedDarkSteelEnergyStorage(itemStack, EIODataComponents.ENERGY, new FixedScalable(() -> 1000));
-
         event.registerItem(
             Capabilities.EnergyStorage.ITEM,
-            darkSteelEnergyStorageProvider::getCapability,
-            EIOItems.DARK_STEEL_SWORD,
-            EIOItems.DARK_STEEL_PICKAXE,
-            EIOItems.DARK_STEEL_AXE,
-            EIOItems.DARK_STEEL_HELMET,
-            EIOItems.DARK_STEEL_CHESTPLATE,
-            EIOItems.DARK_STEEL_LEGGINGS,
-            EIOItems.DARK_STEEL_BOOTS,
-            EIOItems.END_STEEL_SWORD,
-            EIOItems.END_STEEL_PICKAXE,
-            EIOItems.END_STEEL_AXE,
-            EIOItems.END_STEEL_HELMET,
-            EIOItems.END_STEEL_CHESTPLATE,
-            EIOItems.END_STEEL_LEGGINGS,
-            EIOItems.END_STEEL_BOOTS
-        );
-
-        event.registerItem(
-            EnderIOCapabilities.DARK_STEEL_ENERGY_STORAGE,
-            darkSteelEnergyStorageProvider,
+            (itemStack, ignored) -> new CapacitorBackedDarkSteelEnergyStorage(itemStack, EIODataComponents.ENERGY, new FixedScalable(() -> 1000)),
             EIOItems.DARK_STEEL_SWORD,
             EIOItems.DARK_STEEL_PICKAXE,
             EIOItems.DARK_STEEL_AXE,

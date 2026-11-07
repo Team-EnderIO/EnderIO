@@ -14,7 +14,6 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.ItemAbilities;
 
@@ -26,7 +25,7 @@ public class DarkSteelUpgrades {
 
         // /give @s enderio:dark_steel_pickaxe[enderio:dark_steel_upgrades={upgrades:["enderio:spoon"]}]
         context.register(key("spoon"), new DarkSteelUpgrade(Component.literal("Spoon"),
-            new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE), false), HolderSet.empty(), List.of(
+            new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_TOOLS), false), HolderSet.empty(), List.of(
                 new AddItemAbilitiesEffect(ItemAbilities.SHOVEL_DIG),
                 new AdditionalToolRulesEffect.MinesAndDrops(BlockTags.MINEABLE_WITH_SHOVEL),
                 ShovelBlockTransformationEffect.INSTANCE

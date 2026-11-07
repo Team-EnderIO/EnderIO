@@ -81,10 +81,17 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
             EIOItems.END_STEEL_HELMET.get(), EIOItems.END_STEEL_CHESTPLATE.get(),
             EIOItems.END_STEEL_LEGGINGS.get(), EIOItems.END_STEEL_BOOTS.get());
 
-        tag(EIOTags.Items.DARK_STEEL_UPGRADABLE).add(
+        tag(EIOTags.Items.DARK_STEEL_UPGRADABLE)
+            .addTag(EIOTags.Items.DARK_STEEL_UPGRADABLE_TOOLS)
+            .addTag(EIOTags.Items.DARK_STEEL_UPGRADABLE_ARMOR);
+
+        tag(EIOTags.Items.DARK_STEEL_UPGRADABLE_TOOLS).add(
             EIOItems.DARK_STEEL_SWORD.get(), EIOItems.DARK_STEEL_PICKAXE.get(),
             EIOItems.DARK_STEEL_AXE.get(), EIOItems.END_STEEL_SWORD.get(),
-            EIOItems.END_STEEL_PICKAXE.get(), EIOItems.END_STEEL_AXE.get(),
+            EIOItems.END_STEEL_PICKAXE.get(), EIOItems.END_STEEL_AXE.get()
+        );
+
+        tag(EIOTags.Items.DARK_STEEL_UPGRADABLE_ARMOR).add(
             EIOItems.DARK_STEEL_HELMET.get(), EIOItems.DARK_STEEL_CHESTPLATE.get(),
             EIOItems.DARK_STEEL_LEGGINGS.get(), EIOItems.DARK_STEEL_BOOTS.get(),
             EIOItems.END_STEEL_HELMET.get(), EIOItems.END_STEEL_CHESTPLATE.get(),
