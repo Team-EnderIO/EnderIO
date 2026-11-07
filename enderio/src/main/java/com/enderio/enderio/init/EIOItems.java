@@ -7,6 +7,8 @@ import com.enderio.enderio.api.armory.WeaponBeheading;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.content.armory.ArmoryTiers;
+import com.enderio.enderio.content.armory.items.DarkSteelAxeItem;
+import com.enderio.enderio.content.armory.items.DarkSteelPickaxeItem;
 import com.enderio.enderio.content.armory.items.DarkSteelSwordItem;
 import com.enderio.enderio.content.broken_spawner.BrokenSpawnerItem;
 import com.enderio.enderio.content.capacitors.CapacitorItem;
@@ -236,10 +238,8 @@ public class EIOItems {
 
     public static final DeferredItem<DarkSteelSwordItem> DARK_STEEL_SWORD = ITEMS.registerItem("dark_steel_sword", DarkSteelSwordItem::new,
         new Item.Properties().durability(2000).component(EnderIODataComponents.WEAPON_BEHEADING, new WeaponBeheading(0.07f)));
-    public static final DeferredItem<PickaxeItem> DARK_STEEL_PICKAXE = ITEMS.registerItem("dark_steel_pickaxe",
-        props -> new PickaxeItem(ArmoryTiers.DARK_STEEL_TIER, props.attributes(PickaxeItem.createAttributes(ArmoryTiers.DARK_STEEL_TIER, 1.0f, -2.8f))));
-    public static final DeferredItem<AxeItem> DARK_STEEL_AXE = ITEMS.registerItem("dark_steel_axe",
-        props -> new AxeItem(ArmoryTiers.DARK_STEEL_TIER, props.attributes(AxeItem.createAttributes(ArmoryTiers.DARK_STEEL_TIER, 5.0f, -3.0f))));
+    public static final DeferredItem<DarkSteelPickaxeItem> DARK_STEEL_PICKAXE = ITEMS.registerItem("dark_steel_pickaxe", DarkSteelPickaxeItem::new);
+    public static final DeferredItem<DarkSteelAxeItem> DARK_STEEL_AXE = ITEMS.registerItem("dark_steel_axe", DarkSteelAxeItem::new);
 
     private static final int DARK_STEEL_DURABILITY_MULTIPLIER = 35;
     public static final DeferredItem<ArmorItem> DARK_STEEL_HELMET = armor("dark_steel_helmet", EIOArmorMaterials.DARK_STEEL,

@@ -1,25 +1,21 @@
 package com.enderio.enderio.content.armory.energy;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
+import com.enderio.enderio.api.armory.DarkSteelEnergyStorage;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.capacitor.CapacitorScalable;
-import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.common.MutableDataComponentHolder;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 
-public final class DarkSteelEnergyStorage implements IEnergyStorage {
-    private final MutableDataComponentHolder parent;
-    private final DataComponentType<ItemStack> capacitorComponent;
-    private final DataComponentType<Integer> energyComponent;
-    private final CapacitorScalable capacityScalable;
+public class CapacitorBackedEnergyStorage implements IEnergyStorage {
+    protected final ItemStack parent;
+    protected final DataComponentType<Integer> energyComponent;
+    protected final CapacitorScalable capacityScalable;
 
-    public DarkSteelEnergyStorage(MutableDataComponentHolder parent, DataComponentType<ItemStack> capacitorComponent,
-        DataComponentType<Integer> energyComponent, CapacitorScalable capacityScalable) {
+    public CapacitorBackedEnergyStorage(ItemStack parent, DataComponentType<Integer> energyComponent, CapacitorScalable capacityScalable) {
         this.parent = parent;
-        this.capacitorComponent = capacitorComponent;
         this.energyComponent = energyComponent;
         this.capacityScalable = capacityScalable;
     }
@@ -66,24 +62,16 @@ public final class DarkSteelEnergyStorage implements IEnergyStorage {
         return !getCapacitorData().equals(CapacitorData.NONE);
     }
 
-    private void setEnergy(int energy) {
+    protected void setEnergy(int energy) {
         parent.set(energyComponent, energy);
     }
 
-    private CapacitorData getCapacitorData() {
-        var capacitorStack = parent.get(capacitorComponent);
-        if (capacitorStack == null) {
+    protected CapacitorData getCapacitorData() {
+        var capacitorSocket = parent.getCapability(EnderIOCapabilities.CAPACITOR_SOCKET);
+        if (capacitorSocket == null) {
             return CapacitorData.NONE;
         }
 
-        var capacitorExtension = capacitorStack.getCapability(EnderIOCapabilities.CAPACITOR_EXTENSION);
-        if (capacitorExtension != null) {
-            var data = capacitorExtension.getCapacitorData(capacitorStack, null);
-            if (data != null) {
-                return data;
-            }
-        }
-
-        return capacitorStack.getOrDefault(EIODataComponents.CAPACITOR_DATA, CapacitorData.NONE);
+        return capacitorSocket.getCapacitorData();
     }
 }

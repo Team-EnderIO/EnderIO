@@ -2,6 +2,7 @@ package com.enderio.enderio.content.armory;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgrade;
+import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgradeContainer;
 import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelUpgradeHookType;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -14,7 +15,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
-public record ItemDarkSteelUpgrades(List<Holder<DarkSteelUpgrade>> upgrades) {
+public record ItemDarkSteelUpgrades(List<Holder<DarkSteelUpgrade>> upgrades) implements DarkSteelUpgradeContainer {
+
+    public static final ItemDarkSteelUpgrades EMPTY = new ItemDarkSteelUpgrades(List.of());
 
     public static final Codec<ItemDarkSteelUpgrades> CODEC = RecordCodecBuilder.<ItemDarkSteelUpgrades>create(
         inst -> inst.group(

@@ -1,0 +1,51 @@
+package com.enderio.enderio.content.armory.effects.tools;
+
+import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgradeEffect;
+import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelHookContext;
+import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelUpgradeHookType;
+import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelUpgradeHookTypes;
+import com.enderio.enderio.api.armory.upgrades.hooks.tools.CanPerformActionHook;
+import com.enderio.enderio.api.armory.upgrades.hooks.tools.UseOnHook;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.item.Items;
+import net.minecraft.world.item.context.UseOnContext;
+import net.neoforged.neoforge.common.ItemAbilities;
+import net.neoforged.neoforge.common.ItemAbility;
+
+import java.util.List;
+
+public class ShovelBlockTransformationEffect extends DarkSteelUpgradeEffect implements CanPerformActionHook, UseOnHook {
+
+    public static final ShovelBlockTransformationEffect INSTANCE = new ShovelBlockTransformationEffect();
+
+    public static final MapCodec<ShovelBlockTransformationEffect> CODEC = MapCodec.unit(INSTANCE);
+
+    private ShovelBlockTransformationEffect() {
+    }
+
+    @Override
+    public List<DarkSteelUpgradeHookType<?>> getActiveHooks() {
+        return List.of(DarkSteelUpgradeHookTypes.CAN_PERFORM_ACTION, DarkSteelUpgradeHookTypes.USE_ON);
+    }
+
+    @Override
+    protected MapCodec<? extends DarkSteelUpgradeEffect> codec() {
+        return CODEC;
+    }
+
+    @Override
+    public boolean canPerformAction(DarkSteelHookContext context, ItemAbility itemAbility) {
+        return itemAbility == ItemAbilities.SHOVEL_FLATTEN || itemAbility == ItemAbilities.SHOVEL_DOUSE;
+    }
+
+    @Override
+    public InteractionResult useOn(DarkSteelHookContext context, UseOnContext useOnContext, InteractionResult currentResult) {
+        if (currentResult != InteractionResult.PASS) {
+            return currentResult;
+        }
+
+        // TODO: Reimplement directly for nice-ness
+        return Items.DIAMOND_PICKAXE.useOn(useOnContext);
+    }
+}

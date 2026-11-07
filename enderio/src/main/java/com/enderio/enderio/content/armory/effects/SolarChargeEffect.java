@@ -1,6 +1,7 @@
 package com.enderio.enderio.content.armory.effects;
 
 import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgradeEffect;
+import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelHookContext;
 import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelUpgradeHookType;
 import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelUpgradeHookTypes;
 import com.enderio.enderio.api.armory.upgrades.hooks.general.DarkSteelInventoryTickHook;
@@ -25,7 +26,7 @@ public class SolarChargeEffect extends DarkSteelUpgradeEffect implements DarkSte
     }
 
     @Override
-    public void onInventoryTick(Level level, Entity entity) {
+    public void onInventoryTick(DarkSteelHookContext context, Level level, Entity entity) {
         // Do solar charging things lol
         level.random.nextBoolean();
     }

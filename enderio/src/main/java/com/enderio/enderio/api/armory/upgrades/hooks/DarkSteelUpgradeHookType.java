@@ -8,5 +8,5 @@ import org.jetbrains.annotations.ApiStatus;
  */
 @SuppressWarnings("unused")
 @ApiStatus.Experimental
-public record DarkSteelUpgradeHookType<T>() {
+public final class DarkSteelUpgradeHookType<T> {
 }

@@ -35,10 +35,11 @@ public record DarkSteelUpgrade(Component description, UpgradeDefinition definiti
     public static final StreamCodec<RegistryFriendlyByteBuf, Holder<DarkSteelUpgrade>> STREAM_CODEC = ByteBufCodecs
         .holderRegistry(EnderIORegistries.Keys.DARK_STEEL_UPGRADE);
 
-    public record UpgradeDefinition(HolderSet<Item> supportedItems) {
+    public record UpgradeDefinition(HolderSet<Item> supportedItems, boolean requiresSocketedCapacitor) {
         public static final MapCodec<DarkSteelUpgrade.UpgradeDefinition> CODEC = RecordCodecBuilder.mapCodec(
             inst -> inst.group(
-                RegistryCodecs.homogeneousList(Registries.ITEM).fieldOf("supported_items").forGetter(DarkSteelUpgrade.UpgradeDefinition::supportedItems)
+                RegistryCodecs.homogeneousList(Registries.ITEM).fieldOf("supported_items").forGetter(DarkSteelUpgrade.UpgradeDefinition::supportedItems),
+                Codec.BOOL.fieldOf("requires_socketed_capacitor").forGetter(DarkSteelUpgrade.UpgradeDefinition::requiresSocketedCapacitor)
             ).apply(inst, DarkSteelUpgrade.UpgradeDefinition::new)
         );
     }
