@@ -1,89 +1,93 @@
 package com.enderio.enderio.content.filters.redstone;
 
-import com.enderio.enderio.api.EnderIOCapabilities;
-import com.enderio.enderio.foundation.network.packets.ServerboundCountFilterPacket;
+import com.enderio.core.common.network.menu.EnumSyncSlot;
+import com.enderio.core.common.network.menu.IntSyncSlot;
+import com.enderio.enderio.content.filters.AbstractFilterMenu;
+import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOMenus;
+import net.minecraft.core.component.DataComponentType;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.client.network.ClientPacketDistributor;
 import org.jspecify.annotations.Nullable;
 
-public class RedstoneCountFilterMenu extends AbstractContainerMenu {
+public class RedstoneCountFilterMenu extends AbstractFilterMenu<RedstoneCountFilter.Component> {
 
-    private final ItemStack stack;
-    private final RedstoneCountFilter filter;
+    private final EnumSyncSlot<DyeColor> channel;
+    private final IntSyncSlot maxCount;
 
-    public RedstoneCountFilterMenu(@Nullable MenuType<?> menuType, int containerId, Inventory inventory, ItemStack stack) {
-        super(menuType, containerId);
-        this.stack = stack;
-        var resourceFilter = stack.getCapability(EnderIOCapabilities.REDSTONE_INSERT_FILTER);
-        if (!(resourceFilter instanceof RedstoneCountFilter filter)) {
-            throw new IllegalArgumentException();
+    public RedstoneCountFilterMenu(@Nullable MenuType<?> menuType, int containerId, Inventory inventory, FilterAccess filterAccess) {
+        super(menuType, containerId, inventory, filterAccess);
+
+        channel = addUpdatableSyncSlot(EnumSyncSlot.simple(DyeColor.class, () -> getFilter().channel1(), value -> modifyFilter(filter ->
+                new RedstoneCountFilter.Component(value, filter.maxCount(), filter.count(), filter.deactivated()))));
+        maxCount = addUpdatableSyncSlot(IntSyncSlot.simple(() -> getFilter().maxCount(), value -> {
+            if (value >= 0) {
+                modifyFilter(filter -> new RedstoneCountFilter.Component(filter.channel1(), value, filter.count(), filter.deactivated()));
+            }
+        }));
+
+        addPlayerInventorySlots(14, 119);
+    }
+
+    private RedstoneCountFilterMenu(int containerId, Inventory inventory, ItemStack stack) {
+        super(EIOMenus.REDSTONE_COUNT_FILTER.get(), containerId, inventory);
+        var initial = stack.getOrDefault(EIODataComponents.REDSTONE_COUNT_FILTER, RedstoneCountFilter.INSTANCE);
+
+        channel = addUpdatableSyncSlot(EnumSyncSlot.standalone(DyeColor.class));
+        channel.set(initial.channel1());
+        channel.detectChanges();
+        maxCount = addUpdatableSyncSlot(IntSyncSlot.standalone());
+        maxCount.set(initial.maxCount());
+        maxCount.detectChanges();
+
+        addPlayerInventorySlots(14, 119);
+    }
+
+    public static RedstoneCountFilterMenu factory(int containerId, Inventory inventory, RegistryFriendlyByteBuf buffer) {
+        return new RedstoneCountFilterMenu(containerId, inventory, ItemStack.STREAM_CODEC.decode(buffer));
+    }
+
+    @Override
+    protected DataComponentType<RedstoneCountFilter.Component> dataComponentType() {
+        return EIODataComponents.REDSTONE_COUNT_FILTER;
+    }
+
+    @Override
+    protected RedstoneCountFilter.Component defaultFilter() {
+        return RedstoneCountFilter.INSTANCE;
+    }
+
+    public DyeColor getChannel() {
+        return channel.get();
+    }
+
+    public void setChannel(DyeColor value) {
+        channel.set(value);
+        updateSlot(channel);
+    }
+
+    public int getMaxCount() {
+        return maxCount.get();
+    }
+
+    public void setCount(String input) {
+        try {
+            int value = Integer.parseInt(input);
+            if (value >= 0) {
+                maxCount.set(value);
+                updateSlot(maxCount);
+            }
+        } catch (NumberFormatException ignored) {
+            // Leave the filter unchanged until a valid number is confirmed.
         }
-        this.filter = filter;
-        addInventorySlots(14,119, inventory);
     }
-
-    public RedstoneCountFilterMenu(int containerId, Inventory inventory, ItemStack stack) {
-        this(EIOMenus.REDSTONE_COUNT_FILTER.get(), containerId, inventory, stack);
-    }
-
-    public static RedstoneCountFilterMenu factory(int i, Inventory inventory, RegistryFriendlyByteBuf registryFriendlyByteBuf) {
-        return new RedstoneCountFilterMenu(i, inventory, inventory.player.getMainHandItem());
-    }
-
 
     @Override
     public ItemStack quickMoveStack(Player player, int index) {
         return ItemStack.EMPTY;
     }
-
-    @Override
-    public boolean stillValid(Player player) {
-        return player.getItemInHand(InteractionHand.MAIN_HAND).equals(stack);
-    }
-
-    public RedstoneCountFilter getFilter() {
-        return filter;
-    }
-
-    public void setCount(String maxCount) {
-        try {
-            filter.setMaxCount(Integer.parseInt(maxCount));
-            ClientPacketDistributor.sendToServer(new ServerboundCountFilterPacket(filter.getChannel(), filter.getMaxCount(), filter.getCount(), filter.isDeactivated()));
-        } catch (Exception e) {
-
-        }
-    }
-
-    public void setChannel(DyeColor channel) {
-        filter.setChannel(channel);
-        ClientPacketDistributor.sendToServer(new ServerboundCountFilterPacket(filter.getChannel(), filter.getMaxCount(), filter.getCount(), filter.isDeactivated()));
-    }
-
-    public void addInventorySlots(int xPos, int yPos, Inventory inventory) {
-
-        // Hotbar
-        for (int x = 0; x < 9; x++) {
-            Slot ref = new Slot(inventory, x, xPos + x * 18, yPos + 58);
-            this.addSlot(ref);
-        }
-
-        // Inventory
-        for (int y = 0; y < 3; y++) {
-            for (int x = 0; x < 9; x++) {
-                Slot ref = new Slot(inventory, x + y * 9 + 9, xPos + x * 18, yPos + y * 18);
-                this.addSlot(ref);
-            }
-        }
-
-    }
-
 }
