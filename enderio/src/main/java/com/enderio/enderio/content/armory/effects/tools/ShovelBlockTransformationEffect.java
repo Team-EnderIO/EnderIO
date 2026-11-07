@@ -46,6 +46,6 @@ public class ShovelBlockTransformationEffect extends DarkSteelUpgradeEffect impl
         }
 
         // TODO: Reimplement directly for nice-ness
-        return Items.DIAMOND_PICKAXE.useOn(useOnContext);
+        return Items.DIAMOND_SHOVEL.useOn(useOnContext);
     }
 }
