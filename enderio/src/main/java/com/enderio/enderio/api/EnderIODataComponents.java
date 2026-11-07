@@ -1,6 +1,7 @@
 package com.enderio.enderio.api;
 
 import com.enderio.enderio.api.armory.WeaponBeheading;
+import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgrade;
 import com.enderio.enderio.api.conduits.Conduit;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
@@ -19,6 +20,9 @@ public class EnderIODataComponents {
      */
     public static final DataComponentType<Holder<Conduit<?, ?>>> CONDUIT = create(b ->
         b.persistent(Conduit.CODEC).networkSynchronized(Conduit.STREAM_CODEC));
+
+    public static final DataComponentType<Holder<DarkSteelUpgrade>> DARK_STEEL_UPGRADE = create(b ->
+        b.persistent(DarkSteelUpgrade.CODEC).networkSynchronized(DarkSteelUpgrade.STREAM_CODEC));
 
     public static final DataComponentType<WeaponBeheading> WEAPON_BEHEADING = create(b ->
         b.persistent(WeaponBeheading.CODEC));

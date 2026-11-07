@@ -29,6 +29,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -129,6 +130,9 @@ public class EIODataComponents {
     // endregion
 
     // region Tools
+
+    public static final DataComponentType<ItemStack> SOCKETED_CAPACITOR = register("socketed_capacitor",
+        builder -> builder.persistent(ItemStack.OPTIONAL_CODEC).networkSynchronized(ItemStack.OPTIONAL_STREAM_CODEC));
 
     public static final DataComponentType<ItemDarkSteelUpgrades> DARK_STEEL_UPGRADES = register("dark_steel_upgrades",
         builder -> builder.persistent(ItemDarkSteelUpgrades.CODEC).networkSynchronized(ItemDarkSteelUpgrades.STREAM_CODEC));

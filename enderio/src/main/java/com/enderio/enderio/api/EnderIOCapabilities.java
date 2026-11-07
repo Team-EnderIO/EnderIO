@@ -1,5 +1,6 @@
 package com.enderio.enderio.api;
 
+import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgradeContainer;
 import com.enderio.enderio.api.capacitor.ICapacitorExtension;
 import com.enderio.enderio.api.conduits.facade.ConduitFacadeProvider;
 import com.enderio.enderio.api.filter.FilterMenuProvider;
@@ -55,4 +56,7 @@ public class EnderIOCapabilities {
 
     public static final ItemCapability<RedstoneInputFilter, Void> REDSTONE_EXTRACT_FILTER = ItemCapability
         .createVoid(EnderIOAPI.rl("redstone_extract_filter"), RedstoneInputFilter.class);
+
+    public static final ItemCapability<DarkSteelUpgradeContainer, Void> DARK_STEEL_UPGRADE_CONTAINER = ItemCapability
+        .createVoid(EnderIOAPI.rl("dark_steel_upgrade_container"), DarkSteelUpgradeContainer.class);
 }
