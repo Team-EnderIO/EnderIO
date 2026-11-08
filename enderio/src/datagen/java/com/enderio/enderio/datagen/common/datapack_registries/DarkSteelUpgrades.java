@@ -7,6 +7,8 @@ import com.enderio.enderio.api.armory.upgrades.costs.EffectDurabilityCost;
 import com.enderio.enderio.api.armory.upgrades.costs.FreeCost;
 import com.enderio.enderio.content.armory.effects.AttributeModifierEffect;
 import com.enderio.enderio.content.armory.effects.armor.ElytraEffect;
+import com.enderio.enderio.content.armory.effects.armor.PreventsFreezingEffect;
+import com.enderio.enderio.content.armory.effects.armor.WalkOnPowderedSnowEffect;
 import com.enderio.enderio.content.armory.effects.tools.AddItemAbilitiesEffect;
 import com.enderio.enderio.content.armory.effects.tools.AdditionalToolRulesEffect;
 import com.enderio.enderio.content.armory.effects.tools.AreaMiningEffect;
@@ -72,10 +74,10 @@ public class DarkSteelUpgrades {
             new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_TOOLS), false), HolderSet.empty(), List.of(
                 new TravelEffect(true, new EffectDurabilityCost(5))
         )));
-        
+
         context.register(key("explosive"), new DarkSteelUpgrade(Component.literal("Explosive"), Component.literal("Blows up the stone and dirt around the block you mine. Crouch to mine a single block"),
             new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_TOOLS), false), HolderSet.empty(), List.of(
-                new AreaMiningEffect(Optional.of(blocks.getOrThrow(EIOTags.Blocks.AREA_MINING_TARGETS)), FreeCost.INSTANCE, true, true),
+                new AreaMiningEffect(Optional.of(blocks.getOrThrow(EIOTags.Blocks.AREA_MINING_TARGETS)), FreeCost.INSTANCE, true, true, true, true),
                 new AttributeModifierEffect(EIOAttributes.MINING_AREA_RADIUS,
                     new AttributeModifier(EnderIO.rl("dark_steel_upgrade/explosive"), 1, AttributeModifier.Operation.ADD_VALUE))
         )));
@@ -86,10 +88,20 @@ public class DarkSteelUpgrades {
                     new AttributeModifier(EnderIO.rl("dark_steel_upgrade/explosive_depth"), 2, AttributeModifier.Operation.ADD_VALUE))
         )));
 
-        context.register(key("explosive_carpet"), new DarkSteelUpgrade(Component.literal("Carpeting"), Component.literal("Flatens the explosive force into a carpet."),
+        context.register(key("explosive_carpet"), new DarkSteelUpgrade(Component.literal("Carpeting"), Component.literal("Flattens the explosive force into a carpet."),
             new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_TOOLS), false), HolderSet.empty(), List.of(
                 new AttributeModifierEffect(EIOAttributes.MINING_AREA_RADIUS,
                     new AttributeModifier(EnderIO.rl("dark_steel_upgrade/explosive_carpet"), 1, AttributeModifier.Operation.ADD_VALUE))
+        )));
+
+        context.register(key("stable_footing"), new DarkSteelUpgrade(Component.literal("Stable Footing"), Component.literal("Prevents the wearer from falling through powdered snow."),
+            new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_BOOTS), false), HolderSet.empty(), List.of(
+                WalkOnPowderedSnowEffect.INSTANCE
+        )));
+
+        context.register(key("insulation"), new DarkSteelUpgrade(Component.literal("Insulation"), Component.literal("Prevents the wearer from falling freezing in powdered snow."),
+            new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_ARMOR), false), HolderSet.empty(), List.of(
+                PreventsFreezingEffect.INSTANCE
         )));
     }
 

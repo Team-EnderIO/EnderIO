@@ -1,6 +1,8 @@
 package com.enderio.enderio.api.armory.upgrades.hooks;
 
+import com.enderio.enderio.api.armory.upgrades.hooks.armor.CanFreezeHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.armor.ElytraFlyHook;
+import com.enderio.enderio.api.armory.upgrades.hooks.armor.WalkOnPowderedSnowHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.general.DarkSteelInventoryTickHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.general.ModifyAttributesHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.tools.CanPerformActionHook;
@@ -20,4 +22,6 @@ public class DarkSteelUpgradeHookTypes {
     public static final DarkSteelUpgradeHookType<IsCorrectToolForDropsHook> IS_CORRECT_TOOL_FOR_DROPS = new DarkSteelUpgradeHookType<>();
     public static final DarkSteelUpgradeHookType<MineBlockHook> MINE_BLOCK = new DarkSteelUpgradeHookType<>();
     public static final DarkSteelUpgradeHookType<ElytraFlyHook> ELYTRA_FLY = new DarkSteelUpgradeHookType<>();
+    public static final DarkSteelUpgradeHookType<CanFreezeHook> CAN_FREEZE = new DarkSteelUpgradeHookType<>();
+    public static final DarkSteelUpgradeHookType<WalkOnPowderedSnowHook> WALK_ON_POWDERED_SNOW = new DarkSteelUpgradeHookType<>();
 }

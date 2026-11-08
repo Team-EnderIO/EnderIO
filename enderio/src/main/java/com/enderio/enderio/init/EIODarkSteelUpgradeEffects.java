@@ -9,6 +9,8 @@ import com.enderio.enderio.content.armory.effects.tools.AreaMiningEffect;
 import com.enderio.enderio.content.armory.effects.AttributeModifierEffect;
 import com.enderio.enderio.content.armory.effects.SolarChargeEffect;
 import com.enderio.enderio.content.armory.effects.armor.ElytraEffect;
+import com.enderio.enderio.content.armory.effects.armor.PreventsFreezingEffect;
+import com.enderio.enderio.content.armory.effects.armor.WalkOnPowderedSnowEffect;
 import com.enderio.enderio.content.armory.effects.tools.HoeBlockTransformationEffect;
 import com.enderio.enderio.content.armory.effects.tools.ImmediatePickupEffect;
 import com.enderio.enderio.content.armory.effects.tools.ShovelBlockTransformationEffect;
@@ -31,6 +33,8 @@ public class EIODarkSteelUpgradeEffects {
         DARK_STEEL_UPGRADE_EFFECTS.register("hoe_block_transformation", () -> HoeBlockTransformationEffect.CODEC);
         DARK_STEEL_UPGRADE_EFFECTS.register("immediate_pickup", () -> ImmediatePickupEffect.CODEC);
         DARK_STEEL_UPGRADE_EFFECTS.register("elytra", () -> ElytraEffect.CODEC);
+        DARK_STEEL_UPGRADE_EFFECTS.register("prevents_freezing", () -> PreventsFreezingEffect.CODEC);
+        DARK_STEEL_UPGRADE_EFFECTS.register("walk_on_powdered_snow", () -> WalkOnPowderedSnowEffect.CODEC);
         DARK_STEEL_UPGRADE_EFFECTS.register("travel", () -> TravelEffect.CODEC);
         DARK_STEEL_UPGRADE_EFFECTS.register("area_mining", () -> AreaMiningEffect.CODEC);
 
