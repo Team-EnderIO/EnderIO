@@ -12,6 +12,7 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 
 import java.util.Collection;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,7 +37,8 @@ public record ItemDarkSteelUpgrades(List<Holder<DarkSteelUpgrade>> upgrades) imp
             .flatMap(upgradeHolder -> upgradeHolder.value().effects().stream())
             .filter(effect -> effect.getActiveHooks().contains(type))
             .map(effect -> (T)effect)
-            .collect(Collectors.toSet());
+            // Ordered (upgrade application order) so hooks that pick the first match behave predictably.
+            .collect(Collectors.toCollection(LinkedHashSet::new));
     }
 
     /**
