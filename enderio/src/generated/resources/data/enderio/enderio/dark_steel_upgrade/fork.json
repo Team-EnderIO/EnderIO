@@ -1,5 +1,5 @@
 {
-  "description": "Fork",
+  "description": "Who needs a hoe when you have a fork...",
   "effects": [
     {
       "type": "enderio:add_item_abilities",
@@ -15,6 +15,7 @@
       "type": "enderio:hoe_block_transformation"
     }
   ],
+  "name": "Fork",
   "requires_socketed_capacitor": false,
   "supported_items": "#enderio:dark_steel_upgradable_tools"
 }

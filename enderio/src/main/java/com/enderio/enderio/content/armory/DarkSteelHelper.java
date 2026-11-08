@@ -5,6 +5,9 @@ import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgradeContainer;
 import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelHookContext;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.init.EIODataComponents;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
+import net.minecraft.world.item.Equipable;
 import net.minecraft.world.item.ItemStack;
 
 public class DarkSteelHelper {

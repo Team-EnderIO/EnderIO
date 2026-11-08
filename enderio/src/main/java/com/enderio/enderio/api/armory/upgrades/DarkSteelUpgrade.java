@@ -18,9 +18,10 @@ import net.minecraft.world.item.Item;
 
 import java.util.List;
 
-public record DarkSteelUpgrade(Component description, UpgradeDefinition definition, HolderSet<DarkSteelUpgrade> exclusiveSet, List<DarkSteelUpgradeEffect> effects) {
+public record DarkSteelUpgrade(Component name, Component description, UpgradeDefinition definition, HolderSet<DarkSteelUpgrade> exclusiveSet, List<DarkSteelUpgradeEffect> effects) {
     public static final Codec<DarkSteelUpgrade> DIRECT_CODEC = RecordCodecBuilder.create(
         inst -> inst.group(
+            ComponentSerialization.CODEC.fieldOf("name").forGetter(DarkSteelUpgrade::name),
             ComponentSerialization.CODEC.fieldOf("description").forGetter(DarkSteelUpgrade::description),
             DarkSteelUpgrade.UpgradeDefinition.CODEC.forGetter(DarkSteelUpgrade::definition),
             RegistryCodecs.homogeneousList(EnderIORegistries.Keys.DARK_STEEL_UPGRADE)

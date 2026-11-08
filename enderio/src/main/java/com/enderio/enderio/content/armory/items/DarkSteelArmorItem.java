@@ -15,7 +15,12 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import java.util.Set;
 
 public class DarkSteelArmorItem extends ArmorItem implements DarkSteelUpgradableItem {
+    private static final Set<DarkSteelUpgradeHookType<?>> ARMOR_HOOKS = Set.of(
+        DarkSteelUpgradeHookTypes.MODIFY_ATTRIBUTES
+    );
+
     private static final Set<DarkSteelUpgradeHookType<?>> CHESTPLATE_HOOKS = Set.of(
+        DarkSteelUpgradeHookTypes.MODIFY_ATTRIBUTES,
         DarkSteelUpgradeHookTypes.ELYTRA_FLY
     );
 
@@ -26,7 +31,7 @@ public class DarkSteelArmorItem extends ArmorItem implements DarkSteelUpgradable
     @Override
     public Set<DarkSteelUpgradeHookType<?>> availableHookTypes() {
         // Vanilla only checks the chest slot for elytra flight.
-        return getType() == Type.CHESTPLATE ? CHESTPLATE_HOOKS : Set.of();
+        return getType() == Type.CHESTPLATE ? CHESTPLATE_HOOKS : ARMOR_HOOKS;
     }
 
     @Override

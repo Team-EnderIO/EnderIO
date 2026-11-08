@@ -26,7 +26,8 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
         DarkSteelUpgradeHookTypes.CAN_PERFORM_ACTION,
         DarkSteelUpgradeHookTypes.USE_ON,
         DarkSteelUpgradeHookTypes.GET_DESTROY_SPEED,
-        DarkSteelUpgradeHookTypes.IS_CORRECT_TOOL_FOR_DROPS
+        DarkSteelUpgradeHookTypes.IS_CORRECT_TOOL_FOR_DROPS,
+        DarkSteelUpgradeHookTypes.MODIFY_ATTRIBUTES
     );
 
     public DarkSteelSwordItem(Tier tier, int attackDamage, float attackSpeed, Properties properties) {

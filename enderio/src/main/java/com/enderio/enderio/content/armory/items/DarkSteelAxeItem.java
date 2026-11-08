@@ -26,7 +26,8 @@ public class DarkSteelAxeItem extends AxeItem implements AdvancedTooltipProvider
         DarkSteelUpgradeHookTypes.CAN_PERFORM_ACTION,
         DarkSteelUpgradeHookTypes.USE_ON,
         DarkSteelUpgradeHookTypes.GET_DESTROY_SPEED,
-        DarkSteelUpgradeHookTypes.IS_CORRECT_TOOL_FOR_DROPS
+        DarkSteelUpgradeHookTypes.IS_CORRECT_TOOL_FOR_DROPS,
+        DarkSteelUpgradeHookTypes.MODIFY_ATTRIBUTES
     );
 
     public DarkSteelAxeItem(Tier tier, float attackDamage, float attackSpeed, Properties properties) {
