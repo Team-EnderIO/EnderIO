@@ -184,6 +184,9 @@ public class EIOLanguageProvider extends LanguageProvider {
     private void addArmoryLang() {
         add(ArmoryLang.ENDER_HEAD_DROP_CHANCE, "%s%% chance to drop a mob head");
         add(ArmoryLang.DURABILITY_AMOUNT, "Durability %s");
+        add(ArmoryLang.SOCKETED_CAPACITOR, "Socketed capacitor:");
+        add(ArmoryLang.UPGRADE_ENTRY, "- %s");
+        add(ArmoryLang.UPGRADE_DESCRIPTION, "   - %s");
     }
 
     private void addConduitDescriptions() {
@@ -729,6 +732,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOCommonLang.FLUID_TANK_TOOLTIP, "%d/%d mb of %s"); // [amount]/[capacity] mb of [FluidName]
 
         add(EIOCommonLang.ENERGY_AMOUNT, "%s \u00B5I");
+        add(EIOCommonLang.ENERGY_CAPACITY, "Capacity: %s");
 
         add(EIOCommonLang.VISIBLE, "Visible");
         add(EIOCommonLang.NOT_VISIBLE, "Hidden");

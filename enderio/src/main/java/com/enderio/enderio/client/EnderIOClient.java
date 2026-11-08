@@ -1,5 +1,9 @@
 package com.enderio.enderio.client;
 
+import com.enderio.enderio.client.content.armory.ClientSocketedCapacitorTooltip;
+import com.enderio.enderio.client.content.armory.SocketedCapacitorTooltip;
+import com.enderio.enderio.client.foundation.tooltip.ClientEnergyBarTooltip;
+import com.enderio.enderio.client.foundation.tooltip.EnergyBarTooltip;
 import com.enderio.core.client.item.FluidBarDecorator;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOAPI;
@@ -196,6 +200,8 @@ public class EnderIOClient {
         event.register(LimitedItemFilter.class, ClientLimitedItemFilterTooltip::new);
         event.register(EnderSoulFilter.class, ClientEnderSoulFilterTooltip::new);
         event.register(EnderFluidFilter.class, ClientEnderFluidFilterTooltip::new);
+        event.register(SocketedCapacitorTooltip.class, ClientSocketedCapacitorTooltip::new);
+        event.register(EnergyBarTooltip.class, ClientEnergyBarTooltip::new);
     }
 
     @SubscribeEvent
