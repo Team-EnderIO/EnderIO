@@ -38,6 +38,7 @@ import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import com.enderio.enderio.content.armory.items.DarkSteelArmorItem;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
 import net.minecraft.world.item.AxeItem;
@@ -236,10 +237,13 @@ public class EIOItems {
 
     // region Armory
 
-    public static final DeferredItem<DarkSteelSwordItem> DARK_STEEL_SWORD = ITEMS.registerItem("dark_steel_sword", DarkSteelSwordItem::new,
+    public static final DeferredItem<DarkSteelSwordItem> DARK_STEEL_SWORD = ITEMS.registerItem("dark_steel_sword",
+        props -> new DarkSteelSwordItem(ArmoryTiers.DARK_STEEL_TIER, 3, -2.4f, props),
         new Item.Properties().durability(2000).component(EnderIODataComponents.WEAPON_BEHEADING, new WeaponBeheading(0.07f)));
-    public static final DeferredItem<DarkSteelPickaxeItem> DARK_STEEL_PICKAXE = ITEMS.registerItem("dark_steel_pickaxe", DarkSteelPickaxeItem::new);
-    public static final DeferredItem<DarkSteelAxeItem> DARK_STEEL_AXE = ITEMS.registerItem("dark_steel_axe", DarkSteelAxeItem::new);
+    public static final DeferredItem<DarkSteelPickaxeItem> DARK_STEEL_PICKAXE = ITEMS.registerItem("dark_steel_pickaxe",
+        props -> new DarkSteelPickaxeItem(ArmoryTiers.DARK_STEEL_TIER, 1.0f, -2.8f, props));
+    public static final DeferredItem<DarkSteelAxeItem> DARK_STEEL_AXE = ITEMS.registerItem("dark_steel_axe",
+        props -> new DarkSteelAxeItem(ArmoryTiers.DARK_STEEL_TIER, 5.0f, -3.0f, props));
 
     private static final int DARK_STEEL_DURABILITY_MULTIPLIER = 35;
     public static final DeferredItem<ArmorItem> DARK_STEEL_HELMET = armor("dark_steel_helmet", EIOArmorMaterials.DARK_STEEL,
@@ -251,13 +255,13 @@ public class EIOItems {
     public static final DeferredItem<ArmorItem> DARK_STEEL_BOOTS = armor("dark_steel_boots", EIOArmorMaterials.DARK_STEEL,
         ArmorItem.Type.BOOTS, DARK_STEEL_DURABILITY_MULTIPLIER);
 
-    public static final DeferredItem<SwordItem> END_STEEL_SWORD = ITEMS.registerItem("end_steel_sword",
-        props -> new SwordItem(ArmoryTiers.END_STEEL_TIER, props.attributes(SwordItem.createAttributes(ArmoryTiers.END_STEEL_TIER, 3, -2.4f))
-            .component(EnderIODataComponents.WEAPON_BEHEADING, new WeaponBeheading(0.07f))));
-    public static final DeferredItem<PickaxeItem> END_STEEL_PICKAXE = ITEMS.registerItem("end_steel_pickaxe",
-        props -> new PickaxeItem(ArmoryTiers.END_STEEL_TIER, props.attributes(PickaxeItem.createAttributes(ArmoryTiers.END_STEEL_TIER, 1.0f, -2.8f))));
-    public static final DeferredItem<AxeItem> END_STEEL_AXE = ITEMS.registerItem("end_steel_axe",
-        props -> new AxeItem(ArmoryTiers.END_STEEL_TIER, props.attributes(AxeItem.createAttributes(ArmoryTiers.END_STEEL_TIER, 3.0f, -3.0f))));
+    public static final DeferredItem<DarkSteelSwordItem> END_STEEL_SWORD = ITEMS.registerItem("end_steel_sword",
+        props -> new DarkSteelSwordItem(ArmoryTiers.END_STEEL_TIER, 3, -2.4f, props),
+        new Item.Properties().component(EnderIODataComponents.WEAPON_BEHEADING, new WeaponBeheading(0.07f)));
+    public static final DeferredItem<DarkSteelPickaxeItem> END_STEEL_PICKAXE = ITEMS.registerItem("end_steel_pickaxe",
+        props -> new DarkSteelPickaxeItem(ArmoryTiers.END_STEEL_TIER, 1.0f, -2.8f, props));
+    public static final DeferredItem<DarkSteelAxeItem> END_STEEL_AXE = ITEMS.registerItem("end_steel_axe",
+        props -> new DarkSteelAxeItem(ArmoryTiers.END_STEEL_TIER, 3.0f, -3.0f, props));
 
     private static final int END_STEEL_DURABILITY_MULTIPLIER = 50;
     public static final DeferredItem<ArmorItem> END_STEEL_HELMET = armor("end_steel_helmet", EIOArmorMaterials.END_STEEL,
@@ -331,7 +335,7 @@ public class EIOItems {
 
     private static DeferredItem<ArmorItem> armor(String name, Holder<ArmorMaterial> material, ArmorItem.Type type,
         int durabilityMultiplier) {
-        return ITEMS.registerItem(name, props -> new ArmorItem(material, type, props),
+        return ITEMS.registerItem(name, props -> new DarkSteelArmorItem(material, type, props),
             new Item.Properties().durability(type.getDurability(durabilityMultiplier)));
     }
 

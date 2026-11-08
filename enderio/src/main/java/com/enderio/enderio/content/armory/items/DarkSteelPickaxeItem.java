@@ -8,12 +8,12 @@ import com.enderio.enderio.api.armory.upgrades.hooks.tools.CanPerformActionHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.tools.GetDestroySpeedHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.tools.IsCorrectToolForDropsHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.tools.UseOnHook;
-import com.enderio.enderio.content.armory.ArmoryTiers;
 import com.enderio.enderio.content.armory.DarkSteelHelper;
 import com.enderio.enderio.content.armory.IDarkSteelItem;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.level.block.state.BlockState;
@@ -29,9 +29,9 @@ public class DarkSteelPickaxeItem extends PickaxeItem implements AdvancedTooltip
         DarkSteelUpgradeHookTypes.IS_CORRECT_TOOL_FOR_DROPS
     );
 
-    public DarkSteelPickaxeItem(Properties properties) {
-        super(ArmoryTiers.DARK_STEEL_TIER,
-                properties.attributes(createAttributes(ArmoryTiers.DARK_STEEL_TIER, 1.0F, -2.8F))
+    public DarkSteelPickaxeItem(Tier tier, float attackDamage, float attackSpeed, Properties properties) {
+        super(tier,
+                properties.attributes(createAttributes(tier, attackDamage, attackSpeed))
                         .component(EIODataComponents.TRAVEL_ITEM, false));
     }
 

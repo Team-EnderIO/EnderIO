@@ -91,11 +91,26 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
             EIOItems.END_STEEL_PICKAXE.get(), EIOItems.END_STEEL_AXE.get()
         );
 
-        tag(EIOTags.Items.DARK_STEEL_UPGRADABLE_ARMOR).add(
-            EIOItems.DARK_STEEL_HELMET.get(), EIOItems.DARK_STEEL_CHESTPLATE.get(),
-            EIOItems.DARK_STEEL_LEGGINGS.get(), EIOItems.DARK_STEEL_BOOTS.get(),
-            EIOItems.END_STEEL_HELMET.get(), EIOItems.END_STEEL_CHESTPLATE.get(),
-            EIOItems.END_STEEL_LEGGINGS.get(), EIOItems.END_STEEL_BOOTS.get()
+        tag(EIOTags.Items.DARK_STEEL_UPGRADABLE_ARMOR)
+            .addTag(EIOTags.Items.DARK_STEEL_UPGRADABLE_HELMETS)
+            .addTag(EIOTags.Items.DARK_STEEL_UPGRADABLE_CHESTPLATES)
+            .addTag(EIOTags.Items.DARK_STEEL_UPGRADABLE_LEGGINGS)
+            .addTag(EIOTags.Items.DARK_STEEL_UPGRADABLE_BOOTS);
+
+        tag(EIOTags.Items.DARK_STEEL_UPGRADABLE_HELMETS).add(
+            EIOItems.DARK_STEEL_HELMET.get(), EIOItems.END_STEEL_HELMET.get()
+        );
+
+        tag(EIOTags.Items.DARK_STEEL_UPGRADABLE_CHESTPLATES).add(
+            EIOItems.DARK_STEEL_CHESTPLATE.get(), EIOItems.END_STEEL_CHESTPLATE.get()
+        );
+
+        tag(EIOTags.Items.DARK_STEEL_UPGRADABLE_LEGGINGS).add(
+            EIOItems.DARK_STEEL_LEGGINGS.get(), EIOItems.END_STEEL_LEGGINGS.get()
+        );
+
+        tag(EIOTags.Items.DARK_STEEL_UPGRADABLE_BOOTS).add(
+            EIOItems.DARK_STEEL_BOOTS.get(), EIOItems.END_STEEL_BOOTS.get()
         );
     }
 

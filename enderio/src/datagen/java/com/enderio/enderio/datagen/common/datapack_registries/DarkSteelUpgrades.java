@@ -4,12 +4,14 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgrade;
 import com.enderio.enderio.api.armory.upgrades.costs.EffectDurabilityCost;
-import com.enderio.enderio.api.armory.upgrades.costs.ExperienceCost;
+import com.enderio.enderio.api.armory.upgrades.costs.FreeCost;
+import com.enderio.enderio.content.armory.effects.armor.ElytraEffect;
 import com.enderio.enderio.content.armory.effects.tools.AddItemAbilitiesEffect;
 import com.enderio.enderio.content.armory.effects.tools.AdditionalToolRulesEffect;
 import com.enderio.enderio.content.armory.effects.tools.ImmediatePickupEffect;
 import com.enderio.enderio.content.armory.effects.tools.ShovelBlockTransformationEffect;
 import com.enderio.enderio.foundation.tag.EIOTags;
+import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -38,6 +40,11 @@ public class DarkSteelUpgrades {
         context.register(key("direct"), new DarkSteelUpgrade(Component.literal("Direct"),
             new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_TOOLS), false), HolderSet.empty(), List.of(
             new ImmediatePickupEffect(new EffectDurabilityCost(ConstantInt.of(1)))
+        )));
+
+        context.register(key("elytra"), new DarkSteelUpgrade(Component.literal("Elytra"),
+            new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_CHESTPLATES), false),
+            HolderSet.empty(), List.of(new ElytraEffect(FreeCost.INSTANCE, 20)
         )));
     }
 

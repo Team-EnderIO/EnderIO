@@ -1,5 +1,6 @@
 package com.enderio.enderio.api.armory.upgrades.hooks;
 
+import com.enderio.enderio.api.armory.upgrades.hooks.armor.ElytraFlyHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.general.DarkSteelInventoryTickHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.tools.CanPerformActionHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.tools.GetDestroySpeedHook;
@@ -12,4 +13,5 @@ public class DarkSteelUpgradeHookTypes {
     public static final DarkSteelUpgradeHookType<UseOnHook> USE_ON = new DarkSteelUpgradeHookType<>();
     public static final DarkSteelUpgradeHookType<GetDestroySpeedHook> GET_DESTROY_SPEED = new DarkSteelUpgradeHookType<>();
     public static final DarkSteelUpgradeHookType<IsCorrectToolForDropsHook> IS_CORRECT_TOOL_FOR_DROPS = new DarkSteelUpgradeHookType<>();
+    public static final DarkSteelUpgradeHookType<ElytraFlyHook> ELYTRA_FLY = new DarkSteelUpgradeHookType<>();
 }

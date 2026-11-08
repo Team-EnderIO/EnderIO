@@ -144,6 +144,10 @@ public class EIOTags {
         public static final TagKey<Item> DARK_STEEL_UPGRADABLE = tag("dark_steel_upgradable");
         public static final TagKey<Item> DARK_STEEL_UPGRADABLE_TOOLS = tag("dark_steel_upgradable_tools");
         public static final TagKey<Item> DARK_STEEL_UPGRADABLE_ARMOR = tag("dark_steel_upgradable_armor");
+        public static final TagKey<Item> DARK_STEEL_UPGRADABLE_HELMETS = tag("dark_steel_upgradable_helmets");
+        public static final TagKey<Item> DARK_STEEL_UPGRADABLE_CHESTPLATES = tag("dark_steel_upgradable_chestplates");
+        public static final TagKey<Item> DARK_STEEL_UPGRADABLE_LEGGINGS = tag("dark_steel_upgradable_leggings");
+        public static final TagKey<Item> DARK_STEEL_UPGRADABLE_BOOTS = tag("dark_steel_upgradable_boots");
 
         // endregion
 

@@ -1,12 +1,8 @@
 {
   "values": [
-    "enderio:dark_steel_helmet",
-    "enderio:dark_steel_chestplate",
-    "enderio:dark_steel_leggings",
-    "enderio:dark_steel_boots",
-    "enderio:end_steel_helmet",
-    "enderio:end_steel_chestplate",
-    "enderio:end_steel_leggings",
-    "enderio:end_steel_boots"
+    "#enderio:dark_steel_upgradable_helmets",
+    "#enderio:dark_steel_upgradable_chestplates",
+    "#enderio:dark_steel_upgradable_leggings",
+    "#enderio:dark_steel_upgradable_boots"
   ]
 }
