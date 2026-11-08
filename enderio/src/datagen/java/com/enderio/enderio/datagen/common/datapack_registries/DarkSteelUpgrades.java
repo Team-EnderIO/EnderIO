@@ -94,6 +94,18 @@ public class DarkSteelUpgrades {
                     new AttributeModifier(EnderIO.rl("dark_steel_upgrade/explosive_carpet"), 1, AttributeModifier.Operation.ADD_VALUE))
         )));
 
+        context.register(key("double_jump"), new DarkSteelUpgrade(Component.literal("Double Jump"), Component.literal("Allows you to jump again while in the air."),
+            new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_BOOTS), false), HolderSet.empty(), List.of(
+                new AttributeModifierEffect(EIOAttributes.EXTRA_JUMPS,
+                    new AttributeModifier(EnderIO.rl("dark_steel_upgrade/jump"), 1, AttributeModifier.Operation.ADD_VALUE))
+        )));
+
+        context.register(key("jump_boost"), new DarkSteelUpgrade(Component.literal("Jump Boost"), Component.literal("Increases your jump power."),
+            new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_BOOTS), false), HolderSet.empty(), List.of(
+                new AttributeModifierEffect(Attributes.JUMP_STRENGTH,
+                    new AttributeModifier(EnderIO.rl("dark_steel_upgrade/jump_boost"), 0.35F, AttributeModifier.Operation.ADD_VALUE))
+        )));
+
         context.register(key("stable_footing"), new DarkSteelUpgrade(Component.literal("Stable Footing"), Component.literal("Prevents the wearer from falling through powdered snow."),
             new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_BOOTS), false), HolderSet.empty(), List.of(
                 WalkOnPowderedSnowEffect.INSTANCE

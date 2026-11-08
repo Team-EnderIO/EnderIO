@@ -26,17 +26,15 @@ public class EIOAttributes {
      */
     public static final DeferredHolder<Attribute, Attribute> MINING_AREA_DEPTH = register("mining_area_depth", 0, 0, 16);
 
+    /**
+     * How many additional jumps the entity can make while in the air. Resets upon landing.
+     */
+    public static final DeferredHolder<Attribute, Attribute> EXTRA_JUMPS = register("extra_jumps", 0, 0, 16);
+
     private static DeferredHolder<Attribute, Attribute> register(String name, double defaultValue, double min, double max) {
-        // Synced so the client can draw the area highlight.
+        // Synced so the client can use them, i.e. to draw the area highlight or start a double jump.
         return ATTRIBUTES.register(name,
             () -> new RangedAttribute(Util.makeDescriptionId("attribute", EnderIO.rl(name)), defaultValue, min, max).setSyncable(true));
-    }
-
-    /**
-     * @return whether modifiers for this attribute should be left out of item tooltips.
-     */
-    public static boolean isHiddenFromTooltips(Holder<Attribute> attribute) {
-        return attribute.is(MINING_AREA_RADIUS.getKey()) || attribute.is(MINING_AREA_DEPTH.getKey());
     }
 
     public static void register(IEventBus eventBus) {
@@ -47,5 +45,6 @@ public class EIOAttributes {
     private static void addPlayerAttributes(EntityAttributeModificationEvent event) {
         event.add(EntityType.PLAYER, MINING_AREA_RADIUS);
         event.add(EntityType.PLAYER, MINING_AREA_DEPTH);
+        event.add(EntityType.PLAYER, EXTRA_JUMPS);
     }
 }

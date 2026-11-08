@@ -23,6 +23,7 @@ import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerMode;
 import com.enderio.enderio.content.tools.ToolsLang;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.tag.EIOTags;
+import com.enderio.enderio.init.EIOAttributes;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduits;
 import com.enderio.enderio.init.EIOEntities;
@@ -190,6 +191,7 @@ public class EIOLanguageProvider extends LanguageProvider {
 
         add(EIOAttributes.MINING_AREA_RADIUS.get().getDescriptionId(), "Mining Area Radius");
         add(EIOAttributes.MINING_AREA_DEPTH.get().getDescriptionId(), "Mining Area Depth");
+        add(EIOAttributes.EXTRA_JUMPS.get().getDescriptionId(), "Extra Jumps");
     }
 
     private void addConduitDescriptions() {

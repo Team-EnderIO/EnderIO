@@ -5,6 +5,7 @@ import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelHookContext;
 import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelUpgradeHookType;
 import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelUpgradeHookTypes;
 import com.enderio.enderio.api.armory.upgrades.hooks.general.ModifyAttributesHook;
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
@@ -23,17 +24,24 @@ public class AttributeModifierEffect extends DarkSteelUpgradeEffect implements M
     public static final MapCodec<AttributeModifierEffect> CODEC = RecordCodecBuilder.mapCodec(inst -> inst
         .group(
             Attribute.CODEC.fieldOf("attribute").forGetter(AttributeModifierEffect::attribute),
-            AttributeModifier.MAP_CODEC.forGetter(AttributeModifierEffect::modifier)
+            AttributeModifier.MAP_CODEC.forGetter(AttributeModifierEffect::modifier),
+            Codec.BOOL.optionalFieldOf("hide_from_tooltip", true).forGetter(AttributeModifierEffect::hideFromTooltip)
         ).apply(inst, AttributeModifierEffect::new));
 
     private static final List<DarkSteelUpgradeHookType<?>> HOOKS = List.of(DarkSteelUpgradeHookTypes.MODIFY_ATTRIBUTES);
 
     private final Holder<Attribute> attribute;
     private final AttributeModifier modifier;
+    private final boolean hideFromTooltip;
 
-    public AttributeModifierEffect(Holder<Attribute> attribute, AttributeModifier modifier) {
+    public AttributeModifierEffect(Holder<Attribute> attribute, AttributeModifier modifier, boolean hideFromTooltip) {
         this.attribute = attribute;
         this.modifier = modifier;
+        this.hideFromTooltip = hideFromTooltip;
+    }
+
+    public AttributeModifierEffect(Holder<Attribute> attribute, AttributeModifier modifier) {
+        this(attribute, modifier, true);
     }
 
     public Holder<Attribute> attribute() {
@@ -42,6 +50,10 @@ public class AttributeModifierEffect extends DarkSteelUpgradeEffect implements M
 
     public AttributeModifier modifier() {
         return modifier;
+    }
+
+    public boolean hideFromTooltip() {
+        return hideFromTooltip;
     }
 
     @Override
