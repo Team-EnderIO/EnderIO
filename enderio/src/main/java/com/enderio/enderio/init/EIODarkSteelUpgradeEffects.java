@@ -7,6 +7,7 @@ import com.enderio.enderio.content.armory.effects.tools.AddItemAbilitiesEffect;
 import com.enderio.enderio.content.armory.effects.tools.AdditionalToolRulesEffect;
 import com.enderio.enderio.content.armory.effects.SolarChargeEffect;
 import com.enderio.enderio.content.armory.effects.armor.ElytraEffect;
+import com.enderio.enderio.content.armory.effects.tools.HoeBlockTransformationEffect;
 import com.enderio.enderio.content.armory.effects.tools.ImmediatePickupEffect;
 import com.enderio.enderio.content.armory.effects.tools.ShovelBlockTransformationEffect;
 import com.mojang.serialization.MapCodec;
@@ -23,6 +24,7 @@ public class EIODarkSteelUpgradeEffects {
         DARK_STEEL_UPGRADE_EFFECTS.register("additional_mineable_blocks", () -> AdditionalToolRulesEffect.MinesAndDrops.CODEC);
         DARK_STEEL_UPGRADE_EFFECTS.register("additional_tool_rules", () -> AdditionalToolRulesEffect.Raw.CODEC);
         DARK_STEEL_UPGRADE_EFFECTS.register("shovel_block_transformation", () -> ShovelBlockTransformationEffect.CODEC);
+        DARK_STEEL_UPGRADE_EFFECTS.register("hoe_block_transformation", () -> HoeBlockTransformationEffect.CODEC);
         DARK_STEEL_UPGRADE_EFFECTS.register("immediate_pickup", () -> ImmediatePickupEffect.CODEC);
         DARK_STEEL_UPGRADE_EFFECTS.register("elytra", () -> ElytraEffect.CODEC);
 

@@ -8,6 +8,7 @@ import com.enderio.enderio.api.armory.upgrades.costs.FreeCost;
 import com.enderio.enderio.content.armory.effects.armor.ElytraEffect;
 import com.enderio.enderio.content.armory.effects.tools.AddItemAbilitiesEffect;
 import com.enderio.enderio.content.armory.effects.tools.AdditionalToolRulesEffect;
+import com.enderio.enderio.content.armory.effects.tools.HoeBlockTransformationEffect;
 import com.enderio.enderio.content.armory.effects.tools.ImmediatePickupEffect;
 import com.enderio.enderio.content.armory.effects.tools.ShovelBlockTransformationEffect;
 import com.enderio.enderio.foundation.tag.EIOTags;
@@ -35,6 +36,13 @@ public class DarkSteelUpgrades {
                 new AddItemAbilitiesEffect(ItemAbilities.SHOVEL_DIG),
                 new AdditionalToolRulesEffect.MinesAndDrops(BlockTags.MINEABLE_WITH_SHOVEL),
                 ShovelBlockTransformationEffect.INSTANCE
+        )));
+
+        context.register(key("fork"), new DarkSteelUpgrade(Component.literal("Fork"),
+            new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_TOOLS), false), HolderSet.empty(), List.of(
+                new AddItemAbilitiesEffect(ItemAbilities.HOE_DIG),
+                new AdditionalToolRulesEffect.MinesAndDrops(BlockTags.MINEABLE_WITH_HOE),
+                HoeBlockTransformationEffect.INSTANCE
         )));
 
         context.register(key("direct"), new DarkSteelUpgrade(Component.literal("Direct"),
