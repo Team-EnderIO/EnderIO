@@ -6,6 +6,7 @@ import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgradeEffect;
 import com.enderio.enderio.api.armory.upgrades.costs.CompoundEffectCost;
 import com.enderio.enderio.api.armory.upgrades.costs.EffectCost;
 import com.enderio.enderio.api.armory.upgrades.costs.EffectDurabilityCost;
+import com.enderio.enderio.api.armory.upgrades.costs.EnergyCost;
 import com.enderio.enderio.api.armory.upgrades.costs.ExperienceCost;
 import com.enderio.enderio.api.armory.upgrades.costs.FreeCost;
 import com.enderio.enderio.content.armory.effects.SolarChargeEffect;
@@ -25,6 +26,7 @@ public class EIODarkSteelUpgradeEffectCosts {
         DARK_STEEL_UPGRADE_EFFECT_COSTS.register("no_cost", () -> FreeCost.CODEC);
         DARK_STEEL_UPGRADE_EFFECT_COSTS.register("durability", () -> EffectDurabilityCost.CODEC);
         DARK_STEEL_UPGRADE_EFFECT_COSTS.register("experience", () -> ExperienceCost.CODEC);
+        DARK_STEEL_UPGRADE_EFFECT_COSTS.register("energy", () -> EnergyCost.CODEC);
         DARK_STEEL_UPGRADE_EFFECT_COSTS.register("compound", () -> CompoundEffectCost.CODEC);
 
         DARK_STEEL_UPGRADE_EFFECT_COSTS.register(eventBus);
