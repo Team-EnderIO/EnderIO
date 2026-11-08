@@ -1,0 +1,14 @@
+{
+  "description": "Gives the user night vision.",
+  "effects": [
+    {
+      "type": "enderio:mob_effect",
+      "duration": 300,
+      "effect": "minecraft:night_vision",
+      "reapply_duration_threshold": 240
+    }
+  ],
+  "name": "Night Vision",
+  "requires_socketed_capacitor": false,
+  "supported_items": "#enderio:dark_steel_upgradable_helmets"
+}

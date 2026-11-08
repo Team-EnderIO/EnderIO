@@ -6,6 +6,7 @@ import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgrade;
 import com.enderio.enderio.api.armory.upgrades.costs.EffectDurabilityCost;
 import com.enderio.enderio.api.armory.upgrades.costs.FreeCost;
 import com.enderio.enderio.content.armory.effects.AttributeModifierEffect;
+import com.enderio.enderio.content.armory.effects.MobEffectEffect;
 import com.enderio.enderio.content.armory.effects.armor.ElytraEffect;
 import com.enderio.enderio.content.armory.effects.armor.PreventsFreezingEffect;
 import com.enderio.enderio.content.armory.effects.armor.WalkOnPowderedSnowEffect;
@@ -25,6 +26,8 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.world.effect.MobEffect;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
@@ -114,6 +117,12 @@ public class DarkSteelUpgrades {
         context.register(key("insulation"), new DarkSteelUpgrade(Component.literal("Insulation"), Component.literal("Prevents the wearer from falling freezing in powdered snow."),
             new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_ARMOR), false), HolderSet.empty(), List.of(
                 PreventsFreezingEffect.INSTANCE
+        )));
+
+        context.register(key("night_vision"), new DarkSteelUpgrade(Component.literal("Night Vision"), Component.literal("Gives the user night vision."),
+            new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_HELMETS), false), HolderSet.empty(), List.of(
+                // at 10s left the player's vision will begin flashing
+                new MobEffectEffect(MobEffects.NIGHT_VISION, 0, 15 * 20, 12 * 20, false)
         )));
     }
 

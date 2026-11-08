@@ -31,6 +31,7 @@ import java.util.Set;
 
 public class DarkSteelPickaxeItem extends PickaxeItem implements AdvancedTooltipProvider, IDarkSteelItem, DarkSteelUpgradableItem {
     private static final Set<DarkSteelUpgradeHookType<?>> AVAILABLE_HOOKS = Set.of(
+        DarkSteelUpgradeHookTypes.EQUIPMENT_TICK,
         DarkSteelUpgradeHookTypes.CAN_PERFORM_ACTION,
         DarkSteelUpgradeHookTypes.USE_ON,
         DarkSteelUpgradeHookTypes.USE,

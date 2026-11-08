@@ -4,9 +4,12 @@ import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.armory.capacitor.CapacitorSocket;
 import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgradableItem;
 import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelUpgradeHookTypes;
+import com.enderio.enderio.api.armory.upgrades.hooks.general.EquipmentTickHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.general.ModifyAttributesHook;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickAction;
 import net.minecraft.world.inventory.Slot;
@@ -15,6 +18,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import net.neoforged.neoforge.event.ItemStackedOnOtherEvent;
+import net.neoforged.neoforge.event.tick.EntityTickEvent;
 
 @EventBusSubscriber
 public class ArmoryEventHooks {
@@ -34,6 +38,29 @@ public class ArmoryEventHooks {
         }
 
         ModifyAttributesHook.modifyAttributes(upgrades, DarkSteelHelper.getHookContext(stack), event);
+    }
+
+    @SubscribeEvent
+    public static void onEntityTick(EntityTickEvent.Post event) {
+        // Hooks run on the server only, anything they change (i.e. mob effects) is synced by vanilla.
+        if (!(event.getEntity() instanceof LivingEntity entity) || entity.level().isClientSide()) {
+            return;
+        }
+
+        for (EquipmentSlot slot : EquipmentSlot.values()) {
+            ItemStack stack = entity.getItemBySlot(slot);
+            if (!(stack.getItem() instanceof DarkSteelUpgradableItem upgradableItem)
+                || !upgradableItem.availableHookTypes().contains(DarkSteelUpgradeHookTypes.EQUIPMENT_TICK)) {
+                continue;
+            }
+
+            // Only tick items in the slot they're intended for, i.e. not armor held in a hand.
+            if (entity.getEquipmentSlotForItem(stack) != slot) {
+                continue;
+            }
+
+            EquipmentTickHook.onEquipmentTick(DarkSteelHelper.getUpgradeContainer(stack), DarkSteelHelper.getHookContext(stack), entity, slot);
+        }
     }
 
     /**

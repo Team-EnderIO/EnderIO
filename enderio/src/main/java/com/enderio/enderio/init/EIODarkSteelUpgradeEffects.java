@@ -7,6 +7,7 @@ import com.enderio.enderio.content.armory.effects.tools.AddItemAbilitiesEffect;
 import com.enderio.enderio.content.armory.effects.tools.AdditionalToolRulesEffect;
 import com.enderio.enderio.content.armory.effects.tools.AreaMiningEffect;
 import com.enderio.enderio.content.armory.effects.AttributeModifierEffect;
+import com.enderio.enderio.content.armory.effects.MobEffectEffect;
 import com.enderio.enderio.content.armory.effects.SolarChargeEffect;
 import com.enderio.enderio.content.armory.effects.armor.ElytraEffect;
 import com.enderio.enderio.content.armory.effects.armor.PreventsFreezingEffect;
@@ -26,6 +27,7 @@ public class EIODarkSteelUpgradeEffects {
     public static void register(IEventBus eventBus) {
         DARK_STEEL_UPGRADE_EFFECTS.register("solar_charge", () -> SolarChargeEffect.CODEC);
         DARK_STEEL_UPGRADE_EFFECTS.register("attribute_modifier", () -> AttributeModifierEffect.CODEC);
+        DARK_STEEL_UPGRADE_EFFECTS.register("mob_effect", () -> MobEffectEffect.CODEC);
         DARK_STEEL_UPGRADE_EFFECTS.register("add_item_abilities", () -> AddItemAbilitiesEffect.CODEC);
         DARK_STEEL_UPGRADE_EFFECTS.register("additional_mineable_blocks", () -> AdditionalToolRulesEffect.MinesAndDrops.CODEC);
         DARK_STEEL_UPGRADE_EFFECTS.register("additional_tool_rules", () -> AdditionalToolRulesEffect.Raw.CODEC);

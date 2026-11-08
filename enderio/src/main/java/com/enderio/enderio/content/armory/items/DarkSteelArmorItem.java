@@ -18,17 +18,20 @@ import java.util.Set;
 public class DarkSteelArmorItem extends ArmorItem implements DarkSteelUpgradableItem {
     private static final Set<DarkSteelUpgradeHookType<?>> ARMOR_HOOKS = Set.of(
         DarkSteelUpgradeHookTypes.MODIFY_ATTRIBUTES,
+        DarkSteelUpgradeHookTypes.EQUIPMENT_TICK,
         DarkSteelUpgradeHookTypes.CAN_FREEZE
     );
 
     private static final Set<DarkSteelUpgradeHookType<?>> CHESTPLATE_HOOKS = Set.of(
         DarkSteelUpgradeHookTypes.MODIFY_ATTRIBUTES,
+        DarkSteelUpgradeHookTypes.EQUIPMENT_TICK,
         DarkSteelUpgradeHookTypes.ELYTRA_FLY,
         DarkSteelUpgradeHookTypes.CAN_FREEZE
     );
 
     private static final Set<DarkSteelUpgradeHookType<?>> BOOTS_HOOKS = Set.of(
         DarkSteelUpgradeHookTypes.MODIFY_ATTRIBUTES,
+        DarkSteelUpgradeHookTypes.EQUIPMENT_TICK,
         DarkSteelUpgradeHookTypes.CAN_FREEZE,
         DarkSteelUpgradeHookTypes.WALK_ON_POWDERED_SNOW
     );

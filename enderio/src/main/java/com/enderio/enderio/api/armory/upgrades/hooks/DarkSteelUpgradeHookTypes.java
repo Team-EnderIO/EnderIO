@@ -4,6 +4,7 @@ import com.enderio.enderio.api.armory.upgrades.hooks.armor.CanFreezeHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.armor.ElytraFlyHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.armor.WalkOnPowderedSnowHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.general.DarkSteelInventoryTickHook;
+import com.enderio.enderio.api.armory.upgrades.hooks.general.EquipmentTickHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.general.ModifyAttributesHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.tools.CanPerformActionHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.tools.GetDestroySpeedHook;
@@ -14,6 +15,7 @@ import com.enderio.enderio.api.armory.upgrades.hooks.tools.UseOnHook;
 
 public class DarkSteelUpgradeHookTypes {
     public static final DarkSteelUpgradeHookType<DarkSteelInventoryTickHook> INVENTORY_TICK = new DarkSteelUpgradeHookType<>();
+    public static final DarkSteelUpgradeHookType<EquipmentTickHook> EQUIPMENT_TICK = new DarkSteelUpgradeHookType<>();
     public static final DarkSteelUpgradeHookType<ModifyAttributesHook> MODIFY_ATTRIBUTES = new DarkSteelUpgradeHookType<>();
     public static final DarkSteelUpgradeHookType<CanPerformActionHook> CAN_PERFORM_ACTION = new DarkSteelUpgradeHookType<>();
     public static final DarkSteelUpgradeHookType<UseOnHook> USE_ON = new DarkSteelUpgradeHookType<>();
