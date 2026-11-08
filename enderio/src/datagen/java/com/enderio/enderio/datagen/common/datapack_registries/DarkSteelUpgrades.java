@@ -3,8 +3,11 @@ package com.enderio.enderio.datagen.common.datapack_registries;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgrade;
+import com.enderio.enderio.api.armory.upgrades.costs.EffectDurabilityCost;
+import com.enderio.enderio.api.armory.upgrades.costs.ExperienceCost;
 import com.enderio.enderio.content.armory.effects.tools.AddItemAbilitiesEffect;
 import com.enderio.enderio.content.armory.effects.tools.AdditionalToolRulesEffect;
+import com.enderio.enderio.content.armory.effects.tools.ImmediatePickupEffect;
 import com.enderio.enderio.content.armory.effects.tools.ShovelBlockTransformationEffect;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import net.minecraft.core.HolderGetter;
@@ -14,6 +17,7 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
+import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.common.ItemAbilities;
 
@@ -29,6 +33,11 @@ public class DarkSteelUpgrades {
                 new AddItemAbilitiesEffect(ItemAbilities.SHOVEL_DIG),
                 new AdditionalToolRulesEffect.MinesAndDrops(BlockTags.MINEABLE_WITH_SHOVEL),
                 ShovelBlockTransformationEffect.INSTANCE
+        )));
+
+        context.register(key("direct"), new DarkSteelUpgrade(Component.literal("Direct"),
+            new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_TOOLS), false), HolderSet.empty(), List.of(
+            new ImmediatePickupEffect(new EffectDurabilityCost(ConstantInt.of(1)))
         )));
     }
 

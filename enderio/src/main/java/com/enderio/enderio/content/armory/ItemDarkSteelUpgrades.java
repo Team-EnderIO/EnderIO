@@ -38,4 +38,15 @@ public record ItemDarkSteelUpgrades(List<Holder<DarkSteelUpgrade>> upgrades) imp
             .map(effect -> (T)effect)
             .collect(Collectors.toSet());
     }
+
+    /**
+     * @return all effects of the given type, in the order the upgrades were applied (and then in effect definition order).
+     */
+    public <T> List<T> getAllEffectsOfType(Class<T> clazz) {
+        return upgrades.stream()
+            .flatMap(upgradeHolder -> upgradeHolder.value().effects().stream())
+            .filter(clazz::isInstance)
+            .map(clazz::cast)
+            .toList();
+    }
 }
