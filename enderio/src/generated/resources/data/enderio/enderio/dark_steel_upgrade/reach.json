@@ -1,0 +1,15 @@
+{
+  "description": "Lets you reach blocks further away while held.",
+  "effects": [
+    {
+      "type": "enderio:attribute_modifier",
+      "amount": 2.0,
+      "attribute": "minecraft:player.block_interaction_range",
+      "id": "enderio:dark_steel_upgrade/reach",
+      "operation": "add_value"
+    }
+  ],
+  "name": "Reach",
+  "requires_socketed_capacitor": false,
+  "supported_items": "#enderio:dark_steel_upgradable_tools"
+}

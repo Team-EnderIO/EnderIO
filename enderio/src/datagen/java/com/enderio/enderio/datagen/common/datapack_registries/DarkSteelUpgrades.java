@@ -109,6 +109,12 @@ public class DarkSteelUpgrades {
                     new AttributeModifier(EnderIO.rl("dark_steel_upgrade/jump_boost"), 0.35F, AttributeModifier.Operation.ADD_VALUE))
         )));
 
+        context.register(key("reach"), new DarkSteelUpgrade(Component.literal("Reach"), Component.literal("Lets you reach blocks further away while held."),
+            new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_TOOLS), false), HolderSet.empty(), List.of(
+                new AttributeModifierEffect(Attributes.BLOCK_INTERACTION_RANGE,
+                    new AttributeModifier(EnderIO.rl("dark_steel_upgrade/reach"), 2, AttributeModifier.Operation.ADD_VALUE))
+        )));
+
         context.register(key("stable_footing"), new DarkSteelUpgrade(Component.literal("Stable Footing"), Component.literal("Prevents the wearer from falling through powdered snow."),
             new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_BOOTS), false), HolderSet.empty(), List.of(
                 WalkOnPowderedSnowEffect.INSTANCE
