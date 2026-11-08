@@ -12,6 +12,7 @@ import com.enderio.enderio.content.armory.effects.tools.AdditionalToolRulesEffec
 import com.enderio.enderio.content.armory.effects.tools.HoeBlockTransformationEffect;
 import com.enderio.enderio.content.armory.effects.tools.ImmediatePickupEffect;
 import com.enderio.enderio.content.armory.effects.tools.ShovelBlockTransformationEffect;
+import com.enderio.enderio.content.armory.effects.tools.TravelEffect;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
@@ -61,6 +62,11 @@ public class DarkSteelUpgrades {
             new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_BOOTS), false), HolderSet.empty(), List.of(
                 new AttributeModifierEffect(Attributes.STEP_HEIGHT,
                     new AttributeModifier(EnderIO.rl("dark_steel_upgrade/step_assist"), 0.4, AttributeModifier.Operation.ADD_VALUE))
+        )));
+
+        context.register(key("travel"), new DarkSteelUpgrade(Component.literal("Travel"), Component.literal("Hold Shift and Right-Click to teleport or activate a travel anchor"),
+            new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_TOOLS), false), HolderSet.empty(), List.of(
+                new TravelEffect(true, new EffectDurabilityCost(ConstantInt.of(5)))
         )));
     }
 

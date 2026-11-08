@@ -148,6 +148,7 @@ public class EIODataComponents {
 
     // region Travel
 
+    // TODO: Remove, not fit for purpose.
     public static final DataComponentType<Boolean> TRAVEL_ITEM = register("travel_item",
         builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
 

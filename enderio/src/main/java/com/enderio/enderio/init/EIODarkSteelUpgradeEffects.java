@@ -11,6 +11,7 @@ import com.enderio.enderio.content.armory.effects.armor.ElytraEffect;
 import com.enderio.enderio.content.armory.effects.tools.HoeBlockTransformationEffect;
 import com.enderio.enderio.content.armory.effects.tools.ImmediatePickupEffect;
 import com.enderio.enderio.content.armory.effects.tools.ShovelBlockTransformationEffect;
+import com.enderio.enderio.content.armory.effects.tools.TravelEffect;
 import com.mojang.serialization.MapCodec;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -29,6 +30,7 @@ public class EIODarkSteelUpgradeEffects {
         DARK_STEEL_UPGRADE_EFFECTS.register("hoe_block_transformation", () -> HoeBlockTransformationEffect.CODEC);
         DARK_STEEL_UPGRADE_EFFECTS.register("immediate_pickup", () -> ImmediatePickupEffect.CODEC);
         DARK_STEEL_UPGRADE_EFFECTS.register("elytra", () -> ElytraEffect.CODEC);
+        DARK_STEEL_UPGRADE_EFFECTS.register("travel", () -> TravelEffect.CODEC);
 
         DARK_STEEL_UPGRADE_EFFECTS.register(eventBus);
     }
