@@ -6,6 +6,7 @@ import com.enderio.enderio.api.armory.upgrades.hooks.general.ModifyAttributesHoo
 import com.enderio.enderio.api.armory.upgrades.hooks.tools.CanPerformActionHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.tools.GetDestroySpeedHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.tools.IsCorrectToolForDropsHook;
+import com.enderio.enderio.api.armory.upgrades.hooks.tools.MineBlockHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.tools.UseHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.tools.UseOnHook;
 
@@ -17,5 +18,6 @@ public class DarkSteelUpgradeHookTypes {
     public static final DarkSteelUpgradeHookType<UseHook> USE = new DarkSteelUpgradeHookType<>();
     public static final DarkSteelUpgradeHookType<GetDestroySpeedHook> GET_DESTROY_SPEED = new DarkSteelUpgradeHookType<>();
     public static final DarkSteelUpgradeHookType<IsCorrectToolForDropsHook> IS_CORRECT_TOOL_FOR_DROPS = new DarkSteelUpgradeHookType<>();
+    public static final DarkSteelUpgradeHookType<MineBlockHook> MINE_BLOCK = new DarkSteelUpgradeHookType<>();
     public static final DarkSteelUpgradeHookType<ElytraFlyHook> ELYTRA_FLY = new DarkSteelUpgradeHookType<>();
 }

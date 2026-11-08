@@ -16,6 +16,7 @@ import com.enderio.enderio.foundation.integrations.Integrations;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIOAttachments;
 import com.enderio.enderio.init.EIOArmorMaterials;
+import com.enderio.enderio.init.EIOAttributes;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
@@ -118,6 +119,7 @@ public class EnderIO {
         EIOConduitTypes.register(modEventBus);
         EIOTravelTargets.register(modEventBus);
         EIOSounds.register(modEventBus);
+        EIOAttributes.register(modEventBus);
         EIODarkSteelUpgradeEffects.register(modEventBus);
         EIODarkSteelUpgradeEffectCosts.register(modEventBus);
 

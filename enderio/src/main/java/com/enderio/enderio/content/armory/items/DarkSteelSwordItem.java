@@ -7,14 +7,17 @@ import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelUpgradeHookTypes;
 import com.enderio.enderio.api.armory.upgrades.hooks.tools.CanPerformActionHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.tools.GetDestroySpeedHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.tools.IsCorrectToolForDropsHook;
+import com.enderio.enderio.api.armory.upgrades.hooks.tools.MineBlockHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.tools.UseHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.tools.UseOnHook;
 import com.enderio.enderio.content.armory.DarkSteelHelper;
 import com.enderio.enderio.content.armory.IDarkSteelItem;
 import com.enderio.enderio.init.EIODataComponents;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
@@ -33,6 +36,7 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
         DarkSteelUpgradeHookTypes.USE,
         DarkSteelUpgradeHookTypes.GET_DESTROY_SPEED,
         DarkSteelUpgradeHookTypes.IS_CORRECT_TOOL_FOR_DROPS,
+        DarkSteelUpgradeHookTypes.MINE_BLOCK,
         DarkSteelUpgradeHookTypes.MODIFY_ATTRIBUTES
     );
 
@@ -79,6 +83,13 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
     @Override
     public boolean isCorrectToolForDrops(ItemStack stack, BlockState state) {
         return IsCorrectToolForDropsHook.isCorrectToolForDrops(DarkSteelHelper.getUpgradeContainer(stack), DarkSteelHelper.getHookContext(stack), state);
+    }
+
+    @Override
+    public boolean mineBlock(ItemStack stack, Level level, BlockState state, BlockPos pos, LivingEntity miningEntity) {
+        boolean result = super.mineBlock(stack, level, state, pos, miningEntity);
+        MineBlockHook.mineBlock(DarkSteelHelper.getUpgradeContainer(stack), DarkSteelHelper.getHookContext(stack), level, state, pos, miningEntity);
+        return result;
     }
 
     @Override

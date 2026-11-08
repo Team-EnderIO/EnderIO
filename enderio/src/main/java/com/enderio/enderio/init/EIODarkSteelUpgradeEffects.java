@@ -5,6 +5,7 @@ import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgradeEffect;
 import com.enderio.enderio.content.armory.effects.tools.AddItemAbilitiesEffect;
 import com.enderio.enderio.content.armory.effects.tools.AdditionalToolRulesEffect;
+import com.enderio.enderio.content.armory.effects.tools.AreaMiningEffect;
 import com.enderio.enderio.content.armory.effects.AttributeModifierEffect;
 import com.enderio.enderio.content.armory.effects.SolarChargeEffect;
 import com.enderio.enderio.content.armory.effects.armor.ElytraEffect;
@@ -31,6 +32,7 @@ public class EIODarkSteelUpgradeEffects {
         DARK_STEEL_UPGRADE_EFFECTS.register("immediate_pickup", () -> ImmediatePickupEffect.CODEC);
         DARK_STEEL_UPGRADE_EFFECTS.register("elytra", () -> ElytraEffect.CODEC);
         DARK_STEEL_UPGRADE_EFFECTS.register("travel", () -> TravelEffect.CODEC);
+        DARK_STEEL_UPGRADE_EFFECTS.register("area_mining", () -> AreaMiningEffect.CODEC);
 
         DARK_STEEL_UPGRADE_EFFECTS.register(eventBus);
     }

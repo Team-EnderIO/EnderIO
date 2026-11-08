@@ -33,6 +33,21 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
         // TODO: Temporary, need to decide where they sit
         tag(EIOTags.Blocks.INCORRECT_FOR_DARK_STEEL_TOOL).addTag(BlockTags.INCORRECT_FOR_DIAMOND_TOOL);
         tag(EIOTags.Blocks.INCORRECT_FOR_END_STEEL_TOOL).addTag(BlockTags.INCORRECT_FOR_NETHERITE_TOOL);
+
+        // Bulk "trash" blocks. Dirt-like blocks are only broken when the tool is also correct for them (i.e. with the spoon upgrade).
+        tag(EIOTags.Blocks.AREA_MINING_TARGETS)
+            .addTag(BlockTags.BASE_STONE_OVERWORLD)
+            .addTag(BlockTags.BASE_STONE_NETHER)
+            .addTag(Tags.Blocks.STONES)
+            .addTag(Tags.Blocks.COBBLESTONES)
+            .addTag(Tags.Blocks.END_STONES)
+            .addTag(Tags.Blocks.NETHERRACKS)
+            .addTag(Tags.Blocks.SANDSTONE_BLOCKS)
+            .addTag(BlockTags.TERRACOTTA)
+            .addTag(BlockTags.DIRT)
+            .addTag(Tags.Blocks.GRAVELS)
+            .addTag(Tags.Blocks.SANDS)
+            .add(Blocks.SOUL_SAND, Blocks.SOUL_SOIL, Blocks.CLAY, Blocks.DIRT_PATH, Blocks.FARMLAND);
         tag(BlockTags.DOORS).add(EIOBlocks.DARK_STEEL_DOOR.get());
         tag(BlockTags.TRAPDOORS).add(EIOBlocks.DARK_STEEL_TRAPDOOR.get());
         tag(BlockTags.WITHER_IMMUNE).add(EIOBlocks.REINFORCED_OBSIDIAN.get());

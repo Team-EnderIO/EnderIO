@@ -7,6 +7,8 @@
   "advancements.enderio.richer.title": "Is this real?",
   "advancements.enderio.use_glider.description": "Do you really trust some leather?",
   "advancements.enderio.use_glider.title": "Majestic",
+  "attribute.enderio.mining_area_depth": "Mining Area Depth",
+  "attribute.enderio.mining_area_radius": "Mining Area Radius",
   "block.enderio.advanced_capacitor_bank": "Advanced Capacitor Bank",
   "block.enderio.alloy_smelter": "Alloy Smelter",
   "block.enderio.attractor_obelisk": "Attractor Obelisk",

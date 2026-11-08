@@ -9,11 +9,13 @@ import com.enderio.enderio.content.armory.effects.AttributeModifierEffect;
 import com.enderio.enderio.content.armory.effects.armor.ElytraEffect;
 import com.enderio.enderio.content.armory.effects.tools.AddItemAbilitiesEffect;
 import com.enderio.enderio.content.armory.effects.tools.AdditionalToolRulesEffect;
+import com.enderio.enderio.content.armory.effects.tools.AreaMiningEffect;
 import com.enderio.enderio.content.armory.effects.tools.HoeBlockTransformationEffect;
 import com.enderio.enderio.content.armory.effects.tools.ImmediatePickupEffect;
 import com.enderio.enderio.content.armory.effects.tools.ShovelBlockTransformationEffect;
 import com.enderio.enderio.content.armory.effects.tools.TravelEffect;
 import com.enderio.enderio.foundation.tag.EIOTags;
+import com.enderio.enderio.init.EIOAttributes;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.Registries;
@@ -24,13 +26,16 @@ import net.minecraft.tags.BlockTags;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.neoforge.common.ItemAbilities;
 
 import java.util.List;
+import java.util.Optional;
 
 public class DarkSteelUpgrades {
     public static void bootstrap(BootstrapContext<DarkSteelUpgrade> context) {
         HolderGetter<Item> items = context.lookup(Registries.ITEM);
+        HolderGetter<Block> blocks = context.lookup(Registries.BLOCK);
 
         context.register(key("spoon"), new DarkSteelUpgrade(Component.literal("Spoon"), Component.literal("Who needs a shovel when you have a spoon..."),
             new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_TOOLS), false), HolderSet.empty(), List.of(
@@ -66,6 +71,25 @@ public class DarkSteelUpgrades {
         context.register(key("travel"), new DarkSteelUpgrade(Component.literal("Travel"), Component.literal("Hold Shift and Right-Click to teleport or activate a travel anchor"),
             new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_TOOLS), false), HolderSet.empty(), List.of(
                 new TravelEffect(true, new EffectDurabilityCost(5))
+        )));
+        
+        context.register(key("explosive"), new DarkSteelUpgrade(Component.literal("Explosive"), Component.literal("Blows up the stone and dirt around the block you mine. Crouch to mine a single block"),
+            new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_TOOLS), false), HolderSet.empty(), List.of(
+                new AreaMiningEffect(Optional.of(blocks.getOrThrow(EIOTags.Blocks.AREA_MINING_TARGETS)), FreeCost.INSTANCE, true, true),
+                new AttributeModifierEffect(EIOAttributes.MINING_AREA_RADIUS,
+                    new AttributeModifier(EnderIO.rl("dark_steel_upgrade/explosive"), 1, AttributeModifier.Operation.ADD_VALUE))
+        )));
+
+        context.register(key("explosive_depth"), new DarkSteelUpgrade(Component.literal("Depth"), Component.literal("Directs the explosive force away from the player."),
+            new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_TOOLS), false), HolderSet.empty(), List.of(
+                new AttributeModifierEffect(EIOAttributes.MINING_AREA_DEPTH,
+                    new AttributeModifier(EnderIO.rl("dark_steel_upgrade/explosive_depth"), 2, AttributeModifier.Operation.ADD_VALUE))
+        )));
+
+        context.register(key("explosive_carpet"), new DarkSteelUpgrade(Component.literal("Carpeting"), Component.literal("Flatens the explosive force into a carpet."),
+            new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_TOOLS), false), HolderSet.empty(), List.of(
+                new AttributeModifierEffect(EIOAttributes.MINING_AREA_RADIUS,
+                    new AttributeModifier(EnderIO.rl("dark_steel_upgrade/explosive_carpet"), 1, AttributeModifier.Operation.ADD_VALUE))
         )));
     }
 

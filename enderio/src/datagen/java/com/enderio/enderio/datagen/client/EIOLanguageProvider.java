@@ -187,6 +187,9 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(ArmoryLang.SOCKETED_CAPACITOR, "Socketed capacitor:");
         add(ArmoryLang.UPGRADE_ENTRY, "- %s");
         add(ArmoryLang.UPGRADE_DESCRIPTION, "   - %s");
+
+        add(EIOAttributes.MINING_AREA_RADIUS.get().getDescriptionId(), "Mining Area Radius");
+        add(EIOAttributes.MINING_AREA_DEPTH.get().getDescriptionId(), "Mining Area Depth");
     }
 
     private void addConduitDescriptions() {

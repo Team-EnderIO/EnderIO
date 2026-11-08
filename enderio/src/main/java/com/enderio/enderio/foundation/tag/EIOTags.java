@@ -198,6 +198,9 @@ public class EIOTags {
 
         public static final TagKey<Block> INCORRECT_FOR_DARK_STEEL_TOOL = tag("incorrect_for_dark_steel_tool");
         public static final TagKey<Block> INCORRECT_FOR_END_STEEL_TOOL = tag("incorrect_for_end_steel_tool");
+
+        // Blocks the explosive upgrade's area mining is allowed to break.
+        public static final TagKey<Block> AREA_MINING_TARGETS = tag("area_mining_targets");
         
         
         // Harvestable crops that have a stem.
