@@ -34,7 +34,7 @@ public class AreaMiningHighlight {
 
         ItemStack tool = player.getMainHandItem();
         AreaMiningEffect effect = AreaMiningEffect.getActiveEffect(tool);
-        if (effect == null || !effect.isEnabledFor(player)) {
+        if (effect == null || !effect.condition().isActive(tool, player.level(), player)) {
             return;
         }
 

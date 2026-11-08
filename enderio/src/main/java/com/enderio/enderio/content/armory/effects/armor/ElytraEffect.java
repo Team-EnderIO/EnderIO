@@ -1,6 +1,8 @@
 package com.enderio.enderio.content.armory.effects.armor;
 
 import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgradeEffect;
+import com.enderio.enderio.api.armory.upgrades.conditions.AlwaysActiveCondition;
+import com.enderio.enderio.api.armory.upgrades.conditions.EffectCondition;
 import com.enderio.enderio.api.armory.upgrades.costs.EffectCost;
 import com.enderio.enderio.api.armory.upgrades.costs.FreeCost;
 import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelHookContext;
@@ -18,23 +20,31 @@ import java.util.List;
 
 /**
  * Allows the item to act as an elytra, charging {@link #cost()} once every {@link #costTicks()} ticks of flight.
+ * Flight can only start, and only continues, while {@link #condition()} is active.
  */
 public class ElytraEffect extends DarkSteelUpgradeEffect implements ElytraFlyHook {
 
     public static final MapCodec<ElytraEffect> CODEC = RecordCodecBuilder.mapCodec(inst -> inst
         .group(
             EffectCost.CODEC.optionalFieldOf("cost", FreeCost.INSTANCE).forGetter(ElytraEffect::cost),
-            Codec.intRange(1, 20).optionalFieldOf("cost_ticks", 20).forGetter(ElytraEffect::costTicks)
+            Codec.intRange(1, 20).optionalFieldOf("cost_ticks", 20).forGetter(ElytraEffect::costTicks),
+            EffectCondition.CODEC.optionalFieldOf("condition", AlwaysActiveCondition.INSTANCE).forGetter(ElytraEffect::condition)
         ).apply(inst, ElytraEffect::new));
 
     private static final List<DarkSteelUpgradeHookType<?>> HOOKS = List.of(DarkSteelUpgradeHookTypes.ELYTRA_FLY);
 
     private final EffectCost cost;
     private final int costTicks;
+    private final EffectCondition condition;
 
-    public ElytraEffect(EffectCost cost, int costTicks) {
+    public ElytraEffect(EffectCost cost, int costTicks, EffectCondition condition) {
         this.cost = cost;
         this.costTicks = costTicks;
+        this.condition = condition;
+    }
+
+    public ElytraEffect(EffectCost cost, int costTicks) {
+        this(cost, costTicks, AlwaysActiveCondition.INSTANCE);
     }
 
     public EffectCost cost() {
@@ -43,6 +53,10 @@ public class ElytraEffect extends DarkSteelUpgradeEffect implements ElytraFlyHoo
 
     public int costTicks() {
         return costTicks;
+    }
+
+    public EffectCondition condition() {
+        return condition;
     }
 
     @Override
@@ -57,7 +71,7 @@ public class ElytraEffect extends DarkSteelUpgradeEffect implements ElytraFlyHoo
 
     @Override
     public boolean canElytraFly(DarkSteelHookContext context, LivingEntity entity) {
-        if (!(entity instanceof Player)) {
+        if (!(entity instanceof Player) || !condition.isActive(context.itemStack(), entity.level(), entity)) {
             return false;
         }
 
@@ -72,6 +86,10 @@ public class ElytraEffect extends DarkSteelUpgradeEffect implements ElytraFlyHoo
 
     @Override
     public boolean elytraFlightTick(DarkSteelHookContext context, LivingEntity entity, int flightTicks) {
+        if (!condition.isActive(context.itemStack(), entity.level(), entity)) {
+            return false;
+        }
+
         if (!(entity instanceof ServerPlayer player)) {
             return true;
         }

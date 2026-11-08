@@ -3,6 +3,8 @@ package com.enderio.enderio.datagen.common.datapack_registries;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgrade;
+import com.enderio.enderio.api.armory.upgrades.conditions.NegateCondition;
+import com.enderio.enderio.api.armory.upgrades.conditions.SteppingCarefullyCondition;
 import com.enderio.enderio.api.armory.upgrades.costs.EffectDurabilityCost;
 import com.enderio.enderio.api.armory.upgrades.costs.FreeCost;
 import com.enderio.enderio.content.armory.effects.AttributeModifierEffect;
@@ -46,14 +48,14 @@ public class DarkSteelUpgrades {
             new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_TOOLS), false), HolderSet.empty(), List.of(
                 new AddItemAbilitiesEffect(ItemAbilities.SHOVEL_DIG),
                 new AdditionalToolRulesEffect.MinesAndDrops(BlockTags.MINEABLE_WITH_SHOVEL),
-                ShovelBlockTransformationEffect.INSTANCE
+                new ShovelBlockTransformationEffect()
         )));
 
         context.register(key("fork"), new DarkSteelUpgrade(Component.literal("Fork"), Component.literal("Who needs a hoe when you have a fork..."),
             new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_TOOLS), false), HolderSet.empty(), List.of(
                 new AddItemAbilitiesEffect(ItemAbilities.HOE_DIG),
                 new AdditionalToolRulesEffect.MinesAndDrops(BlockTags.MINEABLE_WITH_HOE),
-                HoeBlockTransformationEffect.INSTANCE
+                new HoeBlockTransformationEffect()
         )));
 
         context.register(key("direct"), new DarkSteelUpgrade(Component.literal("Direct"), Component.literal("Teleports mined things directly into your inventory"),
@@ -80,7 +82,8 @@ public class DarkSteelUpgrades {
 
         context.register(key("explosive"), new DarkSteelUpgrade(Component.literal("Explosive"), Component.literal("Blows up the stone and dirt around the block you mine. Crouch to mine a single block"),
             new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_TOOLS), false), HolderSet.empty(), List.of(
-                new AreaMiningEffect(Optional.of(blocks.getOrThrow(EIOTags.Blocks.AREA_MINING_TARGETS)), FreeCost.INSTANCE, true, true, true, true),
+                new AreaMiningEffect(Optional.of(blocks.getOrThrow(EIOTags.Blocks.AREA_MINING_TARGETS)), FreeCost.INSTANCE, new NegateCondition(
+                    SteppingCarefullyCondition.INSTANCE), true, true, true),
                 new AttributeModifierEffect(EIOAttributes.MINING_AREA_RADIUS,
                     new AttributeModifier(EnderIO.rl("dark_steel_upgrade/explosive"), 1, AttributeModifier.Operation.ADD_VALUE))
         )));
@@ -117,12 +120,12 @@ public class DarkSteelUpgrades {
 
         context.register(key("stable_footing"), new DarkSteelUpgrade(Component.literal("Stable Footing"), Component.literal("Prevents the wearer from falling through powdered snow."),
             new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_BOOTS), false), HolderSet.empty(), List.of(
-                WalkOnPowderedSnowEffect.INSTANCE
+                new WalkOnPowderedSnowEffect()
         )));
 
         context.register(key("insulation"), new DarkSteelUpgrade(Component.literal("Insulation"), Component.literal("Prevents the wearer from falling freezing in powdered snow."),
             new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_ARMOR), false), HolderSet.empty(), List.of(
-                PreventsFreezingEffect.INSTANCE
+                new PreventsFreezingEffect()
         )));
 
         context.register(key("night_vision"), new DarkSteelUpgrade(Component.literal("Night Vision"), Component.literal("Gives the user night vision."),

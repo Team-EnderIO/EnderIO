@@ -1,6 +1,8 @@
 package com.enderio.enderio.content.armory.effects.tools;
 
 import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgradeEffect;
+import com.enderio.enderio.api.armory.upgrades.conditions.AlwaysActiveCondition;
+import com.enderio.enderio.api.armory.upgrades.conditions.EffectCondition;
 import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelHookContext;
 import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelUpgradeHookType;
 import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelUpgradeHookTypes;
@@ -35,8 +37,13 @@ public sealed abstract class AdditionalToolRulesEffect extends DarkSteelUpgradeE
 
         private final TagKey<Block> mineableBlocksTag;
 
-        public MinesAndDrops(TagKey<Block> mineableBlocksTag) {
+        public MinesAndDrops(EffectCondition condition, TagKey<Block> mineableBlocksTag) {
+            super(condition);
             this.mineableBlocksTag = mineableBlocksTag;
+        }
+
+        public MinesAndDrops(TagKey<Block> mineableBlocksTag) {
+            this(AlwaysActiveCondition.INSTANCE, mineableBlocksTag);
         }
 
         @Override
@@ -64,8 +71,13 @@ public sealed abstract class AdditionalToolRulesEffect extends DarkSteelUpgradeE
 
         private final List<Tool.Rule> rules;
 
-        public Raw(List<Tool.Rule> rules) {
+        public Raw(EffectCondition condition, List<Tool.Rule> rules) {
+            super(condition);
             this.rules = rules;
+        }
+
+        public Raw(List<Tool.Rule> rules) {
+            this(AlwaysActiveCondition.INSTANCE, rules);
         }
 
         @Override
@@ -82,6 +94,12 @@ public sealed abstract class AdditionalToolRulesEffect extends DarkSteelUpgradeE
     private static final List<DarkSteelUpgradeHookType<?>> HOOKS = List.of(DarkSteelUpgradeHookTypes.GET_DESTROY_SPEED,
         DarkSteelUpgradeHookTypes.IS_CORRECT_TOOL_FOR_DROPS);
 
+    protected final EffectCondition condition;
+
+    protected AdditionalToolRulesEffect(EffectCondition condition) {
+        this.condition = condition;
+    }
+
     protected abstract List<Tool.Rule> getRules(DarkSteelHookContext context);
 
     @Override
@@ -91,6 +109,10 @@ public sealed abstract class AdditionalToolRulesEffect extends DarkSteelUpgradeE
 
     @Override
     public @Nullable Float getDestroySpeed(DarkSteelHookContext context, BlockState state) {
+        if (!condition.isActive(context.itemStack(), null, null)) {
+            return null;
+        }
+
         for (Tool.Rule rule : getRules(context)) {
             if (rule.speed().isPresent() && state.is(rule.blocks())) {
                 return rule.speed().get();
@@ -102,6 +124,10 @@ public sealed abstract class AdditionalToolRulesEffect extends DarkSteelUpgradeE
 
     @Override
     public @Nullable Boolean isCorrectToolForDrops(DarkSteelHookContext context, BlockState state) {
+        if (!condition.isActive(context.itemStack(), null, null)) {
+            return null;
+        }
+
         for (Tool.Rule rule : getRules(context)) {
             if (rule.correctForDrops().isPresent() && state.is(rule.blocks())) {
                 return rule.correctForDrops().get();

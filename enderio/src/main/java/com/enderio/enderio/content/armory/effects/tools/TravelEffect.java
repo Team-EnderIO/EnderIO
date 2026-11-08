@@ -26,6 +26,9 @@ import net.neoforged.neoforge.common.ItemAbility;
 
 import java.util.List;
 
+/**
+ * Will gain better condition support once we rework travelling.
+ */
 public class TravelEffect extends DarkSteelUpgradeEffect implements UseOnHook, UseHook, CanPerformActionHook {
 
     public static final MapCodec<TravelEffect> CODEC = RecordCodecBuilder.mapCodec(inst -> inst

@@ -22,6 +22,7 @@ import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
 import com.enderio.enderio.init.EIOCreativeTabs;
 import com.enderio.enderio.init.EIOCriterions;
+import com.enderio.enderio.init.EIODarkSteelUpgradeEffectConditions;
 import com.enderio.enderio.init.EIODarkSteelUpgradeEffectCosts;
 import com.enderio.enderio.init.EIODarkSteelUpgradeEffects;
 import com.enderio.enderio.init.EIODataComponents;
@@ -122,6 +123,7 @@ public class EnderIO {
         EIOAttributes.register(modEventBus);
         EIODarkSteelUpgradeEffects.register(modEventBus);
         EIODarkSteelUpgradeEffectCosts.register(modEventBus);
+        EIODarkSteelUpgradeEffectConditions.register(modEventBus);
 
         // Handle mod compat
         for (Map.Entry<String, Consumer<IEventBus>> entry : MOD_INTEGRATIONS.entrySet()) {
@@ -149,6 +151,7 @@ public class EnderIO {
         event.register(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE);
         event.register(EnderIORegistries.DARK_STEEL_UPGRADE_EFFECT);
         event.register(EnderIORegistries.DARK_STEEL_UPGRADE_EFFECT_COST);
+        event.register(EnderIORegistries.DARK_STEEL_UPGRADE_EFFECT_CONDITION);
     }
 
     private void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {

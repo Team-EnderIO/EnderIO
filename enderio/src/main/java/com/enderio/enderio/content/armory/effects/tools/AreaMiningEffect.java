@@ -2,6 +2,8 @@ package com.enderio.enderio.content.armory.effects.tools;
 
 import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgradableItem;
 import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgradeEffect;
+import com.enderio.enderio.api.armory.upgrades.conditions.AlwaysActiveCondition;
+import com.enderio.enderio.api.armory.upgrades.conditions.EffectCondition;
 import com.enderio.enderio.api.armory.upgrades.costs.EffectCost;
 import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelHookContext;
 import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelUpgradeHookType;
@@ -51,7 +53,7 @@ public class AreaMiningEffect extends DarkSteelUpgradeEffect implements MineBloc
         .group(
             RegistryCodecs.homogeneousList(Registries.BLOCK).optionalFieldOf("targets").forGetter(AreaMiningEffect::targets),
             EffectCost.CODEC.fieldOf("cost_per_block").forGetter(AreaMiningEffect::costPerBlock),
-            Codec.BOOL.optionalFieldOf("disabled_while_crouching", true).forGetter(AreaMiningEffect::disabledWhileCrouching),
+            EffectCondition.CODEC.optionalFieldOf("condition", AlwaysActiveCondition.INSTANCE).forGetter(AreaMiningEffect::condition),
             Codec.BOOL.optionalFieldOf("align_to_feet", true).forGetter(AreaMiningEffect::alignToFeet),
             Codec.BOOL.optionalFieldOf("should_display_smoke_particles", true).forGetter(AreaMiningEffect::shouldDisplaySmokeParticles),
             Codec.BOOL.optionalFieldOf("should_display_explosion_particles", true).forGetter(AreaMiningEffect::shouldDisplayExplosionEffect)
@@ -66,16 +68,16 @@ public class AreaMiningEffect extends DarkSteelUpgradeEffect implements MineBloc
 
     private final Optional<HolderSet<Block>> targets;
     private final EffectCost costPerBlock;
-    private final boolean disabledWhileCrouching;
+    private final EffectCondition condition;
     private final boolean alignToFeet;
     private final boolean shouldDisplaySmokeParticles;
     private final boolean shouldDisplayExplosionParticles;
 
-    public AreaMiningEffect(Optional<HolderSet<Block>> targets, EffectCost costPerBlock, boolean disabledWhileCrouching, boolean alignToFeet,
+    public AreaMiningEffect(Optional<HolderSet<Block>> targets, EffectCost costPerBlock, EffectCondition condition, boolean alignToFeet,
         boolean shouldDisplaySmokeParticles, boolean shouldDisplayExplosionParticles) {
         this.targets = targets;
         this.costPerBlock = costPerBlock;
-        this.disabledWhileCrouching = disabledWhileCrouching;
+        this.condition = condition;
         this.alignToFeet = alignToFeet;
         this.shouldDisplaySmokeParticles = shouldDisplaySmokeParticles;
         this.shouldDisplayExplosionParticles = shouldDisplayExplosionParticles;
@@ -89,8 +91,8 @@ public class AreaMiningEffect extends DarkSteelUpgradeEffect implements MineBloc
         return costPerBlock;
     }
 
-    public boolean disabledWhileCrouching() {
-        return disabledWhileCrouching;
+    public EffectCondition condition() {
+        return condition;
     }
 
     public boolean alignToFeet() {
@@ -132,10 +134,6 @@ public class AreaMiningEffect extends DarkSteelUpgradeEffect implements MineBloc
 
         List<AreaMiningEffect> effects = upgrades.getAllEffectsOfType(AreaMiningEffect.class);
         return effects.isEmpty() ? null : effects.getFirst();
-    }
-
-    public boolean isEnabledFor(Player player) {
-        return !(disabledWhileCrouching && player.isShiftKeyDown());
     }
 
     /**
@@ -182,7 +180,7 @@ public class AreaMiningEffect extends DarkSteelUpgradeEffect implements MineBloc
         }
 
         ItemStack tool = context.itemStack();
-        if (tool.isEmpty() || tool != player.getMainHandItem() || !isEnabledFor(player) || getActiveEffect(tool) != this) {
+        if (tool.isEmpty() || tool != player.getMainHandItem() || !condition.isActive(tool, level, player) || getActiveEffect(tool) != this) {
             return;
         }
 

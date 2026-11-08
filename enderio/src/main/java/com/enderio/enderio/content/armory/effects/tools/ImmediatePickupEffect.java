@@ -1,6 +1,8 @@
 package com.enderio.enderio.content.armory.effects.tools;
 
 import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgradeEffect;
+import com.enderio.enderio.api.armory.upgrades.conditions.AlwaysActiveCondition;
+import com.enderio.enderio.api.armory.upgrades.conditions.EffectCondition;
 import com.enderio.enderio.api.armory.upgrades.costs.EffectCost;
 import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelUpgradeHookType;
 import com.enderio.enderio.content.armory.ItemDarkSteelUpgrades;
@@ -32,17 +34,29 @@ public class ImmediatePickupEffect extends DarkSteelUpgradeEffect {
     // TODO: Need a way to require energy from an effect. Might be nicer than the JSON saying it needs a cap.
 
     public static final MapCodec<ImmediatePickupEffect> CODEC = RecordCodecBuilder.mapCodec(inst -> inst
-        .group(EffectCost.CODEC.fieldOf("cost_per_item").forGetter(ImmediatePickupEffect::costPerItem))
-        .apply(inst, ImmediatePickupEffect::new));
+        .group(
+            EffectCost.CODEC.fieldOf("cost_per_item").forGetter(ImmediatePickupEffect::costPerItem),
+            EffectCondition.CODEC.optionalFieldOf("condition", AlwaysActiveCondition.INSTANCE).forGetter(ImmediatePickupEffect::condition)
+        ).apply(inst, ImmediatePickupEffect::new));
 
     private final EffectCost costPerItem;
+    private final EffectCondition condition;
+
+    public ImmediatePickupEffect(EffectCost costPerItem, EffectCondition condition) {
+        this.costPerItem = costPerItem;
+        this.condition = condition;
+    }
 
     public ImmediatePickupEffect(EffectCost costPerItem) {
-        this.costPerItem = costPerItem;
+        this(costPerItem, AlwaysActiveCondition.INSTANCE);
     }
 
     public EffectCost costPerItem() {
         return costPerItem;
+    }
+
+    public EffectCondition condition() {
+        return condition;
     }
 
     @Override
@@ -96,7 +110,10 @@ public class ImmediatePickupEffect extends DarkSteelUpgradeEffect {
             return;
         }
 
-        List<ImmediatePickupEffect> effects = upgrades.getAllEffectsOfType(ImmediatePickupEffect.class);
+        List<ImmediatePickupEffect> effects = upgrades.getAllEffectsOfType(ImmediatePickupEffect.class)
+            .stream()
+            .filter(effect -> effect.condition().isActive(tool, level, player))
+            .toList();
         if (effects.isEmpty()) {
             return;
         }

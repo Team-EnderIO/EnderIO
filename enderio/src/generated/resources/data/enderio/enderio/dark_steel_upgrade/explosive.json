@@ -3,6 +3,12 @@
   "effects": [
     {
       "type": "enderio:area_mining",
+      "condition": {
+        "type": "enderio:not",
+        "condition": {
+          "type": "enderio:entity_stepping_carefully"
+        }
+      },
       "cost_per_block": {
         "type": "enderio:no_cost"
       },

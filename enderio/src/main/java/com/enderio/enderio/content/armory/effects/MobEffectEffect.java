@@ -1,6 +1,8 @@
 package com.enderio.enderio.content.armory.effects;
 
 import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgradeEffect;
+import com.enderio.enderio.api.armory.upgrades.conditions.AlwaysActiveCondition;
+import com.enderio.enderio.api.armory.upgrades.conditions.EffectCondition;
 import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelHookContext;
 import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelUpgradeHookType;
 import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelUpgradeHookTypes;
@@ -17,7 +19,7 @@ import net.minecraft.world.entity.LivingEntity;
 import java.util.List;
 
 /**
- * Applies a mob (potion) effect to the wearer while the item is equipped.
+ * Applies a mob (potion) effect to the wearer while the item is equipped and {@link #condition()} is active.
  * The effect is given a short duration and topped up while equipped, so it wears off shortly after the item is removed.
  */
 public class MobEffectEffect extends DarkSteelUpgradeEffect implements EquipmentTickHook {
@@ -28,7 +30,8 @@ public class MobEffectEffect extends DarkSteelUpgradeEffect implements Equipment
             Codec.intRange(0, 255).optionalFieldOf("amplifier", 0).forGetter(MobEffectEffect::amplifier),
             Codec.intRange(2, 600).optionalFieldOf("duration", 40).forGetter(MobEffectEffect::duration),
             Codec.intRange(2, 600).optionalFieldOf("reapply_duration_threshold", 20).forGetter(MobEffectEffect::reapplyDurationThreshold),
-            Codec.BOOL.optionalFieldOf("show_particles", false).forGetter(MobEffectEffect::showParticles)
+            Codec.BOOL.optionalFieldOf("show_particles", false).forGetter(MobEffectEffect::showParticles),
+            EffectCondition.CODEC.optionalFieldOf("condition", AlwaysActiveCondition.INSTANCE).forGetter(MobEffectEffect::condition)
         ).apply(inst, MobEffectEffect::new));
 
     private static final List<DarkSteelUpgradeHookType<?>> HOOKS = List.of(DarkSteelUpgradeHookTypes.EQUIPMENT_TICK);
@@ -38,13 +41,20 @@ public class MobEffectEffect extends DarkSteelUpgradeEffect implements Equipment
     private final int duration;
     private final int reapplyDurationThreshold;
     private final boolean showParticles;
+    private final EffectCondition condition;
 
-    public MobEffectEffect(Holder<MobEffect> effect, int amplifier, int duration, int reapplyDurationThreshold, boolean showParticles) {
+    public MobEffectEffect(Holder<MobEffect> effect, int amplifier, int duration, int reapplyDurationThreshold, boolean showParticles,
+        EffectCondition condition) {
         this.effect = effect;
         this.amplifier = amplifier;
         this.duration = duration;
         this.reapplyDurationThreshold = reapplyDurationThreshold;
         this.showParticles = showParticles;
+        this.condition = condition;
+    }
+
+    public MobEffectEffect(Holder<MobEffect> effect, int amplifier, int duration, int reapplyDurationThreshold, boolean showParticles) {
+        this(effect, amplifier, duration, reapplyDurationThreshold, showParticles, AlwaysActiveCondition.INSTANCE);
     }
 
     public Holder<MobEffect> effect() {
@@ -67,6 +77,10 @@ public class MobEffectEffect extends DarkSteelUpgradeEffect implements Equipment
         return showParticles;
     }
 
+    public EffectCondition condition() {
+        return condition;
+    }
+
     @Override
     public List<DarkSteelUpgradeHookType<?>> getActiveHooks() {
         return HOOKS;
@@ -79,6 +93,10 @@ public class MobEffectEffect extends DarkSteelUpgradeEffect implements Equipment
 
     @Override
     public void onEquipmentTick(DarkSteelHookContext context, LivingEntity entity, EquipmentSlot slot) {
+        if (!condition.isActive(context.itemStack(), entity.level(), entity)) {
+            return;
+        }
+
         MobEffectInstance current = entity.getEffect(effect);
 
         // Only top up once we need to reapply the effect

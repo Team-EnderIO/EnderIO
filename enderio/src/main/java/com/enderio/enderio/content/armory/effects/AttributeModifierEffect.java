@@ -19,6 +19,9 @@ import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 
 import java.util.List;
 
+/**
+ * @apiNote No condition is available for this effect as it is not possible for changes in the condition to be detected and used by the hook.
+ */
 public class AttributeModifierEffect extends DarkSteelUpgradeEffect implements ModifyAttributesHook {
 
     public static final MapCodec<AttributeModifierEffect> CODEC = RecordCodecBuilder.mapCodec(inst -> inst
