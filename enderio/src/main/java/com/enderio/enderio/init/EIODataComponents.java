@@ -3,6 +3,7 @@ package com.enderio.enderio.init;
 import com.enderio.core.common.util.NamedFluidContents;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIODataComponents;
+import com.enderio.enderio.api.armory.capacitor.SocketedCapacitor;
 import com.enderio.enderio.api.attachment.CoordinateSelection;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.components.GrindingBallData;
@@ -131,8 +132,8 @@ public class EIODataComponents {
 
     // region Tools
 
-    public static final DataComponentType<ItemStack> SOCKETED_CAPACITOR = register("socketed_capacitor",
-        builder -> builder.persistent(ItemStack.OPTIONAL_CODEC).networkSynchronized(ItemStack.OPTIONAL_STREAM_CODEC));
+    public static final DataComponentType<SocketedCapacitor> SOCKETED_CAPACITOR = register("socketed_capacitor",
+        builder -> builder.persistent(SocketedCapacitor.CODEC).networkSynchronized(SocketedCapacitor.STREAM_CODEC));
 
     public static final DataComponentType<ItemDarkSteelUpgrades> DARK_STEEL_UPGRADES = register("dark_steel_upgrades",
         builder -> builder.persistent(ItemDarkSteelUpgrades.CODEC).networkSynchronized(ItemDarkSteelUpgrades.STREAM_CODEC));

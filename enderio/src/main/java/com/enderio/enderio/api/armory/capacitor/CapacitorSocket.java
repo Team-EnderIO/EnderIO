@@ -12,11 +12,17 @@ public interface CapacitorSocket {
 
     void setCapacitor(ItemStack capacitor);
 
+    // TODO: Nicest way of exposing from public API at the moment. Will probably make a CapacitorUtility or helper to replace it.
+    @ApiStatus.Internal
+    static boolean isCapacitor(ItemStack stack) {
+        return !stack.isEmpty() && (stack.has(EIODataComponents.CAPACITOR_DATA) || stack.getCapability(EnderIOCapabilities.CAPACITOR_EXTENSION) != null);
+    }
+
     @ApiStatus.NonExtendable
     default CapacitorData getCapacitorData() {
         ItemStack capacitor = getCapacitor();
         if (capacitor.isEmpty()) {
-            return null;
+            return CapacitorData.NONE;
         }
 
         var capacitorExtension = capacitor.getCapability(EnderIOCapabilities.CAPACITOR_EXTENSION);
