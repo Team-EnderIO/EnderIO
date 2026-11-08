@@ -4,7 +4,9 @@ import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
 import java.util.List;
 
@@ -25,34 +27,27 @@ public record CompoundEffectCost(List<EffectCost> costs) implements EffectCost {
     }
 
     @Override
-    public EffectCostInstance createInstance(ServerLevel level, ServerPlayer player, ItemStack itemStack) {
-        return new Instance(costs.stream().map(i -> i.createInstance(level, player, itemStack)).toList());
-    }
-
-    private record Instance(List<EffectCostInstance> instances) implements EffectCostInstance {
-        @Override
-        public boolean canAfford(ServerLevel level, ServerPlayer player, ItemStack itemStack) {
-            for (EffectCostInstance instance : instances) {
-                if (!instance.canAfford(level, player, itemStack)) {
-                    return false;
-                }
-            }
-
-            return true;
-        }
-
-        @Override
-        public boolean take(ServerLevel level, ServerPlayer player, ItemStack itemStack) {
-            if (!canAfford(level, player, itemStack)) {
+    public boolean canAfford(Level level, Player player, ItemStack itemStack) {
+        for (EffectCost cost : costs) {
+            if (!cost.canAfford(level, player, itemStack)) {
                 return false;
             }
-
-            // TODO: Not great that we ignore return value, but might go away soon.
-            for (EffectCostInstance instance : instances) {
-                instance.take(level, player, itemStack);
-            }
-
-            return true;
         }
+
+        return true;
+    }
+
+    @Override
+    public boolean take(ServerLevel level, ServerPlayer player, ItemStack itemStack) {
+        if (!canAfford(level, player, itemStack)) {
+            return false;
+        }
+
+        // TODO: Not great that we ignore return value, but might go away soon.
+        for (EffectCost cost : costs) {
+            cost.take(level, player, itemStack);
+        }
+
+        return true;
     }
 }

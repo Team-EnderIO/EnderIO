@@ -2,7 +2,6 @@ package com.enderio.enderio.content.armory.effects.tools;
 
 import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgradeEffect;
 import com.enderio.enderio.api.armory.upgrades.costs.EffectCost;
-import com.enderio.enderio.api.armory.upgrades.costs.EffectCostInstance;
 import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelUpgradeHookType;
 import com.enderio.enderio.content.armory.ItemDarkSteelUpgrades;
 import com.enderio.enderio.init.EIODataComponents;
@@ -121,11 +120,10 @@ public class ImmediatePickupEffect extends DarkSteelUpgradeEffect {
                 continue;
             }
 
-            EffectCostInstance cost = findAffordableCost(level, player, tool, effects);
+            EffectCost cost = findAffordableCost(level, player, tool, effects);
             if (cost == null) {
                 // Nothing is affordable, and no costs are taken during this loop unless an item is picked up.
-                // Costs are re-sampled per drop though, so a cheaper sample may still be affordable for later drops.
-                continue;
+                break;
             }
 
             ItemStack originalCopy = stack.copy();
@@ -165,10 +163,10 @@ public class ImmediatePickupEffect extends DarkSteelUpgradeEffect {
 
     // Find the first affordable effect cost, if any.
     @Nullable
-    private static EffectCostInstance findAffordableCost(ServerLevel level, ServerPlayer player, ItemStack tool,
+    private static EffectCost findAffordableCost(ServerLevel level, ServerPlayer player, ItemStack tool,
         List<ImmediatePickupEffect> effects) {
         for (ImmediatePickupEffect effect : effects) {
-            EffectCostInstance cost = effect.costPerItem().createInstance(level, player, tool);
+            EffectCost cost = effect.costPerItem();
             if (cost.canAfford(level, player, tool)) {
                 return cost;
             }

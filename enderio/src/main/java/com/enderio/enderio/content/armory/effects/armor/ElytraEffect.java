@@ -64,8 +64,7 @@ public class ElytraEffect extends DarkSteelUpgradeEffect implements ElytraFlyHoo
         // Costs can only be evaluated on the server. The client optimistically allows flight; if the server refuses
         // to start flying it forces a resync of the fall flying flag (see ServerGamePacketListenerImpl START_FALL_FLYING).
         if (entity instanceof ServerPlayer player) {
-            return cost.createInstance(player.serverLevel(), player, context.itemStack())
-                .canAfford(player.serverLevel(), player, context.itemStack());
+            return cost.canAfford(player.serverLevel(), player, context.itemStack());
         }
 
         return true;
@@ -81,7 +80,6 @@ public class ElytraEffect extends DarkSteelUpgradeEffect implements ElytraFlyHoo
             return true;
         }
 
-        return cost.createInstance(player.serverLevel(), player, context.itemStack())
-            .take(player.serverLevel(), player, context.itemStack());
+        return cost.take(player.serverLevel(), player, context.itemStack());
     }
 }

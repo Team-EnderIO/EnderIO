@@ -1,16 +1,18 @@
 package com.enderio.enderio.api.armory.upgrades.costs;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.util.valueproviders.IntProvider;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
 
-public record EffectDurabilityCost(IntProvider durability) implements EffectCost {
+public record EffectDurabilityCost(int durability) implements EffectCost {
 
     public static final MapCodec<EffectDurabilityCost> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-        IntProvider.CODEC.fieldOf("durability").forGetter(EffectDurabilityCost::durability)
+        Codec.INT.fieldOf("durability").forGetter(EffectDurabilityCost::durability)
     ).apply(instance, EffectDurabilityCost::new));
 
     @Override
@@ -19,24 +21,17 @@ public record EffectDurabilityCost(IntProvider durability) implements EffectCost
     }
 
     @Override
-    public EffectCostInstance createInstance(ServerLevel level, ServerPlayer player, ItemStack itemStack) {
-        return new Instance(durability.sample(level.getRandom()));
+    public boolean canAfford(Level level, Player player, ItemStack itemStack) {
+        return itemStack.isDamageableItem() && itemStack.getDamageValue() + durability <= itemStack.getMaxDamage();
     }
 
-    private record Instance(int durabilityToTake) implements EffectCostInstance {
-        @Override
-        public boolean canAfford(ServerLevel level, ServerPlayer player, ItemStack itemStack) {
-            return itemStack.isDamageableItem() && itemStack.getDamageValue() + durabilityToTake <= itemStack.getMaxDamage();
+    @Override
+    public boolean take(ServerLevel level, ServerPlayer player, ItemStack itemStack) {
+        if (!canAfford(level, player, itemStack)) {
+            return false;
         }
 
-        @Override
-        public boolean take(ServerLevel level, ServerPlayer player, ItemStack itemStack) {
-            if (!canAfford(level, player, itemStack)) {
-                return false;
-            }
-
-            itemStack.hurtAndBreak(durabilityToTake, level, player, item -> {});
-            return true;
-        }
+        itemStack.hurtAndBreak(durability, level, player, item -> {});
+        return true;
     }
 }

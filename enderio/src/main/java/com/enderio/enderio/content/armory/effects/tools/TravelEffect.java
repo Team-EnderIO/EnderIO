@@ -13,6 +13,8 @@ import com.enderio.enderio.content.travel.TravelHandler;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
@@ -74,11 +76,17 @@ public class TravelEffect extends DarkSteelUpgradeEffect implements UseOnHook, U
             return currentResult;
         }
 
-        // TODO: implement costs. Unfortunately need to remove IntProvider as they can't really be random for client+server stuff.
-//        var costInstance = cost.createInstance(level, player, player.getItemInHand(usedHand))
+        if (!cost.canAfford(level, player, currentResult.getObject())) {
+            return currentResult;
+        }
 
         if (TravelHandler.blockTeleport(level, player)) {
-            return InteractionResultHolder.sidedSuccess(context.itemStack(), level.isClientSide());
+            if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
+                // Modifies the stack in-place
+                cost.take(serverLevel, serverPlayer, currentResult.getObject());
+            }
+
+            return InteractionResultHolder.sidedSuccess(currentResult.getObject(), level.isClientSide());
         }
 
         return currentResult;
@@ -102,7 +110,16 @@ public class TravelEffect extends DarkSteelUpgradeEffect implements UseOnHook, U
             return currentResult;
         }
 
+        if (!cost.canAfford(level, player, useOnContext.getItemInHand())) {
+            return currentResult;
+        }
+
         if (TravelHandler.blockTeleport(level, player)) {
+            if (level instanceof ServerLevel serverLevel && player instanceof ServerPlayer serverPlayer) {
+                // Modifies the stack in-place
+                cost.take(serverLevel, serverPlayer, useOnContext.getItemInHand());
+            }
+
             return InteractionResult.sidedSuccess(level.isClientSide());
         }
 

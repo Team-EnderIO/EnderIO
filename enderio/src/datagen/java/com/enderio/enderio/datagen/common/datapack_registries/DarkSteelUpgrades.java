@@ -21,7 +21,6 @@ import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.Item;
@@ -49,7 +48,7 @@ public class DarkSteelUpgrades {
 
         context.register(key("direct"), new DarkSteelUpgrade(Component.literal("Direct"), Component.literal("Teleports mined things directly into your inventory"),
             new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_TOOLS), false), HolderSet.empty(), List.of(
-            new ImmediatePickupEffect(new EffectDurabilityCost(ConstantInt.of(1)))
+            new ImmediatePickupEffect(new EffectDurabilityCost(1))
         )));
 
         context.register(key("elytra"), new DarkSteelUpgrade(Component.literal("Elytra"), Component.literal("Makes armor work as elytra"),
@@ -66,7 +65,7 @@ public class DarkSteelUpgrades {
 
         context.register(key("travel"), new DarkSteelUpgrade(Component.literal("Travel"), Component.literal("Hold Shift and Right-Click to teleport or activate a travel anchor"),
             new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_TOOLS), false), HolderSet.empty(), List.of(
-                new TravelEffect(true, new EffectDurabilityCost(ConstantInt.of(5)))
+                new TravelEffect(true, new EffectDurabilityCost(5))
         )));
     }
 
