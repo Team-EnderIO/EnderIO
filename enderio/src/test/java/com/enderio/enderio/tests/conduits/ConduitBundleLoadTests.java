@@ -6,6 +6,7 @@ import com.enderio.enderio.api.conduits.connection.ConnectionStatus;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfig;
 import com.enderio.enderio.api.conduits.network.node.NodeData;
 import com.enderio.enderio.content.conduits.bundle.ConduitBundleBlockEntity;
+import com.enderio.enderio.content.conduits.network.ConduitNetworkSavedData;
 import com.enderio.enderio.content.conduits.type.item.ItemConduitConnectionConfig;
 import com.enderio.enderio.content.conduits.type.item.ItemConduitNodeData;
 import com.enderio.enderio.init.EIOBlocks;
@@ -18,14 +19,36 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.storage.DimensionDataStorage;
 import net.neoforged.testframework.junit.EphemeralTestServerProvider;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.eq;
+import static org.mockito.Mockito.doReturn;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
 @ExtendWith(EphemeralTestServerProvider.class)
 public class ConduitBundleLoadTests {
+    private static ServerLevel serverLevel(MinecraftServer server) {
+        // The ephemeral server supplies registries but does not create dimensions.
+        // Mock the world boundary; keep the saved data, nodes and networks real.
+        var level = mock(ServerLevel.class);
+        var storage = mock(DimensionDataStorage.class);
+        when(level.registryAccess()).thenReturn(server.registryAccess());
+        when(level.getDataStorage()).thenReturn(storage);
+        when(level.getBlockState(any(BlockPos.class))).thenReturn(Blocks.AIR.defaultBlockState());
+        doReturn(new ConduitNetworkSavedData()).when(storage)
+            .computeIfAbsent(any(), eq("enderio_conduit_network"));
+        return level;
+    }
+
     private static Holder<Conduit<?, ?>> itemConduit(MinecraftServer server) {
         return server.registryAccess().lookupOrThrow(EnderIORegistries.Keys.CONDUIT)
             .getOrThrow(EIOConduits.ITEM);
@@ -69,9 +92,10 @@ public class ConduitBundleLoadTests {
         var conduit = itemConduit(server);
         var bundle = new ConduitBundleBlockEntity(new BlockPos(32, 100, 32),
             EIOBlocks.CONDUIT_BUNDLE.get().defaultBlockState());
-        bundle.setLevel(server.overworld());
+        bundle.setLevel(serverLevel(server));
         bundle.loadWithComponents(savedBundle(server, conduit), server.registryAccess());
 
+        Assertions.assertDoesNotThrow(() -> bundle.onConnectionsUpdated(conduit));
         var node = bundle.getConduitNode(conduit);
         Assertions.assertNotNull(node);
         Assertions.assertNotNull(node.getNetwork());
@@ -95,7 +119,7 @@ public class ConduitBundleLoadTests {
         var bundle = new ConduitBundleBlockEntity(new BlockPos(64, 100, 32),
             EIOBlocks.CONDUIT_BUNDLE.get().defaultBlockState());
         bundle.loadWithComponents(savedBundle(server, conduit), server.registryAccess());
-        bundle.setLevel(server.overworld());
+        bundle.setLevel(serverLevel(server));
 
         Assertions.assertNotNull(bundle.getConduitNode(conduit));
         Assertions.assertEquals(7, bundle.getConduitNode(conduit)
@@ -109,7 +133,7 @@ public class ConduitBundleLoadTests {
         var bundle = new ConduitBundleBlockEntity(new BlockPos(96, 100, 32),
             EIOBlocks.CONDUIT_BUNDLE.get().defaultBlockState());
         bundle.loadWithComponents(savedBundle(server, conduit), server.registryAccess());
-        bundle.setLevel(server.overworld());
+        bundle.setLevel(serverLevel(server));
         var node = bundle.getConduitNode(conduit);
         var network = node.getNetwork();
         var saved = bundle.saveWithoutMetadata(server.registryAccess());
