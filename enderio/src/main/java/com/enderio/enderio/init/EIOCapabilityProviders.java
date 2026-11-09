@@ -4,7 +4,8 @@ import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.armory.DarkSteelEnergyStorage;
 import com.enderio.enderio.api.armory.capacitor.ComponentCapacitorSocket;
-import com.enderio.enderio.api.capacitor.FixedScalable;
+import com.enderio.enderio.api.capacitor.CapacitorModifier;
+import com.enderio.enderio.api.capacitor.LinearScalable;
 import com.enderio.enderio.content.armory.energy.CapacitorBackedDarkSteelEnergyStorage;
 import com.enderio.enderio.content.cold_fire.ColdFireIgniter;
 import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankItem;
@@ -43,6 +44,10 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 @EventBusSubscriber
 public class EIOCapabilityProviders {
+    // TODO: Move these into config?
+    private static final LinearScalable DARK_STEEL_ENERGY_CAPACITY = new LinearScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100_000);
+    private static final LinearScalable END_STEEL_ENERGY_CAPACITY = new LinearScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 250_000);
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void markProxyableCapabilities(RegisterCapabilitiesEvent event) {
         // TODO: Review these
@@ -157,17 +162,22 @@ public class EIOCapabilityProviders {
             EIOItems.END_STEEL_BOOTS
         );
 
-        // Energy
+        // Energy buffers, scaled by the socketed capacitor. Without a capacitor the buffer has no capacity.
         event.registerItem(
             Capabilities.EnergyStorage.ITEM,
-            (itemStack, ignored) -> new CapacitorBackedDarkSteelEnergyStorage(itemStack, EIODataComponents.ENERGY, new FixedScalable(() -> 1000)),
+            (itemStack, ignored) -> new CapacitorBackedDarkSteelEnergyStorage(itemStack, EIODataComponents.ENERGY, DARK_STEEL_ENERGY_CAPACITY),
             EIOItems.DARK_STEEL_SWORD,
             EIOItems.DARK_STEEL_PICKAXE,
             EIOItems.DARK_STEEL_AXE,
             EIOItems.DARK_STEEL_HELMET,
             EIOItems.DARK_STEEL_CHESTPLATE,
             EIOItems.DARK_STEEL_LEGGINGS,
-            EIOItems.DARK_STEEL_BOOTS,
+            EIOItems.DARK_STEEL_BOOTS
+        );
+
+        event.registerItem(
+            Capabilities.EnergyStorage.ITEM,
+            (itemStack, ignored) -> new CapacitorBackedDarkSteelEnergyStorage(itemStack, EIODataComponents.ENERGY, END_STEEL_ENERGY_CAPACITY),
             EIOItems.END_STEEL_SWORD,
             EIOItems.END_STEEL_PICKAXE,
             EIOItems.END_STEEL_AXE,

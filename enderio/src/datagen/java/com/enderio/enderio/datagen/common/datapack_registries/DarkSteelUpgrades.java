@@ -3,11 +3,15 @@ package com.enderio.enderio.datagen.common.datapack_registries;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgrade;
+import com.enderio.enderio.api.armory.upgrades.conditions.AllOfCondition;
+import com.enderio.enderio.api.armory.upgrades.conditions.DayTimeRangeCondition;
 import com.enderio.enderio.api.armory.upgrades.conditions.NegateCondition;
+import com.enderio.enderio.api.armory.upgrades.conditions.SkyAccessCondition;
 import com.enderio.enderio.api.armory.upgrades.conditions.SteppingCarefullyCondition;
 import com.enderio.enderio.api.armory.upgrades.costs.EffectDurabilityCost;
 import com.enderio.enderio.api.armory.upgrades.costs.FreeCost;
 import com.enderio.enderio.content.armory.effects.AttributeModifierEffect;
+import com.enderio.enderio.content.armory.effects.ChargeInventoryEffect;
 import com.enderio.enderio.content.armory.effects.MobEffectEffect;
 import com.enderio.enderio.content.armory.effects.armor.ElytraEffect;
 import com.enderio.enderio.content.armory.effects.armor.PreventsFreezingEffect;
@@ -19,6 +23,7 @@ import com.enderio.enderio.content.armory.effects.tools.HoeBlockTransformationEf
 import com.enderio.enderio.content.armory.effects.tools.ImmediatePickupEffect;
 import com.enderio.enderio.content.armory.effects.tools.ShovelBlockTransformationEffect;
 import com.enderio.enderio.content.armory.effects.tools.TravelEffect;
+import com.enderio.enderio.content.machines.solar_panel.SolarPanelBlockEntity;
 import com.enderio.enderio.foundation.tag.EIOTags;
 import com.enderio.enderio.init.EIOAttributes;
 import net.minecraft.core.HolderGetter;
@@ -132,6 +137,15 @@ public class DarkSteelUpgrades {
             new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_HELMETS), false), HolderSet.empty(), List.of(
                 // at 10s left the player's vision will begin flashing
                 new MobEffectEffect(MobEffects.NIGHT_VISION, 0, 15 * 20, 12 * 20, false)
+        )));
+
+        context.register(key("solar"), new DarkSteelUpgrade(Component.literal("Solar"), Component.literal("Charges your dark steel armor and held tools while in direct sunlight."),
+            new DarkSteelUpgrade.UpgradeDefinition(items.getOrThrow(EIOTags.Items.DARK_STEEL_UPGRADABLE_HELMETS), false), HolderSet.empty(), List.of(
+                new ChargeInventoryEffect(4, 20, true, true, true, false, Optional.of(EIOTags.Items.DARK_STEEL_UPGRADABLE),
+                    new AllOfCondition(List.of(
+                        SkyAccessCondition.INSTANCE,
+                        new DayTimeRangeCondition(0, SolarPanelBlockEntity.DAYTIME_LENGTH - 1)
+                    )))
         )));
     }
 

@@ -161,6 +161,11 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
 
     // region Energy Generation
 
+    /**
+     * How long daytime lasts for solar panels, in ticks. Daytime starts at {@link Level#getDayTime()} 0 (within the day), and night covers the rest of the day.
+     */
+    public static final int DAYTIME_LENGTH = GameTicks.MINUTE_IN_TICKS * 10;
+
     @Override
     public void serverTick() {
         if (getGenerationRate() > 0) {
@@ -228,12 +233,12 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
 
             // Over how long should generation scale up/down and the start/end of the night
             float rampTimeMinutes = 1.5f;
-            float rampTimeTicks = GameTicks.MINUTE_IN_TICKS * rampTimeMinutes + GameTicks.MINUTE_IN_TICKS * 10;
+            float rampTimeTicks = GameTicks.MINUTE_IN_TICKS * rampTimeMinutes + DAYTIME_LENGTH;
 
-            if (GameTicks.MINUTE_IN_TICKS * 10 > dayTime) {
+            if (DAYTIME_LENGTH > dayTime) {
                 // During the day, no power
                 outputScale = 0;
-            } else if (GameTicks.MINUTE_IN_TICKS * 10 < dayTime && dayTime < rampTimeTicks) {
+            } else if (DAYTIME_LENGTH < dayTime && dayTime < rampTimeTicks) {
                 // If in the ramp up period of the night, do a linear scale up
                 outputScale = dayTime / rampTimeTicks;
             } else if (dayTime > (GameTicks.MINUTE_IN_TICKS * 20) - (GameTicks.MINUTE_IN_TICKS * rampTimeMinutes)) {
@@ -261,9 +266,9 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
         if (dayTime < rampTimeTicks) {
             // If in the ramp up period of the day, do a linear scale up
             outputScale = dayTime / rampTimeTicks;
-        } else if (dayTime > (GameTicks.MINUTE_IN_TICKS * 10) - (GameTicks.MINUTE_IN_TICKS * rampTimeMinutes)) {
+        } else if (dayTime > DAYTIME_LENGTH - (GameTicks.MINUTE_IN_TICKS * rampTimeMinutes)) {
             // If in the ramp down period of the day, do a linear scale down
-            int timeLeft = (GameTicks.MINUTE_IN_TICKS * 10) - dayTime;
+            int timeLeft = DAYTIME_LENGTH - dayTime;
             outputScale = timeLeft / rampTimeTicks;
         } else {
             // Rest of the day, full power

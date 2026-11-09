@@ -6,6 +6,7 @@ import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelUpgradeHookTypes;
 import com.enderio.enderio.api.armory.upgrades.hooks.armor.ElytraFlyHook;
 import com.enderio.enderio.api.armory.upgrades.hooks.armor.WalkOnPowderedSnowHook;
 import com.enderio.enderio.content.armory.DarkSteelHelper;
+import com.enderio.enderio.content.armory.IDarkSteelItem;
 import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
@@ -15,7 +16,7 @@ import net.minecraft.world.level.gameevent.GameEvent;
 
 import java.util.Set;
 
-public class DarkSteelArmorItem extends ArmorItem implements DarkSteelUpgradableItem {
+public class DarkSteelArmorItem extends ArmorItem implements IDarkSteelItem, DarkSteelUpgradableItem {
     private static final Set<DarkSteelUpgradeHookType<?>> ARMOR_HOOKS = Set.of(
         DarkSteelUpgradeHookTypes.MODIFY_ATTRIBUTES,
         DarkSteelUpgradeHookTypes.EQUIPMENT_TICK,

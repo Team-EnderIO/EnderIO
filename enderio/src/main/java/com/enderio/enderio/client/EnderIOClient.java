@@ -4,6 +4,7 @@ import com.enderio.enderio.client.content.armory.ClientSocketedCapacitorTooltip;
 import com.enderio.enderio.client.content.armory.SocketedCapacitorTooltip;
 import com.enderio.enderio.client.foundation.tooltip.ClientEnergyBarTooltip;
 import com.enderio.enderio.client.foundation.tooltip.EnergyBarTooltip;
+import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.client.item.FluidBarDecorator;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIOAPI;
@@ -136,6 +137,7 @@ import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsE
 import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 import net.neoforged.neoforge.common.util.Lazy;
 
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -359,6 +361,14 @@ public class EnderIOClient {
     public static void itemDecorators(RegisterItemDecorationsEvent event) {
         // Register tools
         event.register(EIOItems.LEVITATION_STAFF.get(), FluidBarDecorator.INSTANCE);
+
+        // Dark steel energy buffers. Hidden while the item has no capacitor, as the buffer then has no capacity.
+        for (var item : List.of(EIOItems.DARK_STEEL_SWORD, EIOItems.DARK_STEEL_PICKAXE, EIOItems.DARK_STEEL_AXE, EIOItems.DARK_STEEL_HELMET,
+            EIOItems.DARK_STEEL_CHESTPLATE, EIOItems.DARK_STEEL_LEGGINGS, EIOItems.DARK_STEEL_BOOTS, EIOItems.END_STEEL_SWORD,
+            EIOItems.END_STEEL_PICKAXE, EIOItems.END_STEEL_AXE, EIOItems.END_STEEL_HELMET, EIOItems.END_STEEL_CHESTPLATE,
+            EIOItems.END_STEEL_LEGGINGS, EIOItems.END_STEEL_BOOTS)) {
+            event.register(item.get(), EnergyBarDecorator.INSTANCE);
+        }
 
         // Register all glass blocks
         EIOBlocks.GLASS_BLOCKS.values()

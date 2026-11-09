@@ -9,7 +9,6 @@ import com.enderio.enderio.api.armory.upgrades.costs.EffectDurabilityCost;
 import com.enderio.enderio.api.armory.upgrades.costs.EnergyCost;
 import com.enderio.enderio.api.armory.upgrades.costs.ExperienceCost;
 import com.enderio.enderio.api.armory.upgrades.costs.FreeCost;
-import com.enderio.enderio.content.armory.effects.SolarChargeEffect;
 import com.enderio.enderio.content.armory.effects.tools.AddItemAbilitiesEffect;
 import com.enderio.enderio.content.armory.effects.tools.AdditionalToolRulesEffect;
 import com.enderio.enderio.content.armory.effects.tools.ImmediatePickupEffect;

@@ -5,11 +5,13 @@ import com.enderio.enderio.api.EnderIORegistries;
 import com.enderio.enderio.api.armory.upgrades.conditions.AllOfCondition;
 import com.enderio.enderio.api.armory.upgrades.conditions.AlwaysActiveCondition;
 import com.enderio.enderio.api.armory.upgrades.conditions.AnyOfCondition;
+import com.enderio.enderio.api.armory.upgrades.conditions.DayTimeRangeCondition;
 import com.enderio.enderio.api.armory.upgrades.conditions.EffectCondition;
 import com.enderio.enderio.api.armory.upgrades.conditions.EnergyRangeCondition;
 import com.enderio.enderio.api.armory.upgrades.conditions.HasCapacitorCondition;
 import com.enderio.enderio.api.armory.upgrades.conditions.NegateCondition;
 import com.enderio.enderio.api.armory.upgrades.conditions.NeverActiveCondition;
+import com.enderio.enderio.api.armory.upgrades.conditions.SkyAccessCondition;
 import com.enderio.enderio.api.armory.upgrades.conditions.SteppingCarefullyCondition;
 import com.mojang.serialization.MapCodec;
 import net.neoforged.bus.api.IEventBus;
@@ -28,6 +30,8 @@ public class EIODarkSteelUpgradeEffectConditions {
         DARK_STEEL_UPGRADE_EFFECT_CONDITIONS.register("has_capacitor", () -> HasCapacitorCondition.CODEC);
         DARK_STEEL_UPGRADE_EFFECT_CONDITIONS.register("energy_within", () -> EnergyRangeCondition.CODEC);
         DARK_STEEL_UPGRADE_EFFECT_CONDITIONS.register("entity_stepping_carefully", () -> SteppingCarefullyCondition.CODEC);
+        DARK_STEEL_UPGRADE_EFFECT_CONDITIONS.register("entity_can_see_sky", () -> SkyAccessCondition.CODEC);
+        DARK_STEEL_UPGRADE_EFFECT_CONDITIONS.register("day_time_within", () -> DayTimeRangeCondition.CODEC);
 
         DARK_STEEL_UPGRADE_EFFECT_CONDITIONS.register(eventBus);
     }
