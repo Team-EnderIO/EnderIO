@@ -1517,6 +1517,19 @@ public final class ConduitBundleBlockEntity extends EnderBlockEntity
             }
         }
 
+        // NBT can also be applied after setLevel (for example by structure placement).
+        // In that order setLevel saw an empty bundle, so restore the nodes before
+        // connection updates or ticks can observe the newly loaded conduits.
+        if (level instanceof ServerLevel) {
+            isLoading = true;
+            try {
+                loadFromSavedData();
+            } finally {
+                isLoading = false;
+            }
+            checkConnection = checkConnection.activate();
+        }
+
         ensureModelsAreCorrect();
     }
 
