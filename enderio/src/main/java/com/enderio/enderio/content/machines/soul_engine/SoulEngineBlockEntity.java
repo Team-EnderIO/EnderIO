@@ -41,7 +41,6 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -111,7 +110,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
                 // Convert into tagged fluid - allow any valid fluid type to be inserted but normalize to the current fluid
                 if (isValid(index, resource)) {
                     var currentFluid = getResource(index);
-                    if (currentFluid.getFluid() == Fluids.EMPTY || resource.getFluid().isSame(currentFluid.getFluid())) {
+                    if (currentFluid.isEmpty() || resource.equals(currentFluid)) {
                         return super.insert(index, resource, amount, transaction);
                     } else {
                         // Insert the same amount but as the current fluid type

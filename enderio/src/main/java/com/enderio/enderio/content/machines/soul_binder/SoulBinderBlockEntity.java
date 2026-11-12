@@ -112,7 +112,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
                 // Convert into XP Juice - allow any XP fluid type to be inserted but normalize to the current fluid
                 if (isValid(index, resource)) {
                     var currentFluid = getResource(index);
-                    if (currentFluid.getFluid() == Fluids.EMPTY || resource.getFluid().isSame(currentFluid.getFluid())) {
+                    if (currentFluid.isEmpty() || resource.equals(currentFluid)) {
                         return super.insert(index, resource, amount, transaction);
                     } else {
                         // Insert the same amount but as the current fluid type
@@ -274,7 +274,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
                 FluidStack currentFluid = getStoredFluid();
                 if (!currentFluid.isEmpty() && toExtract > 0) {
                     try (Transaction transaction = Transaction.openRoot()) {
-                        fluidStorage.extract(TANK_SLOT, FluidResource.of(currentFluid.getFluid()), toExtract, transaction);
+                        fluidStorage.extract(TANK_SLOT, FluidResource.of(currentFluid), toExtract, transaction);
                         transaction.commit();
                     }
                 }

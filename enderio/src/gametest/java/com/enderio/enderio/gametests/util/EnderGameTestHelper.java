@@ -12,6 +12,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.material.Fluid;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.transfer.fluid.FluidResource;
 import net.neoforged.neoforge.transfer.item.ItemResource;
 import net.neoforged.neoforge.transfer.transaction.Transaction;
@@ -236,7 +237,7 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
 
     // endregion
 
-    public void fillContainer(int x, int y, int z, Fluid fluid, int amount) {
+    public void fillContainer(int x, int y, int z, FluidStack stack) {
         var fluidHandler = getLevel().getCapability(Capabilities.Fluid.BLOCK, absolutePos(new BlockPos(x, y, z)),
             null);
         if (fluidHandler == null) {
@@ -244,7 +245,8 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
         }
 
         try (Transaction transaction = Transaction.openRoot()) {
-            int filled = fluidHandler.insert(FluidResource.of(fluid), amount, transaction);
+            int amount = stack.getAmount();
+            int filled = fluidHandler.insert(FluidResource.of(stack), amount, transaction);
             if (filled != amount) {
                 throw assertionException(
                     "Could not fill tank with all " + amount + " of the fluid into container at " + x + "," + y + "," + z);
@@ -252,6 +254,10 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
 
             transaction.commit();
         }
+    }
+
+    public void fillContainer(int x, int y, int z, Fluid fluid, int amount) {
+        fillContainer(x, y, z, new FluidStack(fluid, amount));
     }
 
     public long getAmountInHandler(int x, int y, int z, Fluid fluid) {
@@ -269,6 +275,28 @@ public class EnderGameTestHelper extends ExtendedGameTestHelper {
         }
 
         return totalAmount;
+    }
+
+    public void assertContainerHasExactly(int x, int y, int z, FluidStack stack) {
+        var fluidHandler = getLevel().getCapability(Capabilities.Fluid.BLOCK, absolutePos(new BlockPos(x, y, z)),
+            null);
+        if (fluidHandler == null) {
+            throw assertionException("No fluid handler at " + x + "," + y + "," + z);
+        }
+
+        // Matches on fluid and components, so a stack that lost its components will not be counted.
+        FluidResource expected = FluidResource.of(stack);
+        long foundAmount = 0;
+        for (int i = 0; i < fluidHandler.size(); i++) {
+            if (fluidHandler.getResource(i).equals(expected)) {
+                foundAmount += fluidHandler.getAmountAsLong(i);
+            }
+        }
+
+        if (foundAmount != stack.getAmount()) {
+            throw assertionException("Expected " + stack.getAmount() + " of " + stack + " in tank at " + x + "," + y
+                + "," + z + " but found " + foundAmount);
+        }
     }
 
     public void assertContainerHasExactly(int x, int y, int z, Fluid fluid, int amount) {

@@ -58,17 +58,17 @@ public class FluidConduitTicker extends ConduitTickerBase<FluidConduit> {
                         continue;
                     }
 
-                    Fluid fluid = extractHandler.getResource(i).getFluid();
-                    remaining = doFluidTransfer(fluid, remaining, extractConnection, insertPaths, insertedPerPath);
+                    // Keep the full resource (fluid and components) so components are not lost in transit.
+                    FluidResource fluidResource = extractHandler.getResource(i);
+                    remaining = doFluidTransfer(fluidResource, remaining, extractConnection, insertPaths, insertedPerPath);
                 }
             }
         }
     }
 
-    private int doFluidTransfer(Fluid fluid, int maxTransfer, ConduitBlockConnection extractConnection,
+    private int doFluidTransfer(FluidResource fluidResource, int maxTransfer, ConduitBlockConnection extractConnection,
         List<ConduitConnectionPath> insertPaths, Map<ConduitConnectionPath, Integer> insertedPerPath) {
 
-        var fluidResource = FluidResource.of(fluid);
 
         var extractHandler = Objects
             .requireNonNull(extractConnection.getSidedCapability(Capabilities.Fluid.BLOCK));

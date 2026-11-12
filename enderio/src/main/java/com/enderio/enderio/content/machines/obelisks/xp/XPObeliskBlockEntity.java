@@ -66,7 +66,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
                 // Convert into XP Juice - allow any XP fluid type to be inserted but normalize to the current fluid
                 if (isValid(index, resource)) {
                     var currentFluid = getResource(index);
-                    if (currentFluid.getFluid() == Fluids.EMPTY || resource.getFluid().isSame(currentFluid.getFluid())) {
+                    if (currentFluid.isEmpty() || resource.equals(currentFluid)) {
                         return super.insert(index, resource, amount, transaction);
                     } else {
                         // Insert the same amount but as the current fluid type
@@ -139,7 +139,7 @@ public class XPObeliskBlockEntity extends MachineBlockEntity {
         // Drain the fluid
         int drained;
         try (Transaction transaction = Transaction.openRoot()) {
-            drained = fluidStorage.extract(TANK_SLOT, FluidResource.of(currentFluid.getFluid()), cappedVolume, transaction);
+            drained = fluidStorage.extract(TANK_SLOT, FluidResource.of(currentFluid), cappedVolume, transaction);
             transaction.commit();
         }
 

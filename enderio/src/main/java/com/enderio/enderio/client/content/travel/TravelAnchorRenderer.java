@@ -8,7 +8,6 @@ import com.enderio.enderio.content.travel.travel_anchor.AnchorTravelTarget;
 import com.enderio.enderio.content.travel.travel_anchor.PaintedTravelAnchorBlockEntity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -78,14 +77,12 @@ public class TravelAnchorRenderer implements TravelRenderer<AnchorTravelTarget> 
             poseStack.translate(-0.5, -0.5, -0.5);
         }
 
-        int outlineColor = 0xFF0B4D42;
-        int textColor = 0xFFFFFFFF;
-        if (active) {
-            textColor = ChatFormatting.AQUA.getColor() == null ? 0xFFFFFFFF : ARGB.opaque(ChatFormatting.AQUA.getColor());
-            outlineColor = textColor;
-        }
-        float outlineR = ((outlineColor & (0xFF << 16)) >> 16) / 255F;
-        float outlineG = ((outlineColor & (0xFF << 8)) >> 8) / 255F;
+        int outlineColor = ARGB.opaque(
+            Integer.parseInt(active ? BaseConfig.CLIENT.ANCHORS_ACTIVE_COLOR.get() : BaseConfig.CLIENT.ANCHORS_BACKGROUND_COLOR.get(), 16));
+        int textColor = ARGB.opaque(
+            Integer.parseInt(active ? BaseConfig.CLIENT.ANCHORS_ACTIVE_COLOR.get() : "FFFFFF", 16));
+        float outlineR = ((outlineColor >> 16) & 0xFF) / 255F;
+        float outlineG = ((outlineColor >> 8) & 0xFF) / 255F;
         float outlineB = (outlineColor & 0xFF) / 255F;
 
         int packedLight = LightCoordsUtil.pack(15, 15);
