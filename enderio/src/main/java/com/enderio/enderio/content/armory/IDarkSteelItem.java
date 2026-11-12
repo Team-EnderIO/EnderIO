@@ -21,21 +21,4 @@ public interface IDarkSteelItem extends AdvancedTooltipProvider {
         EnergyTooltip.add(itemStack, tooltips);
     }
 
-    @Override
-    default void addDetailedTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        addDurabilityTooltips(itemStack, tooltips);
-    }
-
-    default void addDurabilityTooltips(ItemStack itemStack, List<Component> tooltips) {
-        if (itemStack.isDamageableItem()) {
-            String durability = (itemStack.getMaxDamage() - itemStack.getDamageValue()) + "/"
-                    + itemStack.getMaxDamage();
-            tooltips.add(TooltipUtil.withArgs(ArmoryLang.DURABILITY_AMOUNT, durability).withStyle(ChatFormatting.GRAY));
-        }
-    }
-
-    default boolean isDurabilityBarVisible(ItemStack stack) {
-        return stack.getDamageValue() > 0 || ItemStackEnergy.getMaxEnergyStored(stack) > 0;
-    }
-
 }
