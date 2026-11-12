@@ -5,12 +5,14 @@ import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.compat.curios.CuriosCompat;
 import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.content.armory.DoubleJumpHandler;
+import com.enderio.enderio.content.armory.toggles.DarkSteelToggleHelper;
 import com.enderio.enderio.content.filters.FilterSlot;
 import com.enderio.enderio.content.filters.fluid.FluidFilterSlot;
 import com.enderio.enderio.content.tools.ElectromagnetItem;
 import com.enderio.enderio.content.travel.TravelHandler;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.menu.GhostMachineSlot;
+import com.enderio.enderio.foundation.network.packets.ServerboundDarkSteelTogglePacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundDoubleJumpPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestShortTravelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestTravelPacket;
@@ -109,6 +111,10 @@ public class ServerPayloadHandler {
                 DoubleJumpHandler.handleServerDoubleJump(player);
             }
         });
+    }
+
+    public void handleDarkSteelToggle(ServerboundDarkSteelTogglePacket packet, IPayloadContext context) {
+        context.enqueueWork(() -> DarkSteelToggleHelper.onKeyPressed(context.player(), packet.key()));
     }
 
     public void handleMagnetToggle(ServerboundToggleMagnetPacket packet, IPayloadContext context) {

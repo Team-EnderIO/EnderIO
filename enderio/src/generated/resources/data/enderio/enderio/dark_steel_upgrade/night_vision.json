@@ -3,6 +3,10 @@
   "effects": [
     {
       "type": "enderio:mob_effect",
+      "condition": {
+        "type": "enderio:toggled",
+        "toggle": "enderio:night_vision_enabled"
+      },
       "duration": 300,
       "effect": "minecraft:night_vision",
       "reapply_duration_threshold": 240
@@ -10,5 +14,11 @@
   ],
   "name": "Night Vision",
   "requires_socketed_capacitor": false,
-  "supported_items": "#enderio:dark_steel_upgradable_helmets"
+  "supported_items": "#enderio:dark_steel_upgradable_helmets",
+  "toggles": {
+    "enderio:night_vision_enabled": {
+      "key": "enderio:night_vision",
+      "name": "Night Vision"
+    }
+  }
 }

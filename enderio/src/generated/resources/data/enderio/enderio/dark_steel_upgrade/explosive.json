@@ -4,10 +4,19 @@
     {
       "type": "enderio:area_mining",
       "condition": {
-        "type": "enderio:not",
-        "condition": {
-          "type": "enderio:entity_stepping_carefully"
-        }
+        "type": "enderio:all",
+        "conditions": [
+          {
+            "type": "enderio:toggled",
+            "toggle": "enderio:explosive"
+          },
+          {
+            "type": "enderio:not",
+            "condition": {
+              "type": "enderio:entity_stepping_carefully"
+            }
+          }
+        ]
       },
       "cost_per_block": {
         "type": "enderio:no_cost"
@@ -24,5 +33,11 @@
   ],
   "name": "Explosive",
   "requires_socketed_capacitor": false,
-  "supported_items": "#enderio:dark_steel_upgradable_tools"
+  "supported_items": "#enderio:dark_steel_upgradable_tools",
+  "toggles": {
+    "enderio:explosive": {
+      "key": "enderio:explosive",
+      "name": "Explosive"
+    }
+  }
 }

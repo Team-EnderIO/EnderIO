@@ -11,6 +11,7 @@ import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.api.soul.Soul;
 import com.enderio.enderio.content.armory.ItemDarkSteelUpgrades;
+import com.enderio.enderio.content.armory.toggles.DarkSteelToggles;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.filters.fluid.EnderFluidFilter;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilter;
@@ -30,7 +31,6 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.fluids.SimpleFluidContent;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -137,6 +137,9 @@ public class EIODataComponents {
 
     public static final DataComponentType<ItemDarkSteelUpgrades> DARK_STEEL_UPGRADES = register("dark_steel_upgrades",
         builder -> builder.persistent(ItemDarkSteelUpgrades.CODEC).networkSynchronized(ItemDarkSteelUpgrades.STREAM_CODEC));
+
+    public static final DataComponentType<DarkSteelToggles> DARK_STEEL_TOGGLES = savedAndSynced("dark_steel_toggles",
+        DarkSteelToggles.CODEC, DarkSteelToggles.STREAM_CODEC);
 
     public static final DataComponentType<Boolean> TOGGLED = register("toggled",
         builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));

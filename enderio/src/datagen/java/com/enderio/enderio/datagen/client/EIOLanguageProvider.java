@@ -188,6 +188,8 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(ArmoryLang.SOCKETED_CAPACITOR, "Socketed capacitor:");
         add(ArmoryLang.UPGRADE_ENTRY, "- %s");
         add(ArmoryLang.UPGRADE_DESCRIPTION, "   - %s");
+        add(ArmoryLang.TOGGLE_ENABLED, "%s enabled");
+        add(ArmoryLang.TOGGLE_DISABLED, "%s disabled");
 
         add(EIOAttributes.MINING_AREA_RADIUS.get().getDescriptionId(), "Mining Area Radius");
         add(EIOAttributes.MINING_AREA_DEPTH.get().getDescriptionId(), "Mining Area Depth");
@@ -779,6 +781,12 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(KeymapHandler.ENDERIO_KEYBIND_CATEGORY, "EnderIO");
         add(KeymapHandler.TOGGLE_MAGNET_KEY.get().getName(), "Toggle Electromagnet");
         add(KeymapHandler.TRAVEL_STAFF_KEY.get().getName(), "Staff of Travelling");
+        add(KeymapHandler.TOGGLE_NIGHT_VISION_KEY.get().getName(), "Toggle Night Vision");
+        add(KeymapHandler.TOGGLE_ELYTRA_KEY.get().getName(), "Toggle Elytra");
+        add(KeymapHandler.TOGGLE_STEP_ASSIST_KEY.get().getName(), "Toggle Step Assist");
+        add(KeymapHandler.TOGGLE_DOUBLE_JUMP_KEY.get().getName(), "Toggle Double Jump");
+        add(KeymapHandler.TOGGLE_EXPLOSIVE_KEY.get().getName(), "Toggle Explosive Mining");
+        add(KeymapHandler.TOGGLE_SPEED_KEY.get().getName(), "Toggle Speed");
     }
 
     private void addAdvancementsLang() {

@@ -1,6 +1,8 @@
 package com.enderio.enderio.content.armory.effects;
 
 import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgradeEffect;
+import com.enderio.enderio.api.armory.upgrades.conditions.AlwaysActiveCondition;
+import com.enderio.enderio.api.armory.upgrades.conditions.EffectCondition;
 import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelHookContext;
 import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelUpgradeHookType;
 import com.enderio.enderio.api.armory.upgrades.hooks.DarkSteelUpgradeHookTypes;
@@ -20,7 +22,9 @@ import net.neoforged.neoforge.event.ItemAttributeModifierEvent;
 import java.util.List;
 
 /**
- * @apiNote No condition is available for this effect as it is not possible for changes in the condition to be detected and used by the hook.
+ * Adds an attribute modifier to the item while {@link #condition()} is active.
+ * @apiNote Attribute modifiers are only recalculated when the equipped item changes, and the condition is checked without a level or entity.
+ * Only use conditions that depend on the item's own data, such as {@code enderio:toggled}.
  */
 public class AttributeModifierEffect extends DarkSteelUpgradeEffect implements ModifyAttributesHook {
 
@@ -28,7 +32,8 @@ public class AttributeModifierEffect extends DarkSteelUpgradeEffect implements M
         .group(
             Attribute.CODEC.fieldOf("attribute").forGetter(AttributeModifierEffect::attribute),
             AttributeModifier.MAP_CODEC.forGetter(AttributeModifierEffect::modifier),
-            Codec.BOOL.optionalFieldOf("hide_from_tooltip", true).forGetter(AttributeModifierEffect::hideFromTooltip)
+            Codec.BOOL.optionalFieldOf("hide_from_tooltip", true).forGetter(AttributeModifierEffect::hideFromTooltip),
+            EffectCondition.CODEC.optionalFieldOf("condition", AlwaysActiveCondition.INSTANCE).forGetter(AttributeModifierEffect::condition)
         ).apply(inst, AttributeModifierEffect::new));
 
     private static final List<DarkSteelUpgradeHookType<?>> HOOKS = List.of(DarkSteelUpgradeHookTypes.MODIFY_ATTRIBUTES);
@@ -36,11 +41,21 @@ public class AttributeModifierEffect extends DarkSteelUpgradeEffect implements M
     private final Holder<Attribute> attribute;
     private final AttributeModifier modifier;
     private final boolean hideFromTooltip;
+    private final EffectCondition condition;
 
-    public AttributeModifierEffect(Holder<Attribute> attribute, AttributeModifier modifier, boolean hideFromTooltip) {
+    public AttributeModifierEffect(Holder<Attribute> attribute, AttributeModifier modifier, boolean hideFromTooltip, EffectCondition condition) {
         this.attribute = attribute;
         this.modifier = modifier;
         this.hideFromTooltip = hideFromTooltip;
+        this.condition = condition;
+    }
+
+    public AttributeModifierEffect(Holder<Attribute> attribute, AttributeModifier modifier, EffectCondition condition) {
+        this(attribute, modifier, true, condition);
+    }
+
+    public AttributeModifierEffect(Holder<Attribute> attribute, AttributeModifier modifier, boolean hideFromTooltip) {
+        this(attribute, modifier, hideFromTooltip, AlwaysActiveCondition.INSTANCE);
     }
 
     public AttributeModifierEffect(Holder<Attribute> attribute, AttributeModifier modifier) {
@@ -59,6 +74,10 @@ public class AttributeModifierEffect extends DarkSteelUpgradeEffect implements M
         return hideFromTooltip;
     }
 
+    public EffectCondition condition() {
+        return condition;
+    }
+
     @Override
     public List<DarkSteelUpgradeHookType<?>> getActiveHooks() {
         return HOOKS;
@@ -71,6 +90,10 @@ public class AttributeModifierEffect extends DarkSteelUpgradeEffect implements M
 
     @Override
     public void modifyAttributes(DarkSteelHookContext context, ItemAttributeModifierEvent event) {
+        if (!condition.isActive(context.itemStack(), null, null)) {
+            return;
+        }
+
         event.addModifier(attribute, modifier, getUpgradeSlotGroup(context.itemStack()));
     }
 

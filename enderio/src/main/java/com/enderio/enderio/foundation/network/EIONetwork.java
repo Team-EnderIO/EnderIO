@@ -25,6 +25,7 @@ import com.enderio.enderio.foundation.network.packets.ServerboundSetItemFilterSl
 import com.enderio.enderio.foundation.network.packets.ServerboundSyncProbeStatePacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundTimerFilterPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundToggleMagnetPacket;
+import com.enderio.enderio.foundation.network.packets.ServerboundDarkSteelTogglePacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundTransferItemsPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCoordinateSelectionNameMenuPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCrafterTemplatePacket;
@@ -97,6 +98,9 @@ public class EIONetwork {
 
         registrar.playToServer(ServerboundToggleMagnetPacket.TYPE, ServerboundToggleMagnetPacket.STREAM_CODEC,
             ServerPayloadHandler.getInstance()::handleMagnetToggle);
+
+        registrar.playToServer(ServerboundDarkSteelTogglePacket.TYPE, ServerboundDarkSteelTogglePacket.STREAM_CODEC,
+            ServerPayloadHandler.getInstance()::handleDarkSteelToggle);
 
         registrar.playToServer(ServerboundCountFilterPacket.TYPE, ServerboundCountFilterPacket.STREAM_CODEC,
             ConduitServerPayloadHandler.getInstance()::handleCountFilter);

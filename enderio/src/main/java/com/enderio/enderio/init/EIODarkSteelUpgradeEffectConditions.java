@@ -13,6 +13,7 @@ import com.enderio.enderio.api.armory.upgrades.conditions.NegateCondition;
 import com.enderio.enderio.api.armory.upgrades.conditions.NeverActiveCondition;
 import com.enderio.enderio.api.armory.upgrades.conditions.SkyAccessCondition;
 import com.enderio.enderio.api.armory.upgrades.conditions.SteppingCarefullyCondition;
+import com.enderio.enderio.content.armory.toggles.ToggledCondition;
 import com.mojang.serialization.MapCodec;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
@@ -32,6 +33,7 @@ public class EIODarkSteelUpgradeEffectConditions {
         DARK_STEEL_UPGRADE_EFFECT_CONDITIONS.register("entity_stepping_carefully", () -> SteppingCarefullyCondition.CODEC);
         DARK_STEEL_UPGRADE_EFFECT_CONDITIONS.register("entity_can_see_sky", () -> SkyAccessCondition.CODEC);
         DARK_STEEL_UPGRADE_EFFECT_CONDITIONS.register("day_time_within", () -> DayTimeRangeCondition.CODEC);
+        DARK_STEEL_UPGRADE_EFFECT_CONDITIONS.register("toggled", () -> ToggledCondition.CODEC);
 
         DARK_STEEL_UPGRADE_EFFECT_CONDITIONS.register(eventBus);
     }
