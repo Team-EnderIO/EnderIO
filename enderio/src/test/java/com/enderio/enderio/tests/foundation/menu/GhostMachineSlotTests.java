@@ -81,7 +81,7 @@ public class GhostMachineSlotTests {
     }
 
     @Test
-    void testTryRemove_ClearsSlot_ReturnsEmpty(MinecraftServer server) {
+    void testTryRemove_DoesNothing(MinecraftServer server) {
         ItemStorage inventory = new ItemStorage(GHOST_LAYOUT);
         GhostMachineSlot ghostSlot = new GhostMachineSlot(inventory, 0, 0, 0);
 
