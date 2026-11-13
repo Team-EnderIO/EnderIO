@@ -11,10 +11,13 @@ import net.minecraft.core.Holder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.ArmorMaterial;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.gameevent.GameEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class DarkSteelArmorItem extends ArmorItem implements IDarkSteelItem, DarkSteelUpgradableItem {
     private static final Set<DarkSteelUpgradeHookType<?>> ARMOR_HOOKS = Set.of(
@@ -49,6 +52,11 @@ public class DarkSteelArmorItem extends ArmorItem implements IDarkSteelItem, Dar
             case BOOTS -> BOOTS_HOOKS;
             default -> ARMOR_HOOKS;
         };
+    }
+
+    @Override
+    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, @Nullable T entity, Consumer<Item> onBroken) {
+        return DarkSteelCommonUtility.damageItem(stack, amount, entity, onBroken);
     }
 
     @Override

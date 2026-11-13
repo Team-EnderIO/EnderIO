@@ -75,6 +75,9 @@ public class EIOItemTagsProvider extends ItemTagsProvider {
         tag(ItemTags.LEG_ARMOR).add(EIOItems.DARK_STEEL_LEGGINGS.get(), EIOItems.END_STEEL_LEGGINGS.get());
         tag(ItemTags.FOOT_ARMOR).add(EIOItems.DARK_STEEL_BOOTS.get(), EIOItems.END_STEEL_BOOTS.get());
 
+        // Forbid durability-related enchantments
+        tag(ItemTags.DURABILITY_ENCHANTABLE).remove(EIOTags.Items.DARK_STEEL_UPGRADABLE);
+
         tag(ItemTags.TRIMMABLE_ARMOR).add(
             EIOItems.DARK_STEEL_HELMET.get(), EIOItems.DARK_STEEL_CHESTPLATE.get(),
             EIOItems.DARK_STEEL_LEGGINGS.get(), EIOItems.DARK_STEEL_BOOTS.get(),

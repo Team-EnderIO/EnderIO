@@ -19,6 +19,7 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.InteractionResultHolder;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Tier;
 import net.minecraft.world.item.context.UseOnContext;
@@ -26,8 +27,10 @@ import net.minecraft.world.item.SwordItem;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.common.ItemAbility;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Set;
+import java.util.function.Consumer;
 
 public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProvider, IDarkSteelItem, DarkSteelUpgradableItem {
     private static final Set<DarkSteelUpgradeHookType<?>> AVAILABLE_HOOKS = Set.of(
@@ -45,6 +48,11 @@ public class DarkSteelSwordItem extends SwordItem implements AdvancedTooltipProv
         super(tier,
                 properties.attributes(createAttributes(tier, attackDamage, attackSpeed))
                         .component(EIODataComponents.TRAVEL_ITEM, false));
+    }
+
+    @Override
+    public <T extends LivingEntity> int damageItem(ItemStack stack, int amount, @Nullable T entity, Consumer<Item> onBroken) {
+        return DarkSteelCommonUtility.damageItem(stack, amount, entity, onBroken);
     }
 
     @Override

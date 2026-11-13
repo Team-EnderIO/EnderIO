@@ -6,6 +6,7 @@ import com.enderio.enderio.api.armory.DarkSteelEnergyStorage;
 import com.enderio.enderio.api.armory.capacitor.ComponentCapacitorSocket;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.capacitor.LinearScalable;
+import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.content.armory.energy.CapacitorBackedDarkSteelEnergyStorage;
 import com.enderio.enderio.content.cold_fire.ColdFireIgniter;
 import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankItem;
@@ -45,8 +46,8 @@ import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 @EventBusSubscriber
 public class EIOCapabilityProviders {
     // TODO: Move these into config?
-    private static final LinearScalable DARK_STEEL_ENERGY_CAPACITY = new LinearScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 100_000);
-    private static final LinearScalable END_STEEL_ENERGY_CAPACITY = new LinearScalable(CapacitorModifier.ENERGY_CAPACITY, () -> 250_000);
+    private static final LinearScalable DARK_STEEL_ENERGY_CAPACITY = new LinearScalable(CapacitorModifier.ENERGY_CAPACITY, BaseConfig.COMMON.ENERGY.ARMORY_DARK_STEEL_CAPACITY);
+    private static final LinearScalable END_STEEL_ENERGY_CAPACITY = new LinearScalable(CapacitorModifier.ENERGY_CAPACITY, BaseConfig.COMMON.ENERGY.ARMORY_END_STEEL_CAPACITY);
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void markProxyableCapabilities(RegisterCapabilitiesEvent event) {
