@@ -1,0 +1,11 @@
+{
+  "description": "Prevents the wearer from falling freezing in powdered snow.",
+  "effects": [
+    {
+      "type": "enderio:prevents_freezing"
+    }
+  ],
+  "name": "Insulation",
+  "requires_socketed_capacitor": false,
+  "supported_items": "#enderio:dark_steel_upgradable_armor"
+}

@@ -9,9 +9,22 @@ public class ArmoryLang {
 
     public static final MutableComponent ENDER_HEAD_DROP_CHANCE = tooltip("ender_head_chance");
     public static final MutableComponent DURABILITY_AMOUNT = tooltip("durability/amount");
+    public static final MutableComponent SOCKETED_CAPACITOR = tooltip("socketed_capacitor");
+    public static final MutableComponent UPGRADE_ENTRY = tooltip("upgrade/entry");
+    public static final MutableComponent UPGRADE_DESCRIPTION = tooltip("upgrade/description");
 
+    public static final MutableComponent TOGGLE_ENABLED = message("toggle/enabled");
+    public static final MutableComponent TOGGLE_DISABLED = message("toggle/disabled");
     private static MutableComponent tooltip(String path) {
         return create("tooltip", path);
+    }
+
+    private static MutableComponent message(String path) {
+        return create("message", path);
+    }
+
+    private static MutableComponent command(String path) {
+        return create("commands", path);
     }
 
     private static MutableComponent create(String type, String path) {

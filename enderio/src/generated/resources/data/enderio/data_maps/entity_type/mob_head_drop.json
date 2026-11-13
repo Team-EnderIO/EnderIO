@@ -1,0 +1,61 @@
+{
+  "values": {
+    "#minecraft:skeletons": [
+      {
+        "count": 1,
+        "id": "minecraft:skeleton_skull"
+      }
+    ],
+    "#minecraft:zombies": [
+      {
+        "count": 1,
+        "id": "minecraft:zombie_head"
+      }
+    ],
+    "minecraft:creeper": [
+      {
+        "count": 1,
+        "id": "minecraft:creeper_head"
+      }
+    ],
+    "minecraft:ender_dragon": [
+      {
+        "count": 1,
+        "id": "minecraft:dragon_head"
+      }
+    ],
+    "minecraft:enderman": [
+      {
+        "count": 1,
+        "id": "enderio:enderman_head"
+      }
+    ],
+    "minecraft:piglin": [
+      {
+        "count": 1,
+        "id": "minecraft:piglin_head"
+      }
+    ],
+    "minecraft:piglin_brute": [
+      {
+        "count": 1,
+        "id": "minecraft:piglin_head"
+      }
+    ],
+    "minecraft:wither_skeleton": [
+      {
+        "count": 1,
+        "id": "minecraft:wither_skeleton_skull"
+      }
+    ],
+    "minecraft:zombified_piglin": {
+      "replace": true,
+      "value": [
+        {
+          "count": 1,
+          "id": "minecraft:piglin_head"
+        }
+      ]
+    }
+  }
+}

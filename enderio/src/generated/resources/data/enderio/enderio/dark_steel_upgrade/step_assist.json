@@ -1,0 +1,25 @@
+{
+  "description": "Allows you to walk up blocks as if they were stairs.",
+  "effects": [
+    {
+      "type": "enderio:attribute_modifier",
+      "amount": 0.4,
+      "attribute": "minecraft:generic.step_height",
+      "condition": {
+        "type": "enderio:toggled",
+        "toggle": "enderio:step_assist"
+      },
+      "id": "enderio:dark_steel_upgrade/step_assist",
+      "operation": "add_value"
+    }
+  ],
+  "name": "Step Assist",
+  "requires_socketed_capacitor": false,
+  "supported_items": "#enderio:dark_steel_upgradable_boots",
+  "toggles": {
+    "enderio:step_assist": {
+      "key": "enderio:step_assist",
+      "name": "Step Assist"
+    }
+  }
+}

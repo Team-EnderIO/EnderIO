@@ -4,12 +4,16 @@ import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.compat.curios.CuriosCompat;
 import com.enderio.enderio.config.base.BaseConfig;
+import com.enderio.enderio.content.armory.DoubleJumpHandler;
+import com.enderio.enderio.content.armory.toggles.DarkSteelToggleHelper;
 import com.enderio.enderio.content.filters.FilterSlot;
 import com.enderio.enderio.content.filters.fluid.FluidFilterSlot;
 import com.enderio.enderio.content.tools.ElectromagnetItem;
 import com.enderio.enderio.content.travel.TravelHandler;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.menu.GhostMachineSlot;
+import com.enderio.enderio.foundation.network.packets.ServerboundDarkSteelTogglePacket;
+import com.enderio.enderio.foundation.network.packets.ServerboundDoubleJumpPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestShortTravelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestTravelPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundSetFluidFilterSlotPacket;
@@ -101,6 +105,18 @@ public class ServerPayloadHandler {
     /**
      * Toggles first magnet it finds and displays message on action bar based on new active/inactive status of magnet
      */
+    public void handleDoubleJump(ServerboundDoubleJumpPacket packet, IPayloadContext context) {
+        context.enqueueWork(() -> {
+            if (context.player() instanceof ServerPlayer player) {
+                DoubleJumpHandler.handleServerDoubleJump(player);
+            }
+        });
+    }
+
+    public void handleDarkSteelToggle(ServerboundDarkSteelTogglePacket packet, IPayloadContext context) {
+        context.enqueueWork(() -> DarkSteelToggleHelper.onKeyPressed(context.player(), packet.key()));
+    }
+
     public void handleMagnetToggle(ServerboundToggleMagnetPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             var player = context.player();

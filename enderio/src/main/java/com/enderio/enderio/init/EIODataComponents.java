@@ -3,12 +3,15 @@ package com.enderio.enderio.init;
 import com.enderio.core.common.util.NamedFluidContents;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIODataComponents;
+import com.enderio.enderio.api.armory.capacitor.SocketedCapacitor;
 import com.enderio.enderio.api.attachment.CoordinateSelection;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.api.conduits.facade.FacadeType;
 import com.enderio.enderio.api.io.RedstoneControl;
 import com.enderio.enderio.api.soul.Soul;
+import com.enderio.enderio.content.armory.ItemDarkSteelUpgrades;
+import com.enderio.enderio.content.armory.toggles.DarkSteelToggles;
 import com.enderio.enderio.content.conduits.probe.ConduitProbeItem;
 import com.enderio.enderio.content.filters.fluid.EnderFluidFilter;
 import com.enderio.enderio.content.filters.item.general.EnderItemFilter;
@@ -129,6 +132,15 @@ public class EIODataComponents {
 
     // region Tools
 
+    public static final DataComponentType<SocketedCapacitor> SOCKETED_CAPACITOR = register("socketed_capacitor",
+        builder -> builder.persistent(SocketedCapacitor.CODEC).networkSynchronized(SocketedCapacitor.STREAM_CODEC));
+
+    public static final DataComponentType<ItemDarkSteelUpgrades> DARK_STEEL_UPGRADES = register("dark_steel_upgrades",
+        builder -> builder.persistent(ItemDarkSteelUpgrades.CODEC).networkSynchronized(ItemDarkSteelUpgrades.STREAM_CODEC));
+
+    public static final DataComponentType<DarkSteelToggles> DARK_STEEL_TOGGLES = savedAndSynced("dark_steel_toggles",
+        DarkSteelToggles.CODEC, DarkSteelToggles.STREAM_CODEC);
+
     public static final DataComponentType<Boolean> TOGGLED = register("toggled",
         builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
 
@@ -139,6 +151,7 @@ public class EIODataComponents {
 
     // region Travel
 
+    // TODO: Remove, not fit for purpose.
     public static final DataComponentType<Boolean> TRAVEL_ITEM = register("travel_item",
         builder -> builder.persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
 

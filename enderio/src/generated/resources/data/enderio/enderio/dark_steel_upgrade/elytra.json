@@ -1,0 +1,21 @@
+{
+  "description": "Makes armor work as elytra",
+  "effects": [
+    {
+      "type": "enderio:elytra",
+      "condition": {
+        "type": "enderio:toggled",
+        "toggle": "enderio:elytra"
+      }
+    }
+  ],
+  "name": "Elytra",
+  "requires_socketed_capacitor": false,
+  "supported_items": "#enderio:dark_steel_upgradable_chestplates",
+  "toggles": {
+    "enderio:elytra": {
+      "key": "enderio:elytra",
+      "name": "Elytra"
+    }
+  }
+}

@@ -11,7 +11,9 @@ import com.enderio.enderio.init.EIOFluids;
 import com.enderio.enderio.init.EIOItems;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
+import net.minecraft.data.models.ItemModelGenerators;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
@@ -166,7 +168,22 @@ public class EIOItemModelProvider extends ItemModelProvider {
                 .predicate(ConduitProbeItem.PROBE_STATE_PREDICATE, 1)
                 .model(basicItem(EnderIO.rl("conduit_probe_copy")));
 
+        // Armory
         handheldItem(EIOItems.DARK_STEEL_SWORD.get());
+        handheldItem(EIOItems.DARK_STEEL_PICKAXE.get());
+        handheldItem(EIOItems.DARK_STEEL_AXE.get());
+        trimmableArmorItem(EIOItems.DARK_STEEL_HELMET.get());
+        trimmableArmorItem(EIOItems.DARK_STEEL_CHESTPLATE.get());
+        trimmableArmorItem(EIOItems.DARK_STEEL_LEGGINGS.get());
+        trimmableArmorItem(EIOItems.DARK_STEEL_BOOTS.get());
+
+        handheldItem(EIOItems.END_STEEL_SWORD.get());
+        handheldItem(EIOItems.END_STEEL_PICKAXE.get());
+        handheldItem(EIOItems.END_STEEL_AXE.get());
+        trimmableArmorItem(EIOItems.END_STEEL_HELMET.get());
+        trimmableArmorItem(EIOItems.END_STEEL_CHESTPLATE.get());
+        trimmableArmorItem(EIOItems.END_STEEL_LEGGINGS.get());
+        trimmableArmorItem(EIOItems.END_STEEL_BOOTS.get());
 
         // Filters
         basicItem(EIOItems.BASIC_ITEM_FILTER.get());
@@ -392,5 +409,26 @@ public class EIOItemModelProvider extends ItemModelProvider {
             .customLoader(DynamicFluidContainerModelBuilder::begin)
             .fluid(item.content)
             .end();
+    }
+
+    private void trimmableArmorItem(ArmorItem item) {
+        ResourceLocation id = Objects.requireNonNull(BuiltInRegistries.ITEM.getKey(item));
+        ResourceLocation texture = id.withPrefix("item/");
+
+        ItemModelBuilder builder = basicItem(item);
+
+        for (var trimModel : ItemModelGenerators.GENERATED_TRIM_MODELS) {
+            String trimName = trimModel.name(item.getMaterial());
+
+            ItemModelBuilder trimmedModel = getBuilder(id.withSuffix("_" + trimName + "_trim").toString())
+                .parent(new ModelFile.UncheckedModelFile("item/generated"))
+                .texture("layer0", texture)
+                .texture("layer1", ResourceLocation.withDefaultNamespace("trims/items/" + item.getType().getName() + "_trim_" + trimName));
+
+            builder.override()
+                .predicate(ItemModelGenerators.TRIM_TYPE_PREDICATE_ID, trimModel.itemModelIndex())
+                .model(trimmedModel)
+                .end();
+        }
     }
 }

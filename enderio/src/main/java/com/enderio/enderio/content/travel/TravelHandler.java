@@ -1,6 +1,7 @@
 package com.enderio.enderio.content.travel;
 
 import com.enderio.core.common.energy.ItemStackEnergy;
+import com.enderio.enderio.api.EnderIOItemAbilities;
 import com.enderio.enderio.api.travel.TravelTarget;
 import com.enderio.enderio.api.travel.TravelTargetApi;
 import com.enderio.enderio.compat.curios.CuriosCompat;
@@ -52,13 +53,29 @@ public class TravelHandler {
     }
 
     private static boolean canItemTeleport(Player player, InteractionHand hand) {
+        ItemStack stack = player.getItemInHand(hand);
+
+        if (stack.canPerformAction(EnderIOItemAbilities.SEE_TRAVEL_TARGETS)) {
+            return true;
+        }
+
+        if (stack.canPerformAction(EnderIOItemAbilities.SEE_TRAVEL_TARGETS_CROUCHED) &&
+            player.isSteppingCarefully()) {
+            return true;
+        }
+
         @Nullable
         Boolean comp = player.getItemInHand(hand).get(EIODataComponents.TRAVEL_ITEM);
         return comp != null && comp;
     }
 
-    public static boolean isTravelItem(ItemStack stack){
+    public static boolean isTravelItem(ItemStack stack) {
         if(stack != null && !stack.isEmpty()) {
+            if (stack.canPerformAction(EnderIOItemAbilities.SEE_TRAVEL_TARGETS) ||
+                stack.canPerformAction(EnderIOItemAbilities.SEE_TRAVEL_TARGETS_CROUCHED)) {
+                return true;
+            }
+
             Boolean comp = stack.get(EIODataComponents.TRAVEL_ITEM);
             if (comp != null && comp) {
                 return true;

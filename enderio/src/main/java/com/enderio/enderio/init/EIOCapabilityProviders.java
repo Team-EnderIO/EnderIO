@@ -2,6 +2,12 @@ package com.enderio.enderio.init;
 
 import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.EnderIORegistries;
+import com.enderio.enderio.api.armory.DarkSteelEnergyStorage;
+import com.enderio.enderio.api.armory.capacitor.ComponentCapacitorSocket;
+import com.enderio.enderio.api.capacitor.CapacitorModifier;
+import com.enderio.enderio.api.capacitor.LinearScalable;
+import com.enderio.enderio.config.base.BaseConfig;
+import com.enderio.enderio.content.armory.energy.CapacitorBackedDarkSteelEnergyStorage;
 import com.enderio.enderio.content.cold_fire.ColdFireIgniter;
 import com.enderio.enderio.content.machines.capacitor_bank.CapacitorBankItem;
 import com.enderio.enderio.content.tools.vials.VoidVialItem;
@@ -28,15 +34,21 @@ import com.enderio.enderio.content.tools.LevitationStaffItem;
 import com.enderio.enderio.content.tools.PoweredToggledItem;
 import com.enderio.enderio.content.travel.TravelStaffItem;
 import com.enderio.enderio.foundation.soul.SoulCapabilityProviders;
+import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.capabilities.BlockCapability;
 import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.ICapabilityProvider;
 import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 
 @EventBusSubscriber
 public class EIOCapabilityProviders {
+    // TODO: Move these into config?
+    private static final LinearScalable DARK_STEEL_ENERGY_CAPACITY = new LinearScalable(CapacitorModifier.ENERGY_CAPACITY, BaseConfig.COMMON.ENERGY.ARMORY_DARK_STEEL_CAPACITY);
+    private static final LinearScalable END_STEEL_ENERGY_CAPACITY = new LinearScalable(CapacitorModifier.ENERGY_CAPACITY, BaseConfig.COMMON.ENERGY.ARMORY_END_STEEL_CAPACITY);
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void markProxyableCapabilities(RegisterCapabilitiesEvent event) {
         // TODO: Review these
@@ -128,6 +140,55 @@ public class EIOCapabilityProviders {
         // Conduit facades
         event.registerItem(EnderIOCapabilities.CONDUIT_FACADE_PROVIDER, ComponentBackedConduitFacadeProvider.PROVIDER,
             EIOItems.CONDUIT_FACADE, EIOItems.TRANSPARENT_CONDUIT_FACADE, EIOItems.HARDENED_CONDUIT_FACADE, EIOItems.TRANSPARENT_HARDENED_CONDUIT_FACADE);
+
+        // region Armory
+
+        // Capacitor sockets
+        event.registerItem(
+            EnderIOCapabilities.CAPACITOR_SOCKET,
+            (itemStack, ignored) -> new ComponentCapacitorSocket(itemStack, EIODataComponents.SOCKETED_CAPACITOR),
+            EIOItems.DARK_STEEL_SWORD,
+            EIOItems.DARK_STEEL_PICKAXE,
+            EIOItems.DARK_STEEL_AXE,
+            EIOItems.DARK_STEEL_HELMET,
+            EIOItems.DARK_STEEL_CHESTPLATE,
+            EIOItems.DARK_STEEL_LEGGINGS,
+            EIOItems.DARK_STEEL_BOOTS,
+            EIOItems.END_STEEL_SWORD,
+            EIOItems.END_STEEL_PICKAXE,
+            EIOItems.END_STEEL_AXE,
+            EIOItems.END_STEEL_HELMET,
+            EIOItems.END_STEEL_CHESTPLATE,
+            EIOItems.END_STEEL_LEGGINGS,
+            EIOItems.END_STEEL_BOOTS
+        );
+
+        // Energy buffers, scaled by the socketed capacitor. Without a capacitor the buffer has no capacity.
+        event.registerItem(
+            Capabilities.EnergyStorage.ITEM,
+            (itemStack, ignored) -> new CapacitorBackedDarkSteelEnergyStorage(itemStack, EIODataComponents.ENERGY, DARK_STEEL_ENERGY_CAPACITY),
+            EIOItems.DARK_STEEL_SWORD,
+            EIOItems.DARK_STEEL_PICKAXE,
+            EIOItems.DARK_STEEL_AXE,
+            EIOItems.DARK_STEEL_HELMET,
+            EIOItems.DARK_STEEL_CHESTPLATE,
+            EIOItems.DARK_STEEL_LEGGINGS,
+            EIOItems.DARK_STEEL_BOOTS
+        );
+
+        event.registerItem(
+            Capabilities.EnergyStorage.ITEM,
+            (itemStack, ignored) -> new CapacitorBackedDarkSteelEnergyStorage(itemStack, EIODataComponents.ENERGY, END_STEEL_ENERGY_CAPACITY),
+            EIOItems.END_STEEL_SWORD,
+            EIOItems.END_STEEL_PICKAXE,
+            EIOItems.END_STEEL_AXE,
+            EIOItems.END_STEEL_HELMET,
+            EIOItems.END_STEEL_CHESTPLATE,
+            EIOItems.END_STEEL_LEGGINGS,
+            EIOItems.END_STEEL_BOOTS
+        );
+
+        // endregion
     }
 
     // region Conduits

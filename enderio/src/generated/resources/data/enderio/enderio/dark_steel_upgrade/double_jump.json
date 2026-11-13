@@ -1,0 +1,25 @@
+{
+  "description": "Allows you to jump again while in the air.",
+  "effects": [
+    {
+      "type": "enderio:attribute_modifier",
+      "amount": 1.0,
+      "attribute": "enderio:extra_jumps",
+      "condition": {
+        "type": "enderio:toggled",
+        "toggle": "enderio:double_jump"
+      },
+      "id": "enderio:dark_steel_upgrade/jump",
+      "operation": "add_value"
+    }
+  ],
+  "name": "Double Jump",
+  "requires_socketed_capacitor": false,
+  "supported_items": "#enderio:dark_steel_upgradable_boots",
+  "toggles": {
+    "enderio:double_jump": {
+      "key": "enderio:double_jump",
+      "name": "Double Jump"
+    }
+  }
+}

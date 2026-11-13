@@ -23,6 +23,7 @@ import com.enderio.enderio.content.machines.powered_spawner.PoweredSpawnerMode;
 import com.enderio.enderio.content.tools.ToolsLang;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.foundation.tag.EIOTags;
+import com.enderio.enderio.init.EIOAttributes;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduits;
 import com.enderio.enderio.init.EIOEntities;
@@ -184,6 +185,15 @@ public class EIOLanguageProvider extends LanguageProvider {
     private void addArmoryLang() {
         add(ArmoryLang.ENDER_HEAD_DROP_CHANCE, "%s%% chance to drop a mob head");
         add(ArmoryLang.DURABILITY_AMOUNT, "Durability %s");
+        add(ArmoryLang.SOCKETED_CAPACITOR, "Socketed capacitor:");
+        add(ArmoryLang.UPGRADE_ENTRY, "- %s");
+        add(ArmoryLang.UPGRADE_DESCRIPTION, "   - %s");
+        add(ArmoryLang.TOGGLE_ENABLED, "%s enabled");
+        add(ArmoryLang.TOGGLE_DISABLED, "%s disabled");
+
+        add(EIOAttributes.MINING_AREA_RADIUS.get().getDescriptionId(), "Mining Area Radius");
+        add(EIOAttributes.MINING_AREA_DEPTH.get().getDescriptionId(), "Mining Area Depth");
+        add(EIOAttributes.EXTRA_JUMPS.get().getDescriptionId(), "Extra Jumps");
     }
 
     private void addConduitDescriptions() {
@@ -528,6 +538,20 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOItems.CONDUIT_PROBE.get(), "Conduit Probe");
 
         add(EIOItems.DARK_STEEL_SWORD.get(), "The Ender");
+        add(EIOItems.DARK_STEEL_PICKAXE.get(), "Dark Steel Pickaxe");
+        add(EIOItems.DARK_STEEL_AXE.get(), "Dark Steel Axe");
+        add(EIOItems.DARK_STEEL_HELMET.get(), "Dark Steel Helmet");
+        add(EIOItems.DARK_STEEL_CHESTPLATE.get(), "Dark Steel Chestplate");
+        add(EIOItems.DARK_STEEL_LEGGINGS.get(), "Dark Steel Leggings");
+        add(EIOItems.DARK_STEEL_BOOTS.get(), "Dark Steel Boots");
+
+        add(EIOItems.END_STEEL_SWORD.get(), "The Ender Mk2");
+        add(EIOItems.END_STEEL_PICKAXE.get(), "End Steel Pickaxe");
+        add(EIOItems.END_STEEL_AXE.get(), "End Steel Axe");
+        add(EIOItems.END_STEEL_HELMET.get(), "End Steel Helmet");
+        add(EIOItems.END_STEEL_CHESTPLATE.get(), "End Steel Chestplate");
+        add(EIOItems.END_STEEL_LEGGINGS.get(), "End Steel Leggings");
+        add(EIOItems.END_STEEL_BOOTS.get(), "End Steel Boots");
 
         // Filters
         add(EIOItems.BASIC_ITEM_FILTER.get(), "Basic Item Filter");
@@ -715,6 +739,7 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(EIOCommonLang.FLUID_TANK_TOOLTIP, "%d/%d mb of %s"); // [amount]/[capacity] mb of [FluidName]
 
         add(EIOCommonLang.ENERGY_AMOUNT, "%s \u00B5I");
+        add(EIOCommonLang.ENERGY_CAPACITY, "Capacity: %s");
 
         add(EIOCommonLang.VISIBLE, "Visible");
         add(EIOCommonLang.NOT_VISIBLE, "Hidden");
@@ -756,6 +781,12 @@ public class EIOLanguageProvider extends LanguageProvider {
         add(KeymapHandler.ENDERIO_KEYBIND_CATEGORY, "EnderIO");
         add(KeymapHandler.TOGGLE_MAGNET_KEY.get().getName(), "Toggle Electromagnet");
         add(KeymapHandler.TRAVEL_STAFF_KEY.get().getName(), "Staff of Travelling");
+        add(KeymapHandler.TOGGLE_NIGHT_VISION_KEY.get().getName(), "Toggle Night Vision");
+        add(KeymapHandler.TOGGLE_ELYTRA_KEY.get().getName(), "Toggle Elytra");
+        add(KeymapHandler.TOGGLE_STEP_ASSIST_KEY.get().getName(), "Toggle Step Assist");
+        add(KeymapHandler.TOGGLE_DOUBLE_JUMP_KEY.get().getName(), "Toggle Double Jump");
+        add(KeymapHandler.TOGGLE_EXPLOSIVE_KEY.get().getName(), "Toggle Explosive Mining");
+        add(KeymapHandler.TOGGLE_SPEED_KEY.get().getName(), "Toggle Speed");
     }
 
     private void addAdvancementsLang() {
