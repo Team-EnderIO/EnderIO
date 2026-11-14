@@ -380,7 +380,7 @@ public class FarmingStationBlockEntity extends PoweredMachineBlockEntity impleme
     @Override
     public void bindSoul(Soul newSoul) {
         this.boundSoul = newSoul;
-        this.soulData = FarmSoul.FARM.matches(newSoul.entityTypeId()).get();
+        this.soulData = FarmSoul.FARM.matches(newSoul.entityTypeId()).orElse(null);
     }
 
     @SubscribeEvent

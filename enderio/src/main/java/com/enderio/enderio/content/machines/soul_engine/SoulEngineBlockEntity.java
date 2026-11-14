@@ -151,7 +151,7 @@ public class SoulEngineBlockEntity extends PoweredMachineBlockEntity implements 
     @Override
     public void bindSoul(Soul newSoul) {
         this.boundSoul = newSoul;
-        this.soulData = EngineSoul.ENGINE.matches(newSoul.entityTypeId()).get();
+        this.soulData = EngineSoul.ENGINE.matches(newSoul.entityTypeId()).orElse(null);
     }
 
     @Override

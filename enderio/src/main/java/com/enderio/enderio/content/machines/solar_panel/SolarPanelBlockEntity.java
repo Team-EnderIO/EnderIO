@@ -153,7 +153,7 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
     public void bindSoul(Soul newSoul) {
         Preconditions.checkArgument(isSoulValid(newSoul), "Soul is not valid for this block");
         this.boundSoul = newSoul;
-        soulData = SolarSoul.SOLAR.matches(newSoul.entityTypeId()).get();
+        soulData = SolarSoul.SOLAR.matches(newSoul.entityTypeId()).orElse(null);
         setChanged();
     }
 
