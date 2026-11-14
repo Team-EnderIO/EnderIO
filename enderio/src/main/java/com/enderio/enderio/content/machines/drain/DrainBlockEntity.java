@@ -33,6 +33,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
@@ -182,9 +183,16 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
             }
 
             // Not a valid fluid
-            FluidState fluidState = level.getFluidState(pos);
+            BlockState blockState = level.getBlockState(pos);
+            var fluidState = blockState.getFluidState();
             if (fluidState.isEmpty() || !fluidState.isSource()
                     || !TANK.isFluidValid(this, new FluidStack(fluidState.getType(), 1))) {
+                currentIndex++;
+                continue;
+            }
+
+            // Only allow draining liquid 'blocks' and waterlogged blocks (and confirm it's logged with water)
+            if (!blockState.liquid() && !(blockState.hasProperty(BlockStateProperties.WATERLOGGED) && fluidState.is(Fluids.WATER))) {
                 currentIndex++;
                 continue;
             }
@@ -194,7 +202,13 @@ public class DrainBlockEntity extends PoweredMachineBlockEntity implements Range
             if (TANK.fill(this, new FluidStack(fluidState.getType(), FluidType.BUCKET_VOLUME),
                     IFluidHandler.FluidAction.SIMULATE) == FluidType.BUCKET_VOLUME) {
                 if (consumed >= ENERGY_PER_BUCKET) {
-                    level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+
+                    if (blockState.liquid()) {
+                        level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
+                    } else {
+                        level.setBlock(pos, blockState.setValue(BlockStateProperties.WATERLOGGED, false), Block.UPDATE_ALL);
+                    }
+
                     TANK.fill(this, new FluidStack(fluidState.getType(), FluidType.BUCKET_VOLUME),
                             IFluidHandler.FluidAction.EXECUTE);
                     consumed -= ENERGY_PER_BUCKET;
