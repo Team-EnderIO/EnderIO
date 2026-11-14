@@ -75,14 +75,17 @@ public class ExperienceRodItem extends Item {
                     int requiredXp = player.getXpNeededForNextLevel();
                     int fluidVolume = requiredXp * ExperienceUtil.EXP_TO_FLUID;
 
-                    // See if we can drain the amount we need,
-                    FluidStack availableToDrain = fluidHandler.drain(fluidVolume, IFluidHandler.FluidAction.EXECUTE);
+                    // See how much we can drain, rounded down to whole XP points.
+                    FluidStack availableToDrain = fluidHandler.drain(fluidVolume, IFluidHandler.FluidAction.SIMULATE);
                     int volumeToDrain = availableToDrain.getAmount() - (availableToDrain.getAmount() % ExperienceUtil.EXP_TO_FLUID);
 
-                    FluidStack drained = fluidHandler.drain(volumeToDrain, IFluidHandler.FluidAction.SIMULATE);
-                    if (!drained.isEmpty()) {
-                        player.giveExperiencePoints(drained.getAmount() / ExperienceUtil.EXP_TO_FLUID);
-                        return true;
+                    if (volumeToDrain > 0) {
+                        FluidStack drained = fluidHandler.drain(volumeToDrain, IFluidHandler.FluidAction.EXECUTE);
+                        int xp = drained.getAmount() / ExperienceUtil.EXP_TO_FLUID;
+                        if (xp > 0) {
+                            player.giveExperiencePoints(xp);
+                            return true;
+                        }
                     }
                 }
 
