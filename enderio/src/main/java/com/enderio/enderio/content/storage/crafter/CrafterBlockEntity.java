@@ -177,7 +177,7 @@ public class CrafterBlockEntity extends PoweredMachineBlockEntity {
     private boolean canMergeOutput(ItemStack item) {
         ItemStack output = OUTPUT.getItemStack(this);
         return output.isEmpty()
-                || (ItemStack.isSameItemSameComponents(output, item) && (output.getCount() + item.getCount() <= 64));
+                || (ItemStack.isSameItemSameComponents(output, item) && (output.getCount() + item.getCount() <= item.getMaxStackSize()));
     }
 
     private void craftItem() {
