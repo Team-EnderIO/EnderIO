@@ -1,4 +1,4 @@
-package com.enderio.enderio.gametests.machines;
+package com.enderio.enderio.gametests.content.machines;
 
 import com.enderio.enderio.content.machines.alloy.AlloySmeltingRecipe;
 import com.enderio.enderio.gametests.util.EnderGameTestHelper;

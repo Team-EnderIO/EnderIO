@@ -1,4 +1,4 @@
-package com.enderio.enderio.gametests.machines;
+package com.enderio.enderio.gametests.content.machines;
 
 import com.enderio.enderio.api.components.GrindingBallData;
 import com.enderio.enderio.content.machines.sag_mill.SagMillingRecipe;

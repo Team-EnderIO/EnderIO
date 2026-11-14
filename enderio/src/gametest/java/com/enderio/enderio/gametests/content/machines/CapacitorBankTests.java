@@ -1,4 +1,4 @@
-package com.enderio.enderio.gametests.machines;
+package com.enderio.enderio.gametests.content.machines;
 
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.machines.capacitor_bank.CapacitorTier;
