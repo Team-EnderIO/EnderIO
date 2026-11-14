@@ -219,20 +219,31 @@ public class AlloySmelterBlockEntity extends PoweredMachineBlockEntity {
         }
 
         @Override
+        protected boolean shouldRecomputeOutputs(AlloySmeltingRecipe recipe) {
+            // Smelting output and energy cost scale with the number of inputs, so if that number changes
+            // they are recomputed to keep them in sync.
+            return recipe.isSmelting() && countSmeltingInputs(recipe) != inputsConsumed;
+        }
+
+        private int countSmeltingInputs(AlloySmeltingRecipe recipe) {
+            SizedIngredient input = recipe.inputs().getFirst();
+
+            int inputCount = 0;
+            for (int i = inputs.size() - 1; i >= 0; i--) {
+                ItemStack itemStack = inputs.get(i).getItemStack(getInventory());
+                if (input.test(itemStack)) {
+                    inputCount += Math.min(3 - inputCount, itemStack.getCount());
+                }
+            }
+            return inputCount;
+        }
+
+        @Override
         protected AlloySmeltingRecipe.Input prepareToDetermineOutputs(AlloySmeltingRecipe recipe,
                 AlloySmeltingRecipe.Input recipeInput) {
             // This handles the output multiplication for vanilla smelting recipes.
             if (recipe.isSmelting()) {
-                SizedIngredient input = recipe.inputs().getFirst();
-
-                int inputCount = 0;
-                for (int i = inputs.size() - 1; i >= 0; i--) {
-                    ItemStack itemStack = inputs.get(i).getItemStack(getInventory());
-                    if (input.test(itemStack)) {
-                        inputCount += Math.min(3 - inputCount, itemStack.getCount());
-                    }
-                }
-
+                int inputCount = countSmeltingInputs(recipe);
                 inputsConsumed = inputCount;
                 return recipeInput.withInputsConsumed(inputsConsumed);
             } else {

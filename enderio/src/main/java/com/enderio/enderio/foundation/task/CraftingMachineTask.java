@@ -117,6 +117,14 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
         return recipeInput;
     }
 
+    /**
+     * Whether the outputs and progress required should be recomputed, because the inputs have changed since they were
+     * last determined. Checked every tick once outputs have been determined.
+     */
+    protected boolean shouldRecomputeOutputs(R recipe) {
+        return false;
+    }
+
     // endregion
 
     // region Task Implementation
@@ -135,7 +143,7 @@ public abstract class CraftingMachineTask<R extends MachineRecipe<T>, T extends 
         }
 
         // Get the outputs list.
-        if (!hasDeterminedOutputs) {
+        if (!hasDeterminedOutputs || shouldRecomputeOutputs(recipe.value())) {
             hasDeterminedOutputs = true;
             T processedRecipeInput = prepareToDetermineOutputs(recipe.value(), recipeInput);
             outputs = recipe.value().craft(processedRecipeInput, level.registryAccess());
