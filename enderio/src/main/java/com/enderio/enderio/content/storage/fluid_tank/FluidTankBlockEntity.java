@@ -1,6 +1,5 @@
 package com.enderio.enderio.content.storage.fluid_tank;
 
-import com.enderio.core.common.capability.EnderFluidUtil;
 import com.enderio.enderio.foundation.attachment.FluidTankUser;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
 import com.enderio.enderio.foundation.inventory.MachineInventoryLayout;

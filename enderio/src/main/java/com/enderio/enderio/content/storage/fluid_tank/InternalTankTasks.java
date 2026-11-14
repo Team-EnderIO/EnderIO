@@ -3,9 +3,12 @@ package com.enderio.enderio.content.storage.fluid_tank;
 import com.enderio.core.common.capability.EnderFluidUtil;
 import com.enderio.enderio.foundation.attachment.FluidTankUser;
 import com.enderio.enderio.foundation.block.entity.MachineBlockEntity;
+import com.enderio.enderio.foundation.inventory.MachineInventory;
 import com.enderio.enderio.foundation.inventory.SingleSlotAccess;
+import com.enderio.enderio.foundation.io.fluid.MachineFluidHandler;
 import com.enderio.enderio.foundation.io.fluid.TankAccess;
 import com.enderio.enderio.foundation.util.ExperienceUtil;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
@@ -24,10 +27,19 @@ public class InternalTankTasks {
     public static <T extends MachineBlockEntity & FluidTankUser> void fillInternal(
         T blockEntity,
         TankAccess tank,
+        SingleSlotAccess input,
+        SingleSlotAccess output) {
+        fillInternal(blockEntity.getFluidHandler(), tank, blockEntity.getInventory(), input, output);
+    }
+
+    public static void fillInternal(
+        MachineFluidHandler fluids,
+        TankAccess tank,
+        MachineInventory inventory,
         SingleSlotAccess fluidFillInput,
         SingleSlotAccess fluidFillOutput) {
 
-        ItemStack inputItem = fluidFillInput.getItemStack(blockEntity);
+        ItemStack inputItem = fluidFillInput.getItemStack(inventory);
         if (inputItem.isEmpty()) {
             return;
         }
@@ -40,29 +52,40 @@ public class InternalTankTasks {
         }
 
         // See what fluid is available to drain from the item.
-        // We act here because we're acting on a copy of the input.
+        // This is a simulation, the actual drain is performed below once we know how much the tank will accept.
         FluidStack availableFluid = fluidHandlerItem.drain(Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE);
+        if (availableFluid.isEmpty()) {
+            return;
+        }
 
         // See if we can insert this fluid into the block's tank.
-        int filled = tank.fill(blockEntity, availableFluid, IFluidHandler.FluidAction.SIMULATE);
+        int filled = tank.fill(fluids, availableFluid, IFluidHandler.FluidAction.SIMULATE);
         if (filled <= 0) {
             return;
         }
 
-        // Get the resulting emptied container
+        // Drain the fluid from the item, only taking what the tank can hold.
+        // We act here because we're acting on a copy of the input.
+        FluidStack drainedFluid = fluidHandlerItem.drain(availableFluid.copyWithAmount(filled),
+            IFluidHandler.FluidAction.EXECUTE);
+        if (drainedFluid.isEmpty()) {
+            return;
+        }
+
+        // Get the resulting (drained) container
         ItemStack resultStack = fluidHandlerItem.getContainer();
 
-        // If this is the only input, and it's not fully empty we will retain it in the input slot, so long as the
-        //  destination tank is not full
-        if (inputItem.getCount() == 1 && !EnderFluidUtil.isEmpty(fluidHandlerItem) && !tank.isFull(blockEntity)) {
-            tank.fill(blockEntity, availableFluid.copyWithAmount(filled), IFluidHandler.FluidAction.EXECUTE);
-            fluidFillInput.setStackInSlot(blockEntity, resultStack);
-        } else if (!fluidFillInput.extractItem(blockEntity, 1, true).isEmpty() &&
-            fluidFillOutput.insertItem(blockEntity, resultStack, true).isEmpty()) {
+        // If this is the only input and it still holds fluid (partial fill) we retain it in the input slot
+        // so the remainder can be moved once the tank has room.
+        if (inputItem.getCount() == 1 && !EnderFluidUtil.isEmpty(fluidHandlerItem)) {
+            tank.fill(fluids, drainedFluid, IFluidHandler.FluidAction.EXECUTE);
+            fluidFillInput.setStackInSlot(inventory, resultStack);
+        } else if (!fluidFillInput.extractItem(inventory, 1, true).isEmpty()
+            && fluidFillOutput.insertItem(inventory, resultStack, true).isEmpty()) {
 
-            tank.fill(blockEntity, availableFluid.copyWithAmount(filled), IFluidHandler.FluidAction.EXECUTE);
-            fluidFillInput.extractItem(blockEntity, 1, false);
-            fluidFillOutput.insertItem(blockEntity, resultStack, false);
+            tank.fill(fluids, drainedFluid, IFluidHandler.FluidAction.EXECUTE);
+            fluidFillInput.extractItem(inventory, 1, false);
+            fluidFillOutput.insertItem(inventory, resultStack, false);
         }
     }
 
@@ -70,10 +93,19 @@ public class InternalTankTasks {
     public static <T extends MachineBlockEntity & FluidTankUser> void drainInternal(
         T blockEntity,
         TankAccess tank,
+        SingleSlotAccess input,
+        SingleSlotAccess output) {
+        drainInternal(blockEntity.getFluidHandler(), tank, blockEntity.getInventory(), input, output);
+    }
+
+    public static void drainInternal(
+        MachineFluidHandler fluids,
+        TankAccess tank,
+        MachineInventory inventory,
         SingleSlotAccess fluidDrainInput,
         SingleSlotAccess fluidDrainOutput
     ) {
-        ItemStack inputItem = fluidDrainInput.getItemStack(blockEntity);
+        ItemStack inputItem = fluidDrainInput.getItemStack(inventory);
         if (inputItem.isEmpty()) {
             return;
         }
@@ -86,7 +118,10 @@ public class InternalTankTasks {
         }
 
         // See what fluid the tank can drain into the item
-        FluidStack availableFluid = tank.drain(blockEntity, Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE);
+        FluidStack availableFluid = tank.drain(fluids, Integer.MAX_VALUE, IFluidHandler.FluidAction.SIMULATE);
+        if (availableFluid.isEmpty()) {
+            return;
+        }
 
         // See if we can insert this fluid into the container
         int filled = fluidHandlerItem.fill(availableFluid, IFluidHandler.FluidAction.EXECUTE);
@@ -97,16 +132,16 @@ public class InternalTankTasks {
         // Get the resulting filled item
         ItemStack resultStack = fluidHandlerItem.getContainer();
 
-        // If this is the only input, and it isn't completely full, and the destination still has fluid, we will retain it
-        if (inputItem.getCount() == 1 && !EnderFluidUtil.isFull(fluidHandlerItem) && !tank.isEmpty(blockEntity)) {
-            tank.drain(blockEntity, availableFluid.copyWithAmount(filled), IFluidHandler.FluidAction.EXECUTE);
-            fluidDrainInput.setStackInSlot(blockEntity, resultStack);
-        } else if (!fluidDrainInput.extractItem(blockEntity, 1, true).isEmpty() &&
-            fluidDrainOutput.insertItem(blockEntity, resultStack, true).isEmpty()) {
+        // If this is the only input and it isn't completely full we will retain it in the input slot.
+        if (inputItem.getCount() == 1 && !EnderFluidUtil.isFull(fluidHandlerItem)) {
+            tank.drain(fluids, availableFluid.copyWithAmount(filled), IFluidHandler.FluidAction.EXECUTE);
+            fluidDrainInput.setStackInSlot(inventory, resultStack);
+        } else if (!fluidDrainInput.extractItem(inventory, 1, true).isEmpty() &&
+            fluidDrainOutput.insertItem(inventory, resultStack, true).isEmpty()) {
 
-            tank.drain(blockEntity, availableFluid.copyWithAmount(filled), IFluidHandler.FluidAction.EXECUTE);
-            fluidDrainInput.extractItem(blockEntity, 1, false);
-            fluidDrainOutput.insertItem(blockEntity, resultStack, false);
+            tank.drain(fluids, availableFluid.copyWithAmount(filled), IFluidHandler.FluidAction.EXECUTE);
+            fluidDrainInput.extractItem(inventory, 1, false);
+            fluidDrainOutput.insertItem(inventory, resultStack, false);
         }
     }
 
@@ -116,31 +151,52 @@ public class InternalTankTasks {
         SingleSlotAccess fluidDrainInput,
         SingleSlotAccess fluidDrainOutput
     ) {
-        FluidStack fluid = tank.getFluid(blockEntity);
+        tryMendTool(blockEntity.getLevel().registryAccess(), blockEntity.getFluidHandler(), tank,
+            blockEntity.getInventory(), fluidDrainInput, fluidDrainOutput);
+    }
 
-        if (!fluid.isEmpty() && fluid.is(Tags.Fluids.EXPERIENCE)
-            && fluidDrainOutput.getItemStack(blockEntity).isEmpty()) {
-
-            ItemStack tool = fluidDrainInput.getItemStack(blockEntity);
-
-            var enchantmentsRecipe = blockEntity.getLevel().registryAccess().lookupOrThrow(Registries.ENCHANTMENT);
-            var mendingEnchantment = enchantmentsRecipe.getOrThrow(Enchantments.MENDING);
-
-            if (tool.isDamageableItem() && tool.getEnchantmentLevel(mendingEnchantment) > 0) {
-
-                ItemStack repairedTool = tool.copy();
-
-                int damage = tool.getDamageValue();
-                int xpAmount = (int) Math.floor(damage / tool.getXpRepairRatio());
-                int fluidAmount = xpAmount * ExperienceUtil.EXP_TO_FLUID;
-
-                FluidStack drainedXp = tank.drain(blockEntity, fluidAmount, IFluidHandler.FluidAction.EXECUTE);
-                int repairAmount = (int) Math.floor(drainedXp.getAmount() * tool.getXpRepairRatio() / ExperienceUtil.EXP_TO_FLUID);
-                repairedTool.setDamageValue(Math.max(0, damage - repairAmount));
-
-                fluidDrainInput.setStackInSlot(blockEntity, ItemStack.EMPTY);
-                fluidDrainOutput.setStackInSlot(blockEntity, repairedTool);
-            }
+    public static void tryMendTool(
+        HolderLookup.Provider registries,
+        MachineFluidHandler fluids,
+        TankAccess tank,
+        MachineInventory inventory,
+        SingleSlotAccess fluidDrainInput,
+        SingleSlotAccess fluidDrainOutput
+    ) {
+        FluidStack fluid = tank.getFluid(fluids);
+        if (fluid.isEmpty() || !fluid.is(Tags.Fluids.EXPERIENCE) || !fluidDrainOutput.getItemStack(inventory).isEmpty()) {
+            return;
         }
+
+        ItemStack tool = fluidDrainInput.getItemStack(inventory);
+        if (tool.isEmpty() || !tool.isDamageableItem()) {
+            return;
+        }
+
+        var enchantmentsRecipe = registries.lookupOrThrow(Registries.ENCHANTMENT);
+        var mendingEnchantment = enchantmentsRecipe.getOrThrow(Enchantments.MENDING);
+        if (tool.getEnchantmentLevel(mendingEnchantment) <= 0) {
+            return;
+        }
+
+        int damage = tool.getDamageValue();
+        int xpAmount = (int) Math.floor(damage / tool.getXpRepairRatio());
+        int fluidAmount = xpAmount * ExperienceUtil.EXP_TO_FLUID;
+        if (fluidAmount <= 0) {
+            // Nothing to repair, leave the tank and tool untouched.
+            return;
+        }
+
+        FluidStack drainedXp = tank.drain(fluids, fluidAmount, IFluidHandler.FluidAction.EXECUTE);
+        if (drainedXp.isEmpty()) {
+            return;
+        }
+
+        ItemStack repairedTool = tool.copy();
+        int repairAmount = (int) Math.floor(drainedXp.getAmount() * tool.getXpRepairRatio() / ExperienceUtil.EXP_TO_FLUID);
+        repairedTool.setDamageValue(Math.max(0, damage - repairAmount));
+
+        fluidDrainInput.setStackInSlot(inventory, ItemStack.EMPTY);
+        fluidDrainOutput.setStackInSlot(inventory, repairedTool);
     }
 }
