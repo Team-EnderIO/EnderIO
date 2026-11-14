@@ -15,6 +15,11 @@ public class ArmoryLang {
 
     public static final MutableComponent TOGGLE_ENABLED = message("toggle/enabled");
     public static final MutableComponent TOGGLE_DISABLED = message("toggle/disabled");
+
+    public static final MutableComponent UPGRADE_UNKNOWN = tooltip("upgrade/unknown");
+    public static final MutableComponent UPGRADE_SUPPORTED_ITEMS = tooltip("upgrade/supported_items");
+    public static final MutableComponent UPGRADE_REQUIRES_CAPACITOR = tooltip("upgrade/requires_capacitor");
+    public static final MutableComponent UPGRADE_CONFLICTS = tooltip("upgrade/conflicts");
     private static MutableComponent tooltip(String path) {
         return create("tooltip", path);
     }

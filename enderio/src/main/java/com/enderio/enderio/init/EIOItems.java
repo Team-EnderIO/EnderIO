@@ -10,6 +10,7 @@ import com.enderio.enderio.content.armory.ArmoryTiers;
 import com.enderio.enderio.content.armory.items.DarkSteelAxeItem;
 import com.enderio.enderio.content.armory.items.DarkSteelPickaxeItem;
 import com.enderio.enderio.content.armory.items.DarkSteelSwordItem;
+import com.enderio.enderio.content.armory.items.DarkSteelUpgradeItem;
 import com.enderio.enderio.content.broken_spawner.BrokenSpawnerItem;
 import com.enderio.enderio.content.capacitors.CapacitorItem;
 import com.enderio.enderio.content.capacitors.LootCapacitorItem;
@@ -254,6 +255,9 @@ public class EIOItems {
         ArmorItem.Type.LEGGINGS, DARK_STEEL_DURABILITY_MULTIPLIER);
     public static final DeferredItem<ArmorItem> DARK_STEEL_BOOTS = armor("dark_steel_boots", EIOArmorMaterials.DARK_STEEL,
         ArmorItem.Type.BOOTS, DARK_STEEL_DURABILITY_MULTIPLIER);
+
+    public static final DeferredItem<Item> BLANK_DARK_STEEL_UPGRADE = basic("blank_dark_steel_upgrade");
+    public static final DeferredItem<DarkSteelUpgradeItem> DARK_STEEL_UPGRADE = ITEMS.registerItem("dark_steel_upgrade", DarkSteelUpgradeItem::new);
 
     public static final DeferredItem<DarkSteelSwordItem> END_STEEL_SWORD = ITEMS.registerItem("end_steel_sword",
         props -> new DarkSteelSwordItem(ArmoryTiers.END_STEEL_TIER, 3, -2.4f, props),

@@ -4,6 +4,7 @@ import com.enderio.core.common.util.NamedFluidContents;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.api.EnderIODataComponents;
 import com.enderio.enderio.api.armory.capacitor.SocketedCapacitor;
+import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgrade;
 import com.enderio.enderio.api.attachment.CoordinateSelection;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.components.GrindingBallData;
@@ -26,6 +27,7 @@ import com.enderio.enderio.content.paint.BlockPaintData;
 import com.enderio.enderio.foundation.attachment.ActionRange;
 import com.enderio.enderio.foundation.io.IOConfig;
 import com.mojang.serialization.Codec;
+import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
@@ -137,6 +139,12 @@ public class EIODataComponents {
 
     public static final DataComponentType<ItemDarkSteelUpgrades> DARK_STEEL_UPGRADES = register("dark_steel_upgrades",
         builder -> builder.persistent(ItemDarkSteelUpgrades.CODEC).networkSynchronized(ItemDarkSteelUpgrades.STREAM_CODEC));
+
+    /**
+     * The upgrade carried by a dark steel upgrade item.
+     */
+    public static final DataComponentType<Holder<DarkSteelUpgrade>> DARK_STEEL_UPGRADE = savedAndSynced("dark_steel_upgrade",
+        DarkSteelUpgrade.CODEC, DarkSteelUpgrade.STREAM_CODEC);
 
     public static final DataComponentType<DarkSteelToggles> DARK_STEEL_TOGGLES = savedAndSynced("dark_steel_toggles",
         DarkSteelToggles.CODEC, DarkSteelToggles.STREAM_CODEC);

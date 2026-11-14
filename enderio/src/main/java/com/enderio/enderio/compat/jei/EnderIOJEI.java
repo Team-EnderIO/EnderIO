@@ -5,6 +5,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.compat.jei.category.FireCraftingCategory;
 import com.enderio.enderio.compat.jei.extension.ShapedEntityStorageCategoryExtension;
 import com.enderio.enderio.compat.jei.subtype.ConduitSubtypeInterpreter;
+import com.enderio.enderio.compat.jei.subtype.DarkSteelUpgradeSubtypeInterpreter;
 import com.enderio.enderio.compat.jei.subtype.SoulBindableSubtypeInterpreter;
 import com.enderio.enderio.content.broken_spawner.BrokenSpawnerItem;
 import com.enderio.enderio.content.glass.GlassBlocks;
@@ -73,6 +74,7 @@ public class EnderIOJEI implements IModPlugin {
         registration.registerSubtypeInterpreter(EIOItems.SOUL_VIAL.get(), new SoulBindableSubtypeInterpreter());
         registration.registerSubtypeInterpreter(EIOItems.BROKEN_SPAWNER.get(), new SoulBindableSubtypeInterpreter());
         registration.registerSubtypeInterpreter(EIOItems.CONDUIT.get(), new ConduitSubtypeInterpreter());
+        registration.registerSubtypeInterpreter(EIOItems.DARK_STEEL_UPGRADE.get(), new DarkSteelUpgradeSubtypeInterpreter());
     }
 
     @Override
