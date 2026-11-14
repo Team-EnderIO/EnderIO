@@ -1,5 +1,6 @@
 package com.enderio.enderio.content.machines.soul_binder;
 
+import com.enderio.core.common.storage.ExternalResourceStorageView;
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
@@ -69,7 +70,7 @@ public class SoulBinderBlockEntity extends PoweredMachineBlockEntity {
             MachinesConfig.COMMON.ENERGY.SOUL_BINDER_USAGE);
 
     public static final ICapabilityProvider<SoulBinderBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
-        side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
+        side) -> be.fluidStorage != null ? SidedResourceHandler.of(new ExternalResourceStorageView<>(be.fluidStorage), side, be) : null;
 
     public static final int TANK_CAPACITY = 10000;
 

@@ -1,5 +1,6 @@
 package com.enderio.enderio.content.machines.drain;
 
+import com.enderio.core.common.storage.ExternalResourceStorageView;
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
@@ -55,7 +56,7 @@ import java.util.List;
 public class DrainBlockEntity extends PoweredMachineBlockEntity implements RangedActor {
 
     public static final ICapabilityProvider<DrainBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
-        side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
+        side) -> be.fluidStorage != null ? SidedResourceHandler.of(new ExternalResourceStorageView<>(be.fluidStorage), side, be) : null;
     public static final String CONSUMED = "Consumed";
     private static final QuadraticScalable ENERGY_CAPACITY = new QuadraticScalable(CapacitorModifier.ENERGY_CAPACITY,
             MachinesConfig.COMMON.ENERGY.DRAIN_CAPACITY);

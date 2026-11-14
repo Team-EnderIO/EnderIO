@@ -1,5 +1,6 @@
 package com.enderio.enderio.content.machines.vacuum.xp;
 
+import com.enderio.core.common.storage.ExternalResourceStorageView;
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.layout.SlotTemplates;
@@ -33,7 +34,7 @@ import static com.enderio.enderio.foundation.util.ExperienceUtil.EXP_TO_FLUID;
 public class XPVacuumBlockEntity extends VacuumMachineBlockEntity<ExperienceOrb> {
 
     public static final ICapabilityProvider<XPVacuumBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
-        side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
+        side) -> be.fluidStorage != null ? SidedResourceHandler.of(new ExternalResourceStorageView<>(be.fluidStorage), side, be) : null;
 
     public static final SingleResourceSlotKey<FluidResource> TANK = new SingleResourceSlotKey<>();
 

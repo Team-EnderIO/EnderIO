@@ -1,6 +1,7 @@
 package com.enderio.enderio.content.machines.vat;
 
 import com.enderio.core.common.recipes.OutputStack;
+import com.enderio.core.common.storage.ExternalResourceStorageView;
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.ItemStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
@@ -60,7 +61,7 @@ import java.util.Map;
 public class VatBlockEntity extends MachineBlockEntity implements FluidItemInteractive {
 
     public static final ICapabilityProvider<VatBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
-        side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
+        side) -> be.fluidStorage != null ? SidedResourceHandler.of(new ExternalResourceStorageView<>(be.fluidStorage), side, be) : null;
 
     // TODO: Configurable tank sizes...
     public static final int TANK_CAPACITY = 16 * FluidType.BUCKET_VOLUME;

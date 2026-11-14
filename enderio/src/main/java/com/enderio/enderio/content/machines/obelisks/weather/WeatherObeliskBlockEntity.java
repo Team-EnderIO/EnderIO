@@ -1,6 +1,7 @@
 package com.enderio.enderio.content.machines.obelisks.weather;
 
 import com.enderio.core.common.recipes.OutputStack;
+import com.enderio.core.common.storage.ExternalResourceStorageView;
 import com.enderio.core.common.storage.FluidStorage;
 import com.enderio.core.common.storage.layout.FluidStorageLayout;
 import com.enderio.core.common.storage.layout.ItemStorageLayout;
@@ -54,7 +55,7 @@ public class WeatherObeliskBlockEntity extends MachineBlockEntity {
     public static final ItemStackTemplate FIREWORK = new ItemStackTemplate(Items.FIREWORK_ROCKET, 1);
 
     public static final ICapabilityProvider<WeatherObeliskBlockEntity, Direction, ResourceHandler<FluidResource>> FLUID_HANDLER_PROVIDER = (be,
-        side) -> be.fluidStorage != null ? SidedResourceHandler.of(be.fluidStorage, side, be) : null;
+        side) -> be.fluidStorage != null ? SidedResourceHandler.of(new ExternalResourceStorageView<>(be.fluidStorage), side, be) : null;
 
     public static final SingleResourceSlotKey<ItemResource> ROCKET = new SingleResourceSlotKey<>();
     public static final int TANK_CAPACITY = 3000;
