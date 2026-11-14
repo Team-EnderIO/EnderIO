@@ -14,7 +14,7 @@ import net.neoforged.testframework.annotation.ForEachTest;
 import net.neoforged.testframework.annotation.TestHolder;
 import net.neoforged.testframework.gametest.StructureTemplateBuilder;
 
-@ForEachTest(groups = "machines.sag_mill")
+@ForEachTest(groups = "content.machines.sag_mill")
 public class SagMillTests {
 
     @GameTest

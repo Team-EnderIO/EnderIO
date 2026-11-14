@@ -14,7 +14,7 @@ import net.neoforged.testframework.annotation.ForEachTest;
 import net.neoforged.testframework.annotation.TestHolder;
 import net.neoforged.testframework.gametest.StructureTemplateBuilder;
 
-@ForEachTest(groups = "content.storage")
+@ForEachTest(groups = "content.storage.fluid_tank")
 public class FluidTankTests {
 
     @GameTest

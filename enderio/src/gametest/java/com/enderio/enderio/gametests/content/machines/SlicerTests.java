@@ -15,7 +15,7 @@ import net.neoforged.testframework.gametest.StructureTemplateBuilder;
 
 import java.util.List;
 
-@ForEachTest(groups = "machines.slicer")
+@ForEachTest(groups = "content.machines.slicer")
 public class SlicerTests {
 
     @GameTest

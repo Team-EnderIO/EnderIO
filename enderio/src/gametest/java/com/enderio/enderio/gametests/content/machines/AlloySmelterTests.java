@@ -18,7 +18,7 @@ import net.neoforged.testframework.gametest.StructureTemplateBuilder;
 import java.util.List;
 import java.util.Objects;
 
-@ForEachTest(groups = "machines.alloy_smelter")
+@ForEachTest(groups = "content.machines.alloy_smelter")
 public class AlloySmelterTests {
 
     @GameTest

@@ -18,7 +18,7 @@ import net.neoforged.testframework.annotation.ForEachTest;
 import net.neoforged.testframework.annotation.TestHolder;
 import net.neoforged.testframework.gametest.StructureTemplateBuilder;
 
-@ForEachTest(groups = "machines.soul_binder")
+@ForEachTest(groups = "content.machines.soul_binder")
 public class SoulBinderTests {
 
     @GameTest

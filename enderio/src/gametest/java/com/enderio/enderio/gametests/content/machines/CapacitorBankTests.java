@@ -15,7 +15,7 @@ import net.neoforged.testframework.gametest.StructureTemplateBuilder;
 
 import java.util.function.Supplier;
 
-@ForEachTest(groups = "machines.capacitor_bank")
+@ForEachTest(groups = "content.machines.capacitor_bank")
 public class CapacitorBankTests {
 
     private static final String DOUBLE_CAPACITOR_BANKS = EnderIO.MOD_ID + ":double_capacitor_banks";

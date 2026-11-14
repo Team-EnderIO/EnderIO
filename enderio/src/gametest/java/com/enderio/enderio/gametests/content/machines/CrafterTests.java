@@ -16,7 +16,7 @@ import net.neoforged.testframework.gametest.StructureTemplateBuilder;
 
 import java.util.List;
 
-@ForEachTest(groups = "machines.crafter")
+@ForEachTest(groups = "content.machines.crafter")
 public class CrafterTests {
     @GameTest
     @TestHolder(description = "The crafter's output must not exceed the item's maximum stack size.")

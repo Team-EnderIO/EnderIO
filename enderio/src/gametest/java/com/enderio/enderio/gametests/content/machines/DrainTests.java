@@ -15,7 +15,7 @@ import net.neoforged.testframework.annotation.ForEachTest;
 import net.neoforged.testframework.annotation.TestHolder;
 import net.neoforged.testframework.gametest.StructureTemplateBuilder;
 
-@ForEachTest(groups = "machines.drain")
+@ForEachTest(groups = "content.machines.drain")
 public class DrainTests {
     @GameTest(timeoutTicks = 1200)
     @TestHolder(description = "The drain must not destroy waterlogged blocks in its range.")
