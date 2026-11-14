@@ -78,7 +78,9 @@ public class IOConfigSceneRenderer extends PictureInPictureRenderer<IOConfigScen
 
         poseStack.mulPose(state.viewMatrix());
 
-        Minecraft.getInstance().gameRenderer.getLighting().setupFor(Lighting.Entry.ITEMS_3D);
+        // Reset the normals so the camera rotation doesn't affect lighting, otherwise most faces render dark.
+        poseStack.last().normal().identity();
+        Minecraft.getInstance().gameRenderer.getLighting().setupFor(Lighting.Entry.LEVEL);
 
         // Render neighbors transparently, if any to show
         if (!state.neighborBlocks().isEmpty()) {
