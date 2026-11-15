@@ -143,24 +143,10 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
         super.onLoad();
 
         // Create all energy caches
-        if (level instanceof ServerLevel serverLevel) {
-            for (Direction side : Direction.values()) {
-                if (side == Direction.UP) {
-                    continue;
-                }
-
-                energyStorageCaches.put(side, BlockCapabilityCache.create(
-                    Capabilities.EnergyStorage.BLOCK,
-                    serverLevel,
-                    getBlockPos().relative(side),
-                    side.getOpposite(),
-                    () -> !isRemoved(),
-                    () -> isValidPushTargetCacheDirty = true));
-            }
-
+        if (!level.isClientSide()) {
             for (Direction side : Direction.values()) {
                 if (level.getBlockEntity(getBlockPos().relative(side)) instanceof CapacitorBankBlockEntity bank) {
-                    bank.node.getNetwork().connect(bank.node, node); //Connect to neighbours
+                    bank.node.getNetwork().connect(bank.node, node);
                 }
             }
         }
@@ -176,6 +162,10 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
     }
 
     Set<SidedEnergy> getValidPushTargets() {
+        if (!(level instanceof ServerLevel serverLevel)) {
+            throw new IllegalStateException("getValidPushTargets can only be called on the server.");
+        }
+
         if (isValidPushTargetCacheDirty) {
             validPushTargetCache.clear();
             for (Direction side : Direction.values()) {
@@ -183,7 +173,14 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
                     continue;
                 }
 
-                BlockCapabilityCache<IEnergyStorage, Direction> cache = energyStorageCaches.get(side);
+                var cache = energyStorageCaches.computeIfAbsent(side, ignored -> BlockCapabilityCache.create(
+                    Capabilities.EnergyStorage.BLOCK,
+                    serverLevel,
+                    getBlockPos().relative(side),
+                    side.getOpposite(),
+                    () -> !isRemoved(),
+                    () -> isValidPushTargetCacheDirty = true));
+
                 var energyStorage = cache.getCapability();
                 if (energyStorage != null && !(energyStorage instanceof CapacitorBankEnergyStorage) && energyStorage.canReceive() &&
                     getIOMode(side).canPush()) {
