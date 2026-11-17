@@ -7,6 +7,7 @@ import com.enderio.enderio.api.conduits.model.RegisterConduitModelModifiersEvent
 import com.enderio.enderio.api.conduits.screen.RegisterConduitScreenTypesEvent;
 import com.enderio.enderio.api.soul.SoulBoundUtils;
 import com.enderio.enderio.api.travel.RegisterTravelRenderersEvent;
+import com.enderio.enderio.client.content.conduits.ConduitBreakParticle;
 import com.enderio.enderio.client.content.conduits.ConduitBundleExtension;
 import com.enderio.enderio.client.content.conduits.ConduitFacadeColor;
 import com.enderio.enderio.client.content.conduits.gui.ConduitScreen;
@@ -384,6 +385,7 @@ public class EnderIOClient {
     @SubscribeEvent
     public static void registerParticleProviders(RegisterParticleProvidersEvent event) {
         event.registerSpriteSet(EIOParticles.RANGE_PARTICLE.get(), RangeParticle.Provider::new);
+        event.registerSpecial(EIOParticles.CONDUIT_BREAK.get(), new ConduitBreakParticle.Provider());
     }
 
     private static Optional<Item> findGliderForModelRL(ResourceLocation rl) {

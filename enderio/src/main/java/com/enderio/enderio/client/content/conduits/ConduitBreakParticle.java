@@ -2,10 +2,14 @@ package com.enderio.enderio.client.content.conduits;
 
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.content.conduits.bundle.ConduitShape;
+import com.enderio.enderio.foundation.particle.ConduitBreakParticleOption;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
+import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
+import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
@@ -16,6 +20,8 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -146,14 +152,18 @@ public class ConduitBreakParticle extends TextureSheetParticle {
                 .scale(0.6F));
     }
 
-    public static void spawnParticle(BlockPos blockpos, Conduit<?,?> conduit, double x, double y, double z, double xSpeed, float ySpeed, double zSpeed) {
-        ClientLevel level = Minecraft.getInstance().level;
-        if (level == null) {
-            return;
+    public static class Provider implements ParticleProvider<ConduitBreakParticleOption> {
+
+        public Provider() {
+
         }
 
-        ParticleEngine engine = Minecraft.getInstance().particleEngine;
-        engine.add(new ConduitBreakParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, blockpos, conduit.texture()).setPower(0.2F)
-            .scale(0.6F));
+        @Nullable
+        @Override
+        public Particle createParticle(ConduitBreakParticleOption data, @NotNull ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed,
+            double zSpeed) {
+            ConduitBreakParticle particle = new ConduitBreakParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, data.pos(), data.texture());
+            return particle;
+        }
     }
 }
