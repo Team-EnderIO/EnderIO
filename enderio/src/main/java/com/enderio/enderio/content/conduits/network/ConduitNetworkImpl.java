@@ -37,12 +37,16 @@ import org.jspecify.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -81,8 +85,14 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
 
     // TODO: Separate this into a list and a multimap so we can sort all endpointConnections?
     private final SetMultimap<ConduitNodeImpl, ConduitBlockConnection> endpointConnections = HashMultimap.create();
-    private final Map<ConduitBlockConnection, List<ConduitConnectionPath>> accessiblePathsByConnection = Maps
-            .newHashMap();
+
+    // Paths between connections are expensive to find, and most pairs are never queried.
+    // So the path lists below are computed lazily (on first request) and cached.
+    //
+    // Cached lists carry the versions they were computed at. If the network has changed since, the list is stale
+    // and is recomputed, but only within a small time budget per tick. Any stale list is served in the meantime
+    // (minus any connections that no longer exist) so a change never causes a large lag spike.
+    private final Map<ConduitBlockConnection, CachedPaths> accessiblePathsByConnection = Maps.newHashMap();
 
     private final List<ConduitBlockConnection> insertConnections = Lists.newArrayList();
     private final List<ConduitBlockConnection> extractConnections = Lists.newArrayList();
@@ -93,10 +103,38 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     private final ListMultimap<DyeColor, ConduitBlockConnection> extractConnectionsByChannel = ArrayListMultimap
             .create();
 
-    private final Map<ConduitBlockConnection, List<ConduitConnectionPath>> extractConnectionsByInsert = Maps
-            .newHashMap();
-    private final Map<ConduitBlockConnection, List<ConduitConnectionPath>> insertConnectionsByExtract = Maps
-            .newHashMap();
+    private final Map<ConduitBlockConnection, CachedPaths> extractConnectionsByInsert = Maps.newHashMap();
+    private final Map<ConduitBlockConnection, CachedPaths> insertConnectionsByExtract = Maps.newHashMap();
+
+    private record CachedPaths(List<ConduitConnectionPath> paths, int topologyVersion, int membershipVersion) {
+    }
+
+    /**
+     * The IO state of one connection, used to detect whether an update changed what paths could be found.
+     */
+    private record Membership(ConduitBlockConnection connection, @Nullable DyeColor insertChannel,
+            @Nullable DyeColor extractChannel) {
+    }
+
+    // Versions, all taken from versionCounter so a version is never reused.
+    private int versionCounter = 0;
+    // Changes when the layout of the conduits changes (nodes removed, network rebuilt).
+    private int topologyVersion = 0;
+    // Changes when the set of endpoints changes.
+    private int endpointVersion = 0;
+    // Change when the connections that insert/extract on a channel change.
+    private final Map<DyeColor, Integer> insertMembershipVersions = new EnumMap<>(DyeColor.class);
+    private final Map<DyeColor, Integer> extractMembershipVersions = new EnumMap<>(DyeColor.class);
+
+    // Time budget for searching for paths, so that recomputing paths is spread across many ticks.
+    private static final long PATH_SEARCH_BUDGET_NANOS = 2_000_000L;
+    private static final long PATH_SEARCH_WINDOW_NANOS = 50_000_000L;
+    private long pathSearchWindowStart = 0;
+    private long pathSearchNanosUsed = 0;
+
+    // The channel each IO connection inserts to / extracts from, used to find the targets for lazy path lookups.
+    private final Map<ConduitBlockConnection, DyeColor> insertChannelByConnection = Maps.newHashMap();
+    private final Map<ConduitBlockConnection, DyeColor> extractChannelByConnection = Maps.newHashMap();
 
     private final ListMultimap<Integer, Holder<Conduit<?, ?>>> tickableConduits = ArrayListMultimap.create();
     private boolean areTickableConduitsValid = false;
@@ -237,7 +275,140 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     public List<ConduitConnectionPath> blockConnectionsAccessibleFrom(ConduitBlockConnection connection) {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching");
-        return accessiblePathsByConnection.getOrDefault(connection, List.of());
+
+        if (!endpointConnections.containsEntry(connection.node(), connection)) {
+            return List.of();
+        }
+
+        return getCachedPaths(accessiblePathsByConnection, connection, endpointVersion, () -> {
+            var targets = new ArrayList<ConduitBlockConnection>(endpointConnections.size());
+            for (var other : endpointConnections.values()) {
+                if (!other.equals(connection)) {
+                    targets.add(other);
+                }
+            }
+            return targets;
+        }, end -> endpointConnections.containsEntry(end.node(), end));
+    }
+
+    /**
+     * Get the cached paths for a connection, (re)computing them if needed and if there is time budget to do so.
+     * <p>
+     * If the cached paths are out of date and the budget is spent, the out of date paths are returned (without any
+     * paths to connections that no longer exist) and are refreshed in a later tick. If there are no cached paths at
+     * all, an empty list is returned until they could be computed.
+     * </p>
+     */
+    private List<ConduitConnectionPath> getCachedPaths(Map<ConduitBlockConnection, CachedPaths> cache,
+            ConduitBlockConnection key, int membershipVersion,
+            Supplier<? extends Collection<ConduitBlockConnection>> targets,
+            Predicate<ConduitBlockConnection> isValidEnd) {
+        var cached = cache.get(key);
+        if (cached != null && cached.topologyVersion() == topologyVersion
+                && cached.membershipVersion() == membershipVersion) {
+            return cached.paths();
+        }
+
+        if (hasPathSearchBudget()) {
+            long searchStart = System.nanoTime();
+            var paths = computeSortedPaths(key, targets.get());
+            pathSearchNanosUsed += System.nanoTime() - searchStart;
+
+            cache.put(key, new CachedPaths(paths, topologyVersion, membershipVersion));
+            return paths;
+        }
+
+        if (cached == null) {
+            // Nothing to serve yet, this will be computed in a later tick.
+            return List.of();
+        }
+
+        // Serve the out of date paths for now, but never ones that lead to connections that have gone.
+        var stalePaths = cached.paths();
+        boolean allValid = true;
+        for (var path : stalePaths) {
+            if (!isValidEnd.test(path.end())) {
+                allValid = false;
+                break;
+            }
+        }
+
+        if (allValid) {
+            return stalePaths;
+        }
+
+        var validPaths = new ArrayList<ConduitConnectionPath>(stalePaths.size());
+        for (var path : stalePaths) {
+            if (isValidEnd.test(path.end())) {
+                validPaths.add(path);
+            }
+        }
+
+        cache.put(key, new CachedPaths(validPaths, cached.topologyVersion(), cached.membershipVersion()));
+        return validPaths;
+    }
+
+    private boolean hasPathSearchBudget() {
+        long now = System.nanoTime();
+        if (now - pathSearchWindowStart >= PATH_SEARCH_WINDOW_NANOS) {
+            pathSearchWindowStart = now;
+            pathSearchNanosUsed = 0;
+        }
+
+        return pathSearchNanosUsed < PATH_SEARCH_BUDGET_NANOS;
+    }
+
+    /**
+     * Find the paths from a connection to the targets, sorted by the conduit type's comparator.
+     */
+    private List<ConduitConnectionPath> computeSortedPaths(ConduitBlockConnection from,
+            Collection<ConduitBlockConnection> targets) {
+        var paths = new ArrayList<>(findBestPathsTo(from, targets).values());
+        paths.sort(conduitType.connectionPathComparator());
+        return paths;
+    }
+
+    private Set<Membership> membershipOf(ConduitNodeImpl node) {
+        var memberships = new HashSet<Membership>();
+        for (var connection : endpointConnections.get(node)) {
+            memberships.add(new Membership(connection, insertChannelByConnection.get(connection),
+                    extractChannelByConnection.get(connection)));
+        }
+        return memberships;
+    }
+
+    /**
+     * Called when a node's endpoints or IO configuration changed, marks the path lists that this affects as stale.
+     */
+    private void onMembershipChanged(Set<Membership> before, Set<Membership> after) {
+        endpointVersion = ++versionCounter;
+
+        for (var memberships : List.of(before, after)) {
+            for (var membership : memberships) {
+                if (membership.insertChannel() != null) {
+                    insertMembershipVersions.put(membership.insertChannel(), ++versionCounter);
+                }
+
+                if (membership.extractChannel() != null) {
+                    extractMembershipVersions.put(membership.extractChannel(), ++versionCounter);
+                }
+            }
+        }
+
+        // Forget cached paths for connections that no longer exist.
+        var remaining = new HashSet<ConduitBlockConnection>();
+        for (var membership : after) {
+            remaining.add(membership.connection());
+        }
+
+        for (var membership : before) {
+            var connection = membership.connection();
+            if (!remaining.contains(connection)) {
+                accessiblePathsByConnection.remove(connection);
+                extractConnectionsByInsert.remove(connection);
+                insertConnectionsByExtract.remove(connection);
+            }
+        }
     }
 
     public Set<DyeColor> allChannels() {
@@ -262,7 +433,16 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     public List<ConduitConnectionPath> extractConnectionsFrom(ConduitBlockConnection insertConnection) {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching");
-        return extractConnectionsByInsert.getOrDefault(insertConnection, List.of());
+
+        var channel = insertChannelByConnection.get(insertConnection);
+        if (channel == null) {
+            return List.of();
+        }
+
+        return getCachedPaths(extractConnectionsByInsert, insertConnection,
+                extractMembershipVersions.getOrDefault(channel, 0),
+                () -> extractConnectionsByChannel.get(channel),
+                end -> extractChannelByConnection.get(end) == channel);
     }
 
     public List<ConduitBlockConnection> extractConnections() {
@@ -281,7 +461,16 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     public List<ConduitConnectionPath> insertConnectionsFrom(ConduitBlockConnection extractConnection) {
         ensureNotDiscarded();
         Preconditions.checkState(supportsCaching, "This conduit does not support caching");
-        return insertConnectionsByExtract.getOrDefault(extractConnection, List.of());
+
+        var channel = extractChannelByConnection.get(extractConnection);
+        if (channel == null) {
+            return List.of();
+        }
+
+        return getCachedPaths(insertConnectionsByExtract, extractConnection,
+                insertMembershipVersions.getOrDefault(channel, 0),
+                () -> insertConnectionsByChannel.get(channel),
+                end -> insertChannelByConnection.get(end) == channel);
     }
 
     // endregion
@@ -337,12 +526,24 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
                 if (node.isTicking()) {
                     // Update nodes by removing and adding again.
                     if (tickingNodes.contains(node)) {
+                        var before = membershipOf(node);
                         removeTickingNode(node);
-                    }
+                        addTickingNode(node);
 
-                    addTickingNode(node);
+                        // Only mark paths as stale if the update changed which connections can send/receive.
+                        // Most updates (e.g. chunk load/unload) don't, and cached paths remain valid.
+                        var after = membershipOf(node);
+                        if (!before.equals(after)) {
+                            onMembershipChanged(before, after);
+                        }
+                    } else {
+                        addTickingNode(node);
+                        onMembershipChanged(Set.of(), membershipOf(node));
+                    }
                 } else if (tickingNodes.contains(node)) {
+                    var before = membershipOf(node);
                     removeTickingNode(node);
+                    onMembershipChanged(before, Set.of());
                 }
             }
 
@@ -384,27 +585,6 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
             var connection = new ConduitBlockConnection(node, side);
             endpointConnections.put(node, connection);
 
-            // Add own list of block connection accesses.
-            accessiblePathsByConnection.computeIfAbsent(connection,
-                    k -> new ArrayList<>(endpointConnections.values().size()));
-
-            // Add all paths to both lists
-            for (var accessibleConnection : endpointConnections.values()) {
-                if (accessibleConnection != connection) {
-                    findBestPathTo(connection, accessibleConnection).ifPresent(path -> {
-                        var accessibleConnections = accessiblePathsByConnection.get(connection);
-                        if (!accessibleConnections.contains(path)) {
-                            accessibleConnections.add(path);
-                        }
-
-                        var reverseAccessibleConnections = accessiblePathsByConnection.get(accessibleConnection);
-                        if (!reverseAccessibleConnections.contains(path.reverse())) {
-                            reverseAccessibleConnections.add(path.reverse());
-                        }
-                    });
-                }
-            }
-
             // Handle IO caching
             var config = node.getConnectionConfig(side);
             if (config instanceof IOConnectionConfig ioConnectionConfig) {
@@ -412,48 +592,17 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
                 boolean canInsert = ioConnectionConfig.canInsert(node::hasRedstoneSignal);
                 boolean canExtract = ioConnectionConfig.canExtract(node::hasRedstoneSignal);
 
+                // The paths between these connections are found lazily, see extractConnectionsFrom/insertConnectionsFrom.
                 if (canInsert) {
                     insertConnections.add(connection);
                     insertConnectionsByChannel.put(ioConnectionConfig.insertChannel(), connection);
+                    insertChannelByConnection.put(connection, ioConnectionConfig.insertChannel());
                 }
 
                 if (canExtract) {
                     extractConnections.add(connection);
                     extractConnectionsByChannel.put(ioConnectionConfig.extractChannel(), connection);
-                }
-
-                // Now handle the mappings between them, do it after both are added in case we
-                // can self-feed.
-                if (canInsert) {
-                    for (var accessibleConnection : extractConnectionsByChannel.get(ioConnectionConfig.insertChannel())) {
-                        findBestPathTo(connection, accessibleConnection).ifPresent(path -> {
-                            var extractPaths = extractConnectionsByInsert.computeIfAbsent(connection, k -> new ArrayList<>());
-                            if (!extractPaths.contains(path)) {
-                                extractPaths.add(path);
-                            }
-
-                            var insertPaths = insertConnectionsByExtract.computeIfAbsent(accessibleConnection, k -> new ArrayList<>());
-                            if (!insertPaths.contains(path.reverse())) {
-                                insertPaths.add(path.reverse());
-                            }
-                        });
-                    }
-                }
-
-                if (canExtract) {
-                    for (var accessibleConnection : insertConnectionsByChannel.get(ioConnectionConfig.extractChannel())) {
-                        findBestPathTo(connection, accessibleConnection).ifPresent(path -> {
-                            var insertPaths = insertConnectionsByExtract.computeIfAbsent(connection, k -> new ArrayList<>());
-                            if (!insertPaths.contains(path)) {
-                                insertPaths.add(path);
-                            }
-
-                            var extractPaths = extractConnectionsByInsert.computeIfAbsent(accessibleConnection, k -> new ArrayList<>());
-                            if (!extractPaths.contains(path.reverse())) {
-                                extractPaths.add(path.reverse());
-                            }
-                        });
-                    }
+                    extractChannelByConnection.put(connection, ioConnectionConfig.extractChannel());
                 }
             }
 
@@ -462,8 +611,9 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         }
     }
 
-    private Optional<ConduitConnectionPath> findBestPathTo(ConduitBlockConnection from, ConduitBlockConnection to) {
-        return pathfinder.findPath(from, to, this);
+    private Map<ConduitBlockConnection, ConduitConnectionPath> findBestPathsTo(ConduitBlockConnection from,
+            Collection<ConduitBlockConnection> targets) {
+        return pathfinder.findPaths(from, targets, this);
     }
     
     // region PathfindingContext Implementation
@@ -486,9 +636,6 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
 
         // Remove connections from any maps
         for (var connection : endpointConnections.get(node)) {
-            // Remove this connection's maps
-            accessiblePathsByConnection.remove(connection);
-
             // Not a fan of having to iterate, but it's probably fine.
             for (var color : DyeColor.values()) {
                 insertConnections.remove(connection);
@@ -497,21 +644,8 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
                 extractConnectionsByChannel.remove(color, connection);
             }
 
-            extractConnectionsByInsert.remove(connection);
-            insertConnectionsByExtract.remove(connection);
-
-            // Remove this connection from other maps
-            for (var list : accessiblePathsByConnection.values()) {
-                list.removeIf(p -> p.start() == connection || p.end() == connection);
-            }
-
-            for (var list : extractConnectionsByInsert.values()) {
-                list.removeIf(p -> p.start() == connection || p.end() == connection);
-            }
-
-            for (var list : insertConnectionsByExtract.values()) {
-                list.removeIf(p -> p.start() == connection || p.end() == connection);
-            }
+            insertChannelByConnection.remove(connection);
+            extractChannelByConnection.remove(connection);
 
             haveConnectionsChanged = true;
         }
@@ -533,17 +667,7 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
             extractConnections.sort(basicConnectionComparator);
         }
 
-        for (var connectionsList : accessiblePathsByConnection.values()) {
-            connectionsList.sort(conduitType.connectionPathComparator());
-        }
-
-        for (var connectionsList : extractConnectionsByInsert.values()) {
-            connectionsList.sort(conduitType.connectionPathComparator());
-        }
-
-        for (var connectionsList : insertConnectionsByExtract.values()) {
-            connectionsList.sort(conduitType.connectionPathComparator());
-        }
+        // Path lists are sorted as they are lazily computed.
 
         haveConnectionsChanged = false;
     }
@@ -562,13 +686,12 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         nodesByChunkPos.clear();
         tickingNodes.clear();
         endpointConnections.clear();
-        accessiblePathsByConnection.clear();
         insertConnections.clear();
         extractConnections.clear();
         insertConnectionsByChannel.clear();
         extractConnectionsByChannel.clear();
-        insertConnectionsByExtract.clear();
-        extractConnectionsByInsert.clear();
+        insertChannelByConnection.clear();
+        extractChannelByConnection.clear();
 
         // Add each ticking node into the caches.
         for (var node : nodes()) {
@@ -585,6 +708,21 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
 
         // Sort all lists
         sortConnectionLists();
+
+        // The layout has changed, so all cached paths are stale. Rather than throwing them away, they are
+        // kept and served until they are recomputed, which is spread across ticks. Paths to connections that
+        // are no longer in this network are filtered out when served.
+        topologyVersion = ++versionCounter;
+        endpointVersion = ++versionCounter;
+        for (var color : DyeColor.values()) {
+            insertMembershipVersions.put(color, ++versionCounter);
+            extractMembershipVersions.put(color, ++versionCounter);
+        }
+
+        // Forget cached paths for connections no longer in this network.
+        accessiblePathsByConnection.keySet().removeIf(c -> !endpointConnections.containsEntry(c.node(), c));
+        extractConnectionsByInsert.keySet().removeIf(c -> !insertChannelByConnection.containsKey(c));
+        insertConnectionsByExtract.keySet().removeIf(c -> !extractChannelByConnection.containsKey(c));
 
         // Fire chunk coverage update
         if (onChunkCoverageChanged != null) {
@@ -655,6 +793,9 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
     protected void onNodeRemoved(ConduitNodeImpl node) {
         // Always recompute what conduits can tick - it's cheap to do.
         areTickableConduitsValid = false;
+
+        // Paths may have gone through this node, so they are now stale.
+        topologyVersion = ++versionCounter;
 
         // Remove from node count
         nodeCountByConduit.compute(node.conduit(), (k, count) -> count == null || count == 1 ? null : count - 1);

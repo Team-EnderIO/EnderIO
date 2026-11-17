@@ -6,6 +6,7 @@ import org.jetbrains.annotations.ApiStatus;
 
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 /**
  * Provides information about the path between two {@link ConduitBlockConnection}s.
@@ -16,13 +17,26 @@ public final class ConduitConnectionPath {
     private final ConduitBlockConnection start;
     private final ConduitBlockConnection end;
     private final int length;
-    private final Map<ConnectionPathProperty<?>, ?> properties;
+    private Map<ConnectionPathProperty<?>, ?> properties;
+    private Supplier<? extends Map<ConnectionPathProperty<?>, ?>> propertiesSupplier;
 
     public ConduitConnectionPath(ConduitBlockConnection start, ConduitBlockConnection end, int length, Map<ConnectionPathProperty<?>, ?> properties) {
         this.start = start;
         this.end = end;
         this.length = length;
         this.properties = properties == null || properties.isEmpty() ? Map.of() : Map.copyOf(properties);
+    }
+
+    /**
+     * Create a path whose properties are only computed when first needed.
+     * Aggregating properties along a long path is expensive, and most paths never have their properties read.
+     * The supplier is invoked at most once, on the thread that first reads the properties.
+     */
+    public ConduitConnectionPath(ConduitBlockConnection start, ConduitBlockConnection end, int length, Supplier<? extends Map<ConnectionPathProperty<?>, ?>> propertiesSupplier) {
+        this.start = start;
+        this.end = end;
+        this.length = length;
+        this.propertiesSupplier = propertiesSupplier;
     }
 
     public ConduitBlockConnection start() {
@@ -38,6 +52,13 @@ public final class ConduitConnectionPath {
     }
 
     public Map<ConnectionPathProperty<?>, ?> properties() {
+        var supplier = propertiesSupplier;
+        if (supplier != null) {
+            var computed = supplier.get();
+            properties = computed == null || computed.isEmpty() ? Map.of() : Map.copyOf(computed);
+            propertiesSupplier = null;
+        }
+
         return properties;
     }
 
@@ -45,14 +66,20 @@ public final class ConduitConnectionPath {
     public <T> T property(ConnectionPathProperty<T> property) {
         Objects.requireNonNull(property);
 
-        if (!properties.containsKey(property)) {
+        var props = properties();
+        if (!props.containsKey(property)) {
             return property.defaultValue();
         }
 
-        return (T) properties.get(property);
+        return (T) props.get(property);
     }
 
     public ConduitConnectionPath reverse() {
+        if (propertiesSupplier != null) {
+            // Share the lazily computed properties rather than forcing them.
+            return new ConduitConnectionPath(end, start, length, (Supplier<Map<ConnectionPathProperty<?>, ?>>) this::properties);
+        }
+
         return new ConduitConnectionPath(end, start, length, properties);
     }
 
@@ -69,11 +96,11 @@ public final class ConduitConnectionPath {
         return length == that.length
             && Objects.equals(start, that.start)
             && Objects.equals(end, that.end)
-            && Objects.equals(properties, that.properties);
+            && Objects.equals(properties(), that.properties());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(start, end, length, properties);
+        return Objects.hash(start, end, length, properties());
     }
 }
