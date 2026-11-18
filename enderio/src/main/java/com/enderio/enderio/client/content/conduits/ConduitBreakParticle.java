@@ -9,7 +9,6 @@ import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.ParticleRenderType;
-import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
@@ -162,7 +161,7 @@ public class ConduitBreakParticle extends TextureSheetParticle {
         @Override
         public Particle createParticle(ConduitBreakParticleOption data, @NotNull ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed,
             double zSpeed) {
-            ConduitBreakParticle particle = new ConduitBreakParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, data.pos(), data.texture());
+            ConduitBreakParticle particle = new ConduitBreakParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, data.pos(), data.conduit().value().texture());
             return particle;
         }
     }

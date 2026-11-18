@@ -614,7 +614,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             level.sendParticles((new BlockParticleOption(ParticleTypes.BLOCK, conduitBundle.getFacadeBlock().defaultBlockState())).setPos(pos), d0, d1, d2,
                 numberOfParticles, 0.0F, 0.0F, 0.0F, 0.15F);
         } else if (!conduitBundle.getConduits().isEmpty() && conduitBundle.getConduits().getFirst().isBound()) {
-            level.sendParticles(new ConduitBreakParticleOption(pos, conduitBundle.getConduits().getFirst().value().texture()), d0, d1, d2,
+            level.sendParticles(new ConduitBreakParticleOption(pos, conduitBundle.getConduits().getFirst()), d0, d1, d2,
                 numberOfParticles, 0.0F, 0.0F, 0.0F, 0.15F);
         }
 
@@ -647,7 +647,7 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             level.addParticle((new BlockParticleOption(ParticleTypes.BLOCK, conduitBundle.getFacadeBlock().defaultBlockState())).setPos(blockpos), d0,
                 entity.getY() + 0.1, d1, vec3.x * (double)-4.0F, 1.5F, vec3.z * (double)-4.0F);
         } else {
-            level.addParticle(new ConduitBreakParticleOption(blockpos, conduitBundle.getConduits().getFirst().value().texture()), d0,
+            level.addParticle(new ConduitBreakParticleOption(blockpos, conduitBundle.getConduits().getFirst()), d0,
                 entity.getY() + 0.1, d1, vec3.x * (double)-4.0F, 1.5F, vec3.z * (double)-4.0F);
         }
 
