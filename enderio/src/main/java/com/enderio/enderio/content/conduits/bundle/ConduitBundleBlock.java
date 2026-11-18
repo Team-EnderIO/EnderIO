@@ -611,10 +611,8 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             return true;
         }
 
-        if (!conduitBundle.getConduits().isEmpty() && conduitBundle.getConduits().getFirst().isBound()) {
-            ConduitBreakParticle.addDestroyEffects(pos, state2, conduitBundle.getConduits().getFirst().value());
-        }
-
+        // ConduitBreakParticle is client-only (extends SingleQuadParticle). This method runs on the
+        // server (ServerLevel), so calling it here crashes dedicated servers with NoClassDefFoundError.
         return true;
     }
 
