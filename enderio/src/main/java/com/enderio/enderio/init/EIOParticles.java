@@ -1,6 +1,8 @@
 package com.enderio.enderio.init;
 
 import com.enderio.enderio.EnderIO;
+import com.enderio.enderio.foundation.particle.ConduitBreakParticleOption;
+import com.enderio.enderio.foundation.particle.ConduitBreakParticleType;
 import com.enderio.enderio.foundation.particle.RangeParticleType;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
@@ -15,6 +17,9 @@ public class EIOParticles {
 
     public static final DeferredHolder<ParticleType<?>, RangeParticleType> RANGE_PARTICLE = PARTICLE_TYPES
             .register("range_particle", RangeParticleType::new);
+
+    public static final DeferredHolder<ParticleType<?>, ParticleType<ConduitBreakParticleOption>> CONDUIT_BREAK = PARTICLE_TYPES
+            .register("conduit_break", ConduitBreakParticleType::new);
 
     public static void register(IEventBus bus) {
         PARTICLE_TYPES.register(bus);
