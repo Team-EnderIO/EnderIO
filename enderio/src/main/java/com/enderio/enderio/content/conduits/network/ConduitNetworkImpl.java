@@ -365,6 +365,13 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
             Collection<ConduitBlockConnection> targets) {
         var paths = new ArrayList<>(findBestPathsTo(from, targets).values());
         paths.sort(conduitType.connectionPathComparator());
+
+        // Materialize the properties while we are still inside the path search budget. These paths are cached
+        // and reused across ticks, so computing them here keeps aggregation off the server tick.
+        for (var path : paths) {
+            path.properties();
+        }
+
         return paths;
     }
 
@@ -395,20 +402,10 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
             }
         }
 
-        // Forget cached paths for connections that no longer exist.
-        var remaining = new HashSet<ConduitBlockConnection>();
-        for (var membership : after) {
-            remaining.add(membership.connection());
-        }
-
-        for (var membership : before) {
-            var connection = membership.connection();
-            if (!remaining.contains(connection)) {
-                accessiblePathsByConnection.remove(connection);
-                extractConnectionsByInsert.remove(connection);
-                insertConnectionsByExtract.remove(connection);
-            }
-        }
+        // Forget cached paths for connections that are no longer involved with the matching role.
+        accessiblePathsByConnection.keySet().removeIf(c -> !endpointConnections.containsEntry(c.node(), c));
+        extractConnectionsByInsert.keySet().removeIf(c -> !insertChannelByConnection.containsKey(c));
+        insertConnectionsByExtract.keySet().removeIf(c -> !extractChannelByConnection.containsKey(c));
     }
 
     public Set<DyeColor> allChannels() {
@@ -667,7 +664,17 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
             extractConnections.sort(basicConnectionComparator);
         }
 
-        // Path lists are sorted as they are lazily computed.
+        // Connection config (e.g. priority) affects path ordering without changing topology or membership,
+        // so re-sort cached path lists while we are already processing changed connections.
+        for (var cached : accessiblePathsByConnection.values()) {
+            cached.paths().sort(conduitType.connectionPathComparator());
+        }
+        for (var cached : extractConnectionsByInsert.values()) {
+            cached.paths().sort(conduitType.connectionPathComparator());
+        }
+        for (var cached : insertConnectionsByExtract.values()) {
+            cached.paths().sort(conduitType.connectionPathComparator());
+        }
 
         haveConnectionsChanged = false;
     }

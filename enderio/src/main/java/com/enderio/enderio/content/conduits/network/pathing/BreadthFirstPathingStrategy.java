@@ -45,9 +45,9 @@ public class BreadthFirstPathingStrategy implements ConduitPathingStrategy {
      * Finds paths to every target with a single breadth-first search from the source.
      * <p>
      * The search stops as soon as every target node has been reached. It records how far each node is from the
-     * source, which gives each path's length, and which node discovered it, which is enough to rebuild any path
-     * without searching again. Path properties are aggregated lazily, only when a path's properties are first
-     * read, and are rebuilt from that parent map in path length rather than by traversing the network again.
+     * source and which node discovered it, which is enough to rebuild every target path without searching again.
+     * Paths are rebuilt inside this call so the parent map is not retained, and properties are aggregated lazily
+     * only when a path's properties are first read, in path length rather than by traversing the network again.
      * </p>
      */
     @Override
@@ -111,8 +111,11 @@ public class BreadthFirstPathingStrategy implements ConduitPathingStrategy {
 
             // Unreachable targets were never discovered. BFS assigns the shortest length on discovery.
             if (pathLength != null) {
+                // Rebuild the path now, while we are still inside the search budget, so the cached path does
+                // not retain the whole parent map (and the nodes it references) until its properties are read.
+                List<ConduitNode> path = reconstructPath(start, target.node(), parent);
                 results.put(target, new ConduitConnectionPath(from, target, pathLength,
-                    () -> collectPathProperties(start, target.node(), parent, context)));
+                    () -> collectPathProperties(path, context)));
             }
         }
 
@@ -120,33 +123,39 @@ public class BreadthFirstPathingStrategy implements ConduitPathingStrategy {
     }
 
     /**
-     * Rebuild the path found by the search from the recorded parent map and aggregate its node properties.
+     * Rebuild the node chain from the discovery parent map, in start -> goal order.
      */
-    private Map<ConnectionPathProperty<?>, Object> collectPathProperties(
-        ConduitNode start,
-        ConduitNode goal,
-        Map<ConduitNode, ConduitNode> parent,
-        PathfindingContext context
-    ) {
+    private List<ConduitNode> reconstructPath(ConduitNode start, ConduitNode goal,
+        Map<ConduitNode, ConduitNode> parent) {
         if (!parent.containsKey(goal)) {
-            // The path was never discovered, there is nothing to aggregate.
-            return Map.of();
+            return List.of();
         }
 
-        // Rebuild path (goal -> start), then aggregate in start -> goal order.
+        // Rebuild path (goal -> start), then reverse into traversal order.
         ArrayList<ConduitNode> path = new ArrayList<>();
         ConduitNode node = goal;
         while (!node.equals(start)) {
             path.add(node);
             var next = parent.get(node);
             if (next == null) {
-                // The parent map is incomplete, so there is nothing to aggregate.
-                return Map.of();
+                return List.of();
             }
             node = next;
         }
         path.add(start);
         Collections.reverse(path);
+        return path;
+    }
+
+    /**
+     * Aggregate the properties of the nodes along an already rebuilt path.
+     */
+    private Map<ConnectionPathProperty<?>, Object> collectPathProperties(List<ConduitNode> path,
+        PathfindingContext context) {
+        if (path.isEmpty()) {
+            // There is no path to aggregate.
+            return Map.of();
+        }
 
         Map<ConnectionPathProperty<?>, List<Object>> aggregates = Maps.newHashMap();
         for (ConduitNode pathNode : path) {
