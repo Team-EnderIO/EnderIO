@@ -1,35 +1,61 @@
-# OSX
+# Operating system
 .DS_Store
+Thumbs.db
+desktop.ini
+$RECYCLE.BIN/
+*.swp
+*~
 
-# Datagen Caches
-*/src/generated/resources/.cache
+# Logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# eclipse
-bin
-*.launch
-.settings
-.metadata
-.classpath
-.project
+# Agent / AI tooling
+.pi/
+.cursor/
+.claude/
+agent.json
+*.agent.json
 
-# idea
-out
+# Environment / secrets
+.env
+.env.local
+.env.*.local
+
+# IDEs
+.idea/
+.vscode/
 *.ipr
 *.iws
 *.iml
-.idea
+.classpath
+.project
+.settings
+out/
+bin/
+.metadata/
 
-# gradle
-build
+# Gradle
+build/
 .gradle
+run/
+run-server/
+runs/
 
-# other
-eclipse
-run
-run-server
-runs
+# Eclipse
+eclipse/
 
-# Files from Forge MDK
+# Forge MDK
 forge*changelog.txt
 
-.vscode/
+# Datagen caches
+*/src/generated/resources/.cache
+
+# Misc
+*.orig
+*.rej
+coverage/
+.nyc_output/
