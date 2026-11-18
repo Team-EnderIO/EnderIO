@@ -611,15 +611,19 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             return true;
         }
 
-        if (!conduitBundle.getConduits().isEmpty() && conduitBundle.getConduits().getFirst().isBound()) {
-            ConduitBreakParticle.addDestroyEffects(pos, state2, conduitBundle.getConduits().getFirst().value());
-        }
+        // This hook runs on the server (ServerLevel), where client-only classes such as ConduitBreakParticle
+        // do not exist. Conduit-specific landing particles would need to be sent to clients via a packet.
 
         return true;
     }
 
     @Override
     public boolean addRunningEffects(BlockState state, Level level, BlockPos blockpos, Entity entity) {
+        // Particles are client-only; never touch client classes on the server.
+        if (!level.isClientSide()) {
+            return true;
+        }
+
         if (!(level.getBlockEntity(blockpos) instanceof ConduitBundleBlockEntity conduitBundle && !conduitBundle.isEmpty())) {
             return true;
         }
