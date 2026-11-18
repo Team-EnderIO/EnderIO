@@ -80,26 +80,11 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
         super.onLoad();
         reloadCache = !reload;
 
-        // Create all energy caches
-        if (level instanceof ServerLevel serverLevel) {
-            for (Direction side : Direction.values()) {
-                if (side == Direction.UP) {
-                    continue;
+        if (!level.isClientSide()) {
+            for (Direction side : Direction.Plane.HORIZONTAL) {
+                if (level.getBlockEntity(getBlockPos().relative(side)) instanceof SolarPanelBlockEntity panel) {
+                    panel.node.getNetwork().connect(panel.node, node);
                 }
-
-                energyHandlerCaches.put(side, BlockCapabilityCache.create(
-                    Capabilities.Energy.BLOCK,
-                    serverLevel,
-                    getBlockPos().relative(side),
-                    side.getOpposite(),
-                    () -> !isRemoved(),
-                    () -> isValidPushTargetCacheDirty = true));
-            }
-        }
-
-        for (Direction side : Direction.Plane.HORIZONTAL) {
-            if (level.getBlockEntity(getBlockPos().relative(side)) instanceof SolarPanelBlockEntity panel) {
-                panel.node.getNetwork().connect(panel.node, node);
             }
         }
     }
@@ -114,6 +99,10 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
     }
 
     Set<EnergyHandler> getValidPushTargets() {
+        if (!(level instanceof ServerLevel serverLevel)) {
+            throw new IllegalStateException("getValidPushTargets can only be called on the server.");
+        }
+
         if (isValidPushTargetCacheDirty) {
             validPushTargetCache.clear();
             for (Direction side : Direction.values()) {
@@ -121,7 +110,15 @@ public class SolarPanelBlockEntity extends EIOBlockEntity implements SoulBindabl
                     continue;
                 }
 
-                var energyHandler = energyHandlerCaches.get(side).getCapability();
+                var cache = energyHandlerCaches.computeIfAbsent(side, ignored -> BlockCapabilityCache.create(
+                    Capabilities.Energy.BLOCK,
+                    serverLevel,
+                    getBlockPos().relative(side),
+                    side.getOpposite(),
+                    () -> !isRemoved(),
+                    () -> isValidPushTargetCacheDirty = true));
+
+                var energyHandler = cache.getCapability();
                 if (energyHandler instanceof SolarPanelEnergyHandler) {
                     continue;
                 }

@@ -2,19 +2,24 @@ package com.enderio.enderio.client.content.conduits;
 
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.content.conduits.bundle.ConduitShape;
+import com.enderio.enderio.foundation.particle.ConduitBreakParticleOption;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.client.particle.SingleQuadParticle;
+import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.data.AtlasIds;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jspecify.annotations.Nullable;
 
 import java.util.List;
 
@@ -144,14 +149,15 @@ public class ConduitBreakParticle extends SingleQuadParticle {
                 .scale(0.6F));
     }
 
-    public static void spawnParticle(BlockPos blockpos, Conduit<?,?> conduit, double x, double y, double z, double xSpeed, float ySpeed, double zSpeed) {
-        ClientLevel level = Minecraft.getInstance().level;
-        if (level == null) {
-            return;
+    public static class Provider implements ParticleProvider<ConduitBreakParticleOption> {
+
+        public Provider() {
         }
 
-        ParticleEngine engine = Minecraft.getInstance().particleEngine;
-        engine.add(new ConduitBreakParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, blockpos, conduit.texture()).setPower(0.2F)
-            .scale(0.6F));
+        @Override
+        public @Nullable Particle createParticle(ConduitBreakParticleOption data, ClientLevel level, double x, double y, double z, double xSpeed, double ySpeed,
+            double zSpeed, RandomSource randomSource) {
+            return new ConduitBreakParticle(level, x, y, z, xSpeed, ySpeed, zSpeed, data.pos(), data.conduit().value().texture());
+        }
     }
 }

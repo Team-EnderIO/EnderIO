@@ -107,13 +107,17 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
     }
 
     public CapacitorBankNetwork getNetwork() {
+        if (node == null) {
+            node = new CapacitorBankNode(this);
+        }
+
         return node.getNetwork();
     }
 
     @Override
     public void preRemoveSideEffects(BlockPos pos, BlockState state) {
         super.preRemoveSideEffects(pos, state);
-        if (this.node.isValid()) {
+        if (node != null && node.isValid()) {
             this.oldNetwork = node.getNetwork(); //Network is still needed for the picked up block
             this.node.getNetwork().remove(this.node);
         }
@@ -123,22 +127,7 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
     public void onLoad() {
         super.onLoad();
 
-        // Create all energy caches
         if (level instanceof ServerLevel serverLevel) {
-            for (Direction side : Direction.values()) {
-                if (side == Direction.UP) {
-                    continue;
-                }
-
-                energyStorageCaches.put(side, BlockCapabilityCache.create(
-                    Capabilities.Energy.BLOCK,
-                    serverLevel,
-                    getBlockPos().relative(side),
-                    side.getOpposite(),
-                    () -> !isRemoved(),
-                    () -> isValidPushTargetCacheDirty = true));
-            }
-
             //Load the cap node
             CapacitorBankNode savedNote = CapacitorBankSavedData.get(serverLevel).claimNode(this.getBlockPos());
             if (savedNote != null) { //Load saved node
@@ -171,6 +160,10 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
     }
 
     Set<SidedEnergy> getValidPushTargets() {
+        if (!(level instanceof ServerLevel serverLevel)) {
+            throw new IllegalStateException("getValidPushTargets can only be called on the server.");
+        }
+
         if (isValidPushTargetCacheDirty) {
             validPushTargetCache.clear();
             for (Direction side : Direction.values()) {
@@ -178,7 +171,14 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
                     continue;
                 }
 
-                BlockCapabilityCache<EnergyHandler, Direction> cache = energyStorageCaches.get(side);
+                var cache = energyStorageCaches.computeIfAbsent(side, ignored -> BlockCapabilityCache.create(
+                    Capabilities.Energy.BLOCK,
+                    serverLevel,
+                    getBlockPos().relative(side),
+                    side.getOpposite(),
+                    () -> !isRemoved(),
+                    () -> isValidPushTargetCacheDirty = true));
+
                 var energyStorage = cache.getCapability();
                 if (energyStorage != null && !(energyStorage instanceof CapacitorBankEnergyStorage) && getIOMode(side).canPush()) {
                     validPushTargetCache.add(new SidedEnergy(energyStorage, new CapacitorBankNetwork.SidedPos(getBlockPos(), side)));

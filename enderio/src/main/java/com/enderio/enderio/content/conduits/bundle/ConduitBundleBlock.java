@@ -13,16 +13,14 @@ import com.enderio.enderio.content.conduits.menu.ConduitMenu;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduit;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitConnectionConfig;
 import com.enderio.enderio.content.conduits.type.redstone.RedstoneConduitNetworkContext;
+import com.enderio.enderio.foundation.particle.ConduitBreakParticleOption;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.ParticleEngine;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.particles.BlockParticleOption;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
@@ -35,7 +33,6 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockAndLightGetter;
 import net.minecraft.world.level.BlockGetter;
@@ -295,11 +292,11 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             (conduitBundle.getConduits().isEmpty() && conduitBundle.hasFacade())) {
 
             if (level.isClientSide()) {
-                if (!conduitBundle.getConduits().isEmpty()) {
+                if (conduitBundle.hasFacade()) {
+                    level.addDestroyBlockEffect(pos, conduitBundle.getFacadeBlock().defaultBlockState());
+                } else if (!conduitBundle.getConduits().isEmpty()) {
                     var conduit = conduitBundle.getConduits().getFirst();
                     ConduitBreakParticle.addDestroyEffects(pos, state, conduit.value());
-                } else {
-                    // TODO: Facade particles?
                 }
             } else {
                 if (!player.getAbilities().instabuild) {
@@ -594,25 +591,24 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             return true;
         }
 
-        if (conduitBundle.hasFacade()) {
-            double d0 = entity.getX();
-            double d1 = entity.getY();
-            double d2 = entity.getZ();
-            BlockPos blockpos = entity.blockPosition();
-            if (pos.getX() != blockpos.getX() || pos.getZ() != blockpos.getZ()) {
-                double d3 = d0 - (double)pos.getX() - (double)0.5F;
-                double d5 = d2 - (double)pos.getZ() - (double)0.5F;
-                double d6 = Math.max(Math.abs(d3), Math.abs(d5));
-                d0 = (double)pos.getX() + (double)0.5F + d3 / d6 * (double)0.5F;
-                d2 = (double)pos.getZ() + (double)0.5F + d5 / d6 * (double)0.5F;
-            }
-            level.sendParticles((new BlockParticleOption(ParticleTypes.BLOCK, conduitBundle.getFacadeBlock().defaultBlockState(), pos)), d0, d1, d2,
-                numberOfParticles, 0.0F, 0.0F, 0.0F, 0.15F);
-            return true;
+        double d0 = entity.getX();
+        double d1 = entity.getY();
+        double d2 = entity.getZ();
+        BlockPos blockpos = entity.blockPosition();
+        if (pos.getX() != blockpos.getX() || pos.getZ() != blockpos.getZ()) {
+            double d3 = d0 - (double)pos.getX() - (double)0.5F;
+            double d5 = d2 - (double)pos.getZ() - (double)0.5F;
+            double d6 = Math.max(Math.abs(d3), Math.abs(d5));
+            d0 = (double)pos.getX() + (double)0.5F + d3 / d6 * (double)0.5F;
+            d2 = (double)pos.getZ() + (double)0.5F + d5 / d6 * (double)0.5F;
         }
 
-        if (!conduitBundle.getConduits().isEmpty() && conduitBundle.getConduits().getFirst().isBound()) {
-            ConduitBreakParticle.addDestroyEffects(pos, state2, conduitBundle.getConduits().getFirst().value());
+        if (conduitBundle.hasFacade()) {
+            level.sendParticles((new BlockParticleOption(ParticleTypes.BLOCK, conduitBundle.getFacadeBlock().defaultBlockState(), pos)), d0, d1, d2,
+                numberOfParticles, 0.0F, 0.0F, 0.0F, 0.15F);
+        } else if (!conduitBundle.getConduits().isEmpty() && conduitBundle.getConduits().getFirst().isBound()) {
+            level.sendParticles(new ConduitBreakParticleOption(pos, conduitBundle.getConduits().getFirst()), d0, d1, d2,
+                numberOfParticles, 0.0F, 0.0F, 0.0F, 0.15F);
         }
 
         return true;
@@ -621,6 +617,10 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
     @Override
     public boolean addRunningEffects(BlockState state, Level level, BlockPos blockpos, Entity entity) {
         if (!(level.getBlockEntity(blockpos) instanceof ConduitBundleBlockEntity conduitBundle && !conduitBundle.isEmpty())) {
+            return true;
+        }
+
+        if (!level.isClientSide()) {
             return true;
         }
 
@@ -640,8 +640,8 @@ public class ConduitBundleBlock extends Block implements EntityBlock, SimpleWate
             level.addParticle((new BlockParticleOption(ParticleTypes.BLOCK, conduitBundle.getFacadeBlock().defaultBlockState(), blockpos)), d0,
                 entity.getY() + 0.1, d1, vec3.x * (double)-4.0F, 1.5F, vec3.z * (double)-4.0F);
         } else {
-            ConduitBreakParticle.spawnParticle(blockpos, conduitBundle.getConduits().getFirst().value(), d0, entity.getY() + 0.1, d1,
-                vec3.x * (double)-4.0F, 1.5F, vec3.z * (double)-4.0F);
+            level.addParticle(new ConduitBreakParticleOption(blockpos, conduitBundle.getConduits().getFirst()), d0,
+                entity.getY() + 0.1, d1, vec3.x * (double)-4.0F, 1.5F, vec3.z * (double)-4.0F);
         }
 
         return true;
