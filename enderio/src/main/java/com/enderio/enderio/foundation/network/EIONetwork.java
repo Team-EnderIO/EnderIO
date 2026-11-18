@@ -14,6 +14,7 @@ import com.enderio.enderio.foundation.network.packets.ClientboundTravelTargetUpd
 import com.enderio.enderio.foundation.network.packets.ServerboundCountFilterPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundDoubleChannelPacket;
+import com.enderio.enderio.foundation.network.packets.ServerboundDoubleJumpPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundEnderfaceInteractPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundOpenConduitFilterMenu;
 import com.enderio.enderio.foundation.network.packets.ServerboundRequestShortTravelPacket;
@@ -24,6 +25,7 @@ import com.enderio.enderio.foundation.network.packets.ServerboundSetItemFilterSl
 import com.enderio.enderio.foundation.network.packets.ServerboundSyncProbeStatePacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundTimerFilterPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundToggleMagnetPacket;
+import com.enderio.enderio.foundation.network.packets.ServerboundDarkSteelTogglePacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundTransferItemsPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCoordinateSelectionNameMenuPacket;
 import com.enderio.enderio.foundation.network.packets.ServerboundUpdateCrafterTemplatePacket;
@@ -76,6 +78,9 @@ public class EIONetwork {
         registrar.playToServer(ServerboundRequestShortTravelPacket.TYPE, ServerboundRequestShortTravelPacket.STREAM_CODEC,
             ServerPayloadHandler.getInstance()::handleShortTravelRequest);
 
+        registrar.playToServer(ServerboundDoubleJumpPacket.TYPE, ServerboundDoubleJumpPacket.STREAM_CODEC,
+            ServerPayloadHandler.getInstance()::handleDoubleJump);
+
         registrar.playToServer(ServerboundSetFluidFilterSlotPacket.TYPE, ServerboundSetFluidFilterSlotPacket.STREAM_CODEC,
             ServerPayloadHandler.getInstance()::handleSetFluidFilterSlot);
 
@@ -93,6 +98,9 @@ public class EIONetwork {
 
         registrar.playToServer(ServerboundToggleMagnetPacket.TYPE, ServerboundToggleMagnetPacket.STREAM_CODEC,
             ServerPayloadHandler.getInstance()::handleMagnetToggle);
+
+        registrar.playToServer(ServerboundDarkSteelTogglePacket.TYPE, ServerboundDarkSteelTogglePacket.STREAM_CODEC,
+            ServerPayloadHandler.getInstance()::handleDarkSteelToggle);
 
         registrar.playToServer(ServerboundCountFilterPacket.TYPE, ServerboundCountFilterPacket.STREAM_CODEC,
             ConduitServerPayloadHandler.getInstance()::handleCountFilter);

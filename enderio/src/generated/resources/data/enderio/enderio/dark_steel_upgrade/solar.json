@@ -1,0 +1,29 @@
+{
+  "description": "Charges your dark steel armor and held tools while in direct sunlight.",
+  "effects": [
+    {
+      "type": "enderio:charge_inventory",
+      "armor": true,
+      "condition": {
+        "type": "enderio:all",
+        "conditions": [
+          {
+            "type": "enderio:entity_can_see_sky"
+          },
+          {
+            "type": "enderio:day_time_within",
+            "max": 11999,
+            "min": 0
+          }
+        ]
+      },
+      "energy_per_tick": 4,
+      "items": "enderio:dark_steel_upgradable",
+      "main_hand": true,
+      "off_hand": true
+    }
+  ],
+  "name": "Solar",
+  "requires_socketed_capacitor": false,
+  "supported_items": "#enderio:dark_steel_upgradable_helmets"
+}

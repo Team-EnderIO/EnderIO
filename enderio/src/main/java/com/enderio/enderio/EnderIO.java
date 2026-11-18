@@ -2,6 +2,7 @@ package com.enderio.enderio;
 
 import com.enderio.enderio.api.EnderIOAPI;
 import com.enderio.enderio.api.EnderIORegistries;
+import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgrade;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.compat.cctweaked.ComputerCraftCompat;
 import com.enderio.enderio.compat.ftb_ultimine.FTBUltimineCompat;
@@ -14,11 +15,16 @@ import com.enderio.enderio.content.machines.MachinesLang;
 import com.enderio.enderio.foundation.integrations.Integrations;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIOAttachments;
+import com.enderio.enderio.init.EIOArmorMaterials;
+import com.enderio.enderio.init.EIOAttributes;
 import com.enderio.enderio.init.EIOBlockEntities;
 import com.enderio.enderio.init.EIOBlocks;
 import com.enderio.enderio.init.EIOConduitTypes;
 import com.enderio.enderio.init.EIOCreativeTabs;
 import com.enderio.enderio.init.EIOCriterions;
+import com.enderio.enderio.init.EIODarkSteelUpgradeEffectConditions;
+import com.enderio.enderio.init.EIODarkSteelUpgradeEffectCosts;
+import com.enderio.enderio.init.EIODarkSteelUpgradeEffects;
 import com.enderio.enderio.init.EIODataComponents;
 import com.enderio.enderio.init.EIOEntities;
 import com.enderio.enderio.init.EIOFluids;
@@ -31,11 +37,13 @@ import com.enderio.enderio.init.EIORecipes;
 import com.enderio.enderio.init.EIOSounds;
 import com.enderio.enderio.init.EIOTravelTargets;
 import com.mojang.logging.LogUtils;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
+import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
@@ -45,6 +53,7 @@ import net.neoforged.fml.loading.FMLPaths;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.registries.DataPackRegistryEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
+import net.neoforged.neoforge.registries.callback.AddCallback;
 import org.slf4j.Logger;
 
 import java.io.IOException;
@@ -71,7 +80,7 @@ public class EnderIO {
         Map.entry("inventorysorter", InventorySorterCompat::init)
     );
 
-    private final Logger logger = LogUtils.getLogger();
+    public static final Logger logger = LogUtils.getLogger();
 
     public EnderIO(IEventBus modEventBus, ModContainer modContainer) {
         EnderIO.modEventBus = modEventBus;
@@ -95,6 +104,7 @@ public class EnderIO {
         // registered.
         EIODataComponents.register(modEventBus);
         EIOCreativeTabs.register(modEventBus);
+        EIOArmorMaterials.register(modEventBus);
         EIOItems.register(modEventBus);
         EIOBlocks.register(modEventBus);
         EIOBlockEntities.register(modEventBus);
@@ -110,6 +120,10 @@ public class EnderIO {
         EIOConduitTypes.register(modEventBus);
         EIOTravelTargets.register(modEventBus);
         EIOSounds.register(modEventBus);
+        EIOAttributes.register(modEventBus);
+        EIODarkSteelUpgradeEffects.register(modEventBus);
+        EIODarkSteelUpgradeEffectCosts.register(modEventBus);
+        EIODarkSteelUpgradeEffectConditions.register(modEventBus);
 
         // Handle mod compat
         for (Map.Entry<String, Consumer<IEventBus>> entry : MOD_INTEGRATIONS.entrySet()) {
@@ -135,10 +149,14 @@ public class EnderIO {
         event.register(EnderIORegistries.CONDUIT_CONNECTION_CONFIG_TYPE);
         event.register(EnderIORegistries.CONDUIT_NODE_DATA_TYPE);
         event.register(EnderIORegistries.CONDUIT_NETWORK_CONTEXT_TYPE);
+        event.register(EnderIORegistries.DARK_STEEL_UPGRADE_EFFECT);
+        event.register(EnderIORegistries.DARK_STEEL_UPGRADE_EFFECT_COST);
+        event.register(EnderIORegistries.DARK_STEEL_UPGRADE_EFFECT_CONDITION);
     }
 
     private void registerDatapackRegistries(DataPackRegistryEvent.NewRegistry event) {
         event.dataPackRegistry(EnderIORegistries.Keys.CONDUIT, Conduit.DIRECT_CODEC, Conduit.DIRECT_CODEC);
+        event.dataPackRegistry(EnderIORegistries.Keys.DARK_STEEL_UPGRADE, DarkSteelUpgrade.DIRECT_CODEC, DarkSteelUpgrade.DIRECT_CODEC);
     }
 
     public void addBuiltInPacks(final AddPackFindersEvent event) {

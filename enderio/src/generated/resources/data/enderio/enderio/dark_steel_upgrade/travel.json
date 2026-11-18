@@ -1,0 +1,16 @@
+{
+  "description": "Hold Shift and Right-Click to teleport or activate a travel anchor",
+  "effects": [
+    {
+      "type": "enderio:travel",
+      "cost_per_travel": {
+        "type": "enderio:durability",
+        "durability": 5
+      },
+      "require_crouched": true
+    }
+  ],
+  "name": "Travel",
+  "requires_socketed_capacitor": false,
+  "supported_items": "#enderio:dark_steel_upgradable_tools"
+}

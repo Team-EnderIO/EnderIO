@@ -41,6 +41,12 @@ public class EIOAttachments {
     public static final Supplier<AttachmentType<RelocatorObeliskManager>> RELOCATOR_OBELISK_MANAGER = ATTACHMENT_TYPES
             .register("relocator_obelisk_manager", () -> AttachmentType.builder(RelocatorObeliskManager::new).build());
 
+    /**
+     * How many extra jumps the player has used since they last touched the ground. Not saved or synced, each side tracks its own.
+     */
+    public static final Supplier<AttachmentType<Integer>> EXTRA_JUMPS_USED = ATTACHMENT_TYPES
+            .register("extra_jumps_used", () -> AttachmentType.builder(() -> 0).build());
+
     public static void register(IEventBus bus) {
         ATTACHMENT_TYPES.register("fire_crafting_manager", () -> FireCraftingManager.ATTACHMENT_TYPE);
 

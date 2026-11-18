@@ -11,9 +11,11 @@ import com.enderio.enderio.datagen.client.models.block.AthenaProvider;
 import com.enderio.enderio.datagen.common.advancement.EIOAdvancementGenerator;
 import com.enderio.enderio.datagen.common.advancement.MachinesAdvancementGenerator;
 import com.enderio.enderio.datagen.common.data_maps.GrindingBallDataMapProvider;
+import com.enderio.enderio.datagen.common.data_maps.MobHeadDropDataMapProvider;
 import com.enderio.enderio.datagen.common.data_maps.RangeExtenderDataMapProvider;
 import com.enderio.enderio.datagen.common.data_maps.ReagentDataMapProvider;
 import com.enderio.enderio.datagen.common.datapack_registries.ConduitsBootstrap;
+import com.enderio.enderio.datagen.common.datapack_registries.DarkSteelUpgrades;
 import com.enderio.enderio.datagen.common.loot.ChestLootProvider;
 import com.enderio.enderio.datagen.common.loot.EIOBlockLootProvider;
 import com.enderio.enderio.datagen.common.loot.EIOLootModifiersProvider;
@@ -81,6 +83,7 @@ public class EnderIODataGen {
         generator.addProvider(event.includeServer(), new EnderIORecipeProvider(packOutput, lookupProvider));
 
         generator.addProvider(event.includeServer(), new GrindingBallDataMapProvider(packOutput, lookupProvider));
+        generator.addProvider(event.includeServer(), new MobHeadDropDataMapProvider(packOutput, lookupProvider));
         generator.addProvider(event.includeServer(), new ReagentDataMapProvider(packOutput, lookupProvider));
         generator.addProvider(event.includeServer(), new RangeExtenderDataMapProvider(packOutput, lookupProvider));
 
@@ -109,6 +112,7 @@ public class EnderIODataGen {
 
     private static RegistrySetBuilder createDatapackEntriesBuilder() {
         return new RegistrySetBuilder()
-            .add(EnderIORegistries.Keys.CONDUIT, ConduitsBootstrap::bootstrap);
+            .add(EnderIORegistries.Keys.CONDUIT, ConduitsBootstrap::bootstrap)
+            .add(EnderIORegistries.Keys.DARK_STEEL_UPGRADE, DarkSteelUpgrades::bootstrap);
     }
 }

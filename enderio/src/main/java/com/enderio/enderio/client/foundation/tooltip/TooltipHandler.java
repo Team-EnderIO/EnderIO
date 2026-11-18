@@ -6,10 +6,19 @@ import com.enderio.enderio.api.EnderIOCapabilities;
 import com.enderio.enderio.api.capacitor.CapacitorData;
 import com.enderio.enderio.api.capacitor.CapacitorModifier;
 import com.enderio.enderio.api.components.GrindingBallData;
+import com.enderio.enderio.client.content.armory.SocketedCapacitorTooltip;
+import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgrade;
+import com.enderio.enderio.content.armory.ArmoryLang;
+import com.enderio.enderio.content.armory.ItemDarkSteelUpgrades;
 import com.enderio.enderio.content.capacitors.CapacitorLang;
+import com.enderio.enderio.foundation.energy.EnergyTooltip;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.enderio.enderio.init.EIODataComponents;
+import com.mojang.datafixers.util.Either;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -21,6 +30,8 @@ import net.minecraft.world.level.Level;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.client.event.RenderTooltipEvent;
 import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,6 +46,9 @@ import java.util.Optional;
 @EventBusSubscriber(value = Dist.CLIENT)
 public class TooltipHandler {
 
+    // Kept as a single instance so the slot can be placed directly after it in onGatherTooltipComponents.
+    private static final Component SOCKETED_CAPACITOR_HEADING = ArmoryLang.SOCKETED_CAPACITOR.copy().withStyle(ChatFormatting.GRAY);
+
     @SubscribeEvent
     public static void addAdvancedTooltips(ItemTooltipEvent evt) {
         ItemStack forItem = evt.getItemStack();
@@ -44,10 +58,60 @@ public class TooltipHandler {
         addCapacitorTooltips(forItem, evt.getToolTip(), evt.getContext().registries());
         addGrindingBallTooltips(forItem, evt.getToolTip(), advanced);
         addSoulBindableTooltips(forItem, evt.getToolTip(), advanced);
+        boolean hasHiddenSocketDetails = addSocketedCapacitorTooltips(forItem, evt.getToolTip(), evt.getContext().registries(), advanced);
+        boolean hasHiddenUpgradeDetails = addDarkSteelUpgradeTooltips(forItem, evt.getToolTip(), advanced);
 
         // Advanced tooltip system
         getAdvancedProvider(forItem.getItem()).ifPresent(
                 provider -> addAdvancedTooltips(provider, forItem, evt.getEntity(), evt.getToolTip(), advanced));
+
+        // The energy bar shows the exact amount instead of a percentage with shift held (see onGatherEnergyBar).
+        boolean hasHiddenEnergyDetails = !advanced && evt.getToolTip().stream().anyMatch(EnergyTooltip::isEnergyLine);
+
+        if (hasHiddenUpgradeDetails || hasHiddenSocketDetails || hasHiddenEnergyDetails) {
+            addShowDetailsTooltip(evt.getToolTip());
+        }
+    }
+
+    /**
+     * Swaps the text line added by {@link EnergyTooltip} for a "Capacity: X" line and a rendered energy bar. The bar is
+     * labelled with a percentage, or the stored amount while shift is held.
+     */
+    @SubscribeEvent
+    public static void onGatherEnergyBar(RenderTooltipEvent.GatherComponents event) {
+        var energyStorage = event.getItemStack().getCapability(Capabilities.EnergyStorage.ITEM);
+        if (energyStorage == null) {
+            return;
+        }
+
+        var elements = event.getTooltipElements();
+        for (int i = 0; i < elements.size(); i++) {
+            if (elements.get(i).left().filter(EnergyTooltip::isEnergyLine).isPresent()) {
+                int max = energyStorage.getMaxEnergyStored();
+                Component capacity = TooltipUtil.styledWithArgs(EIOCommonLang.ENERGY_CAPACITY,
+                    TooltipUtil.withArgs(EIOCommonLang.ENERGY_AMOUNT, String.format("%,d", max)));
+
+                elements.set(i, Either.right(new EnergyBarTooltip(energyStorage.getEnergyStored(), max, Screen.hasShiftDown())));
+                elements.add(i, Either.left(capacity));
+                return;
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public static void onGatherTooltipComponents(RenderTooltipEvent.GatherComponents event) {
+        var capacitorSocket = event.getItemStack().getCapability(EnderIOCapabilities.CAPACITOR_SOCKET);
+        if (capacitorSocket == null) {
+            return;
+        }
+
+        var elements = event.getTooltipElements();
+        for (int i = 0; i < elements.size(); i++) {
+            if (elements.get(i).left().orElse(null) == SOCKETED_CAPACITOR_HEADING) {
+                elements.add(i + 1, Either.right(new SocketedCapacitorTooltip(capacitorSocket.getCapacitor())));
+                return;
+            }
+        }
     }
 
     // region Configurable items (datapackable or otherwise)
@@ -81,6 +145,69 @@ public class TooltipHandler {
             components.add(TooltipUtil.styledWithArgs(EIOCommonLang.GRINDINGBALL_BONUS_OUTPUT, (int) (data.bonusMultiplier() * 100)));
             components.add(TooltipUtil.styledWithArgs(EIOCommonLang.GRINDINGBALL_POWER_USE, (int) (data.powerUse() * 100)));
         }
+    }
+
+    // endregion
+
+    // region Dark Steel Upgrades
+
+    /**
+     * Lists the item's applied upgrades by name, adding an indented description under each when shift is held.
+     * @return true if there are upgrade descriptions that are hidden until shift is held.
+     */
+    private static boolean addDarkSteelUpgradeTooltips(ItemStack itemStack, List<Component> components, boolean showAdvanced) {
+        if (itemStack.has(DataComponents.HIDE_ADDITIONAL_TOOLTIP)) {
+            return false;
+        }
+
+        ItemDarkSteelUpgrades upgrades = itemStack.get(EIODataComponents.DARK_STEEL_UPGRADES);
+        if (upgrades == null || upgrades.upgrades().isEmpty()) {
+            return false;
+        }
+
+        for (Holder<DarkSteelUpgrade> upgrade : upgrades.upgrades()) {
+            components.add(TooltipUtil.withArgs(ArmoryLang.UPGRADE_ENTRY, upgrade.value().name()).withStyle(ChatFormatting.GRAY));
+            if (showAdvanced) {
+                components.add(TooltipUtil.withArgs(ArmoryLang.UPGRADE_DESCRIPTION, upgrade.value().description()).withStyle(ChatFormatting.DARK_GRAY));
+            }
+        }
+
+        return !showAdvanced;
+    }
+
+    // endregion
+
+    // region Capacitor Sockets
+
+    /**
+     * Adds the socket heading (the slot itself is inserted after it in {@link #onGatherTooltipComponents}), followed by the socketed
+     * capacitor's stats when shift is held.
+     * @return true if there are capacitor stats that are hidden until shift is held.
+     */
+    private static boolean addSocketedCapacitorTooltips(ItemStack itemStack, List<Component> components, @Nullable HolderLookup.Provider registries,
+        boolean showAdvanced) {
+        if (itemStack.has(DataComponents.HIDE_ADDITIONAL_TOOLTIP)) {
+            return false;
+        }
+
+        var capacitorSocket = itemStack.getCapability(EnderIOCapabilities.CAPACITOR_SOCKET);
+        if (capacitorSocket == null) {
+            return false;
+        }
+
+        components.add(SOCKETED_CAPACITOR_HEADING);
+
+        ItemStack capacitor = capacitorSocket.getCapacitor();
+        if (capacitor.isEmpty()) {
+            return false;
+        }
+
+        if (showAdvanced) {
+            addCapacitorTooltips(capacitor, components, registries);
+            return false;
+        }
+
+        return true;
     }
 
     // endregion

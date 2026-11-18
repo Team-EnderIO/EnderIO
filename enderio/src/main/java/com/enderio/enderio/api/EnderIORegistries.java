@@ -1,5 +1,9 @@
 package com.enderio.enderio.api;
 
+import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgrade;
+import com.enderio.enderio.api.armory.upgrades.DarkSteelUpgradeEffect;
+import com.enderio.enderio.api.armory.upgrades.conditions.EffectCondition;
+import com.enderio.enderio.api.armory.upgrades.costs.EffectCost;
 import com.enderio.enderio.api.conduits.Conduit;
 import com.enderio.enderio.api.conduits.ConduitType;
 import com.enderio.enderio.api.conduits.connection.config.ConnectionConfigType;
@@ -8,6 +12,7 @@ import com.enderio.enderio.api.conduits.network.node.NodeDataType;
 import com.enderio.enderio.api.conduits.network.node.legacy.ConduitDataType;
 import com.enderio.enderio.api.travel.TravelTargetSerializer;
 import com.enderio.enderio.api.travel.TravelTargetType;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -40,6 +45,15 @@ public class EnderIORegistries {
     public static final Registry<ConduitNetworkContextType<?>> CONDUIT_NETWORK_CONTEXT_TYPE = new RegistryBuilder<>(
             Keys.CONDUIT_NETWORK_CONTEXT_TYPE).sync(true).create();
 
+    public static final Registry<MapCodec<? extends DarkSteelUpgradeEffect>> DARK_STEEL_UPGRADE_EFFECT = new RegistryBuilder<>(
+        Keys.DARK_STEEL_UPGRADE_EFFECT).sync(true).create();
+
+    public static final Registry<MapCodec<? extends EffectCost>> DARK_STEEL_UPGRADE_EFFECT_COST = new RegistryBuilder<>(
+        Keys.DARK_STEEL_UPGRADE_EFFECT_COST).sync(true).create();
+
+    public static final Registry<MapCodec<? extends EffectCondition>> DARK_STEEL_UPGRADE_EFFECT_CONDITION = new RegistryBuilder<>(
+        Keys.DARK_STEEL_UPGRADE_EFFECT_CONDITION).sync(true).create();
+
     public static class Keys {
         public static final ResourceKey<Registry<TravelTargetType<?>>> TRAVEL_TARGET_TYPES = createKey("travel_target_types");
         public static final ResourceKey<Registry<TravelTargetSerializer<?>>> TRAVEL_TARGET_SERIALIZERS = createKey("travel_target_serializers");
@@ -61,6 +75,13 @@ public class EnderIORegistries {
          * Conduit types are now a datapack registry.
          */
         public static final ResourceKey<Registry<Conduit<?, ?>>> CONDUIT = createKey("conduit");
+
+        public static final ResourceKey<Registry<MapCodec<? extends DarkSteelUpgradeEffect>>> DARK_STEEL_UPGRADE_EFFECT = createKey("dark_steel_upgrade_effect");
+        public static final ResourceKey<Registry<MapCodec<? extends EffectCost>>> DARK_STEEL_UPGRADE_EFFECT_COST = createKey("dark_steel_upgrade_effect_cost");
+        public static final ResourceKey<Registry<MapCodec<? extends EffectCondition>>> DARK_STEEL_UPGRADE_EFFECT_CONDITION = createKey("dark_steel_upgrade_effect_condition");
+
+        // Also a datapack registry
+        public static final ResourceKey<Registry<DarkSteelUpgrade>> DARK_STEEL_UPGRADE = createKey("dark_steel_upgrade");
 
         private static <T> ResourceKey<Registry<T>> createKey(String name) {
             return ResourceKey.createRegistryKey(ResourceLocation.fromNamespaceAndPath("enderio", name));

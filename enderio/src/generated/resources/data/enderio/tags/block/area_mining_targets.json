@@ -1,0 +1,20 @@
+{
+  "values": [
+    "#minecraft:base_stone_overworld",
+    "#minecraft:base_stone_nether",
+    "#c:stones",
+    "#c:cobblestones",
+    "#c:end_stones",
+    "#c:netherracks",
+    "#c:sandstone/blocks",
+    "#minecraft:terracotta",
+    "#minecraft:dirt",
+    "#c:gravels",
+    "#c:sands",
+    "minecraft:soul_sand",
+    "minecraft:soul_soil",
+    "minecraft:clay",
+    "minecraft:dirt_path",
+    "minecraft:farmland"
+  ]
+}

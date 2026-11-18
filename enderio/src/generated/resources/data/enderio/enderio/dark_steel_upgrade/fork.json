@@ -1,0 +1,21 @@
+{
+  "description": "Who needs a hoe when you have a fork...",
+  "effects": [
+    {
+      "type": "enderio:add_item_abilities",
+      "item_abilities": [
+        "hoe_dig"
+      ]
+    },
+    {
+      "type": "enderio:additional_mineable_blocks",
+      "mineable_blocks": "minecraft:mineable/hoe"
+    },
+    {
+      "type": "enderio:hoe_block_transformation"
+    }
+  ],
+  "name": "Fork",
+  "requires_socketed_capacitor": false,
+  "supported_items": "#enderio:dark_steel_upgradable_tools"
+}

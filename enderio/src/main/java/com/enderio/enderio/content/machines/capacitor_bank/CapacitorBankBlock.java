@@ -1,11 +1,9 @@
 package com.enderio.enderio.content.machines.capacitor_bank;
 
 import com.enderio.core.client.item.AdvancedTooltipProvider;
-import com.enderio.core.common.energy.ItemStackEnergy;
-import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.foundation.block.EIOEntityBlock;
-import com.enderio.enderio.foundation.lang.EIOCommonLang;
+import com.enderio.enderio.foundation.energy.EnergyTooltip;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -99,9 +97,7 @@ public class CapacitorBankBlock extends EIOEntityBlock<CapacitorBankBlockEntity>
 
     @Override
     public void addCommonTooltips(ItemStack itemStack, @Nullable Player player, List<Component> tooltips) {
-        String energy = String.format("%,d", ItemStackEnergy.getEnergyStored(itemStack)) + "/"
-            + String.format("%,d", ItemStackEnergy.getMaxEnergyStored(itemStack));
-        tooltips.add(TooltipUtil.styledWithArgs(EIOCommonLang.ENERGY_AMOUNT, energy));
+        EnergyTooltip.add(itemStack, tooltips);
     }
 
     @SubscribeEvent

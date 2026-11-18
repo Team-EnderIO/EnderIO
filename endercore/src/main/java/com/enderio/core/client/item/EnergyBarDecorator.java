@@ -20,12 +20,12 @@ public class EnergyBarDecorator implements IItemDecorator {
         }
 
         int energyStored = ItemStackEnergy.getEnergyStored(stack);
+        float filledRatio = energyStored / (float) maxEnergyStored;
 
-        // Determine fill ratio
-        float fillRatio = energyStored / (float) maxEnergyStored;
+        // Take the durability bar's place when it isn't shown, otherwise sit directly above it.
+        int row = stack.isBarVisible() ? ItemBarRenderer.DURABILITY_BAR_ROW - 2 : ItemBarRenderer.DURABILITY_BAR_ROW;
 
-        // Render the bar overlay
-        ItemBarRenderer.renderBar(guiGraphics, fillRatio, xOffset, yOffset, 0, BAR_COLOR);
+        ItemBarRenderer.renderBarWithBackground(guiGraphics, filledRatio, xOffset, yOffset, row, BAR_COLOR);
         return false;
     }
 }

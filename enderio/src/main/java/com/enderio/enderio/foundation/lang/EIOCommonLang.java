@@ -25,6 +25,9 @@ public class EIOCommonLang {
 
     public static final MutableComponent ENERGY_AMOUNT = create("energy", "micro_infinity");
 
+    // Capacity: [ENERGY_AMOUNT]
+    public static final MutableComponent ENERGY_CAPACITY = tooltip("energy_capacity");
+
     public static final Component VISIBLE = gui("visible");
     public static final Component NOT_VISIBLE = gui("not_visible");
 

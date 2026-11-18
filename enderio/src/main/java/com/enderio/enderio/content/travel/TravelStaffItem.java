@@ -4,9 +4,8 @@ import com.enderio.core.client.item.AdvancedTooltipProvider;
 import com.enderio.core.client.item.EnergyBarDecorator;
 import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.item.ICustomCreativeTabEntries;
-import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.config.base.BaseConfig;
-import com.enderio.enderio.foundation.lang.EIOCommonLang;
+import com.enderio.enderio.foundation.energy.EnergyTooltip;
 import com.enderio.enderio.init.EIODataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
@@ -137,9 +136,7 @@ public class TravelStaffItem extends Item implements AdvancedTooltipProvider, IC
     @Override
     public void addCommonTooltips(ItemStack itemStack, @org.jetbrains.annotations.Nullable Player player,
             List<Component> tooltips) {
-        String energy = String.format("%,d", ItemStackEnergy.getEnergyStored(itemStack)) + "/"
-                + String.format("%,d", ItemStackEnergy.getMaxEnergyStored(itemStack));
-        tooltips.add(TooltipUtil.styledWithArgs(EIOCommonLang.ENERGY_AMOUNT, energy));
+        EnergyTooltip.add(itemStack, tooltips);
     }
 
     protected enum ActivationStatus {

@@ -1,0 +1,43 @@
+{
+  "description": "Blows up the stone and dirt around the block you mine. Crouch to mine a single block",
+  "effects": [
+    {
+      "type": "enderio:area_mining",
+      "condition": {
+        "type": "enderio:all",
+        "conditions": [
+          {
+            "type": "enderio:toggled",
+            "toggle": "enderio:explosive"
+          },
+          {
+            "type": "enderio:not",
+            "condition": {
+              "type": "enderio:entity_stepping_carefully"
+            }
+          }
+        ]
+      },
+      "cost_per_block": {
+        "type": "enderio:no_cost"
+      },
+      "targets": "#enderio:area_mining_targets"
+    },
+    {
+      "type": "enderio:attribute_modifier",
+      "amount": 1.0,
+      "attribute": "enderio:mining_area_radius",
+      "id": "enderio:dark_steel_upgrade/explosive",
+      "operation": "add_value"
+    }
+  ],
+  "name": "Explosive",
+  "requires_socketed_capacitor": false,
+  "supported_items": "#enderio:dark_steel_upgradable_tools",
+  "toggles": {
+    "enderio:explosive": {
+      "key": "enderio:explosive",
+      "name": "Explosive"
+    }
+  }
+}
