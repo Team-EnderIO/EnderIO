@@ -17,8 +17,8 @@ public final class ConduitConnectionPath {
     private final ConduitBlockConnection start;
     private final ConduitBlockConnection end;
     private final int length;
-    private Map<ConnectionPathProperty<?>, ?> properties;
-    private Supplier<? extends Map<ConnectionPathProperty<?>, ?>> propertiesSupplier;
+    private volatile Map<ConnectionPathProperty<?>, ?> properties;
+    private volatile Supplier<? extends Map<ConnectionPathProperty<?>, ?>> propertiesSupplier;
 
     public ConduitConnectionPath(ConduitBlockConnection start, ConduitBlockConnection end, int length, Map<ConnectionPathProperty<?>, ?> properties) {
         this.start = start;
@@ -32,6 +32,7 @@ public final class ConduitConnectionPath {
      * Aggregating properties along a long path is expensive, and most paths never have their properties read.
      * The supplier is invoked at most once, on the thread that first reads the properties.
      */
+    @ApiStatus.Internal
     public ConduitConnectionPath(ConduitBlockConnection start, ConduitBlockConnection end, int length, Supplier<? extends Map<ConnectionPathProperty<?>, ?>> propertiesSupplier) {
         this.start = start;
         this.end = end;
@@ -77,7 +78,7 @@ public final class ConduitConnectionPath {
     public ConduitConnectionPath reverse() {
         if (propertiesSupplier != null) {
             // Share the lazily computed properties rather than forcing them.
-            return new ConduitConnectionPath(end, start, length, (Supplier<Map<ConnectionPathProperty<?>, ?>>) this::properties);
+            return new ConduitConnectionPath(end, start, length, this::properties);
         }
 
         return new ConduitConnectionPath(end, start, length, properties);

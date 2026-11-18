@@ -44,10 +44,10 @@ public class BreadthFirstPathingStrategy implements ConduitPathingStrategy {
     /**
      * Finds paths to every target with a single breadth-first search from the source.
      * <p>
-     * The search stops as soon as every target node has been reached. It only records how far each node is from
-     * the source, which gives each path's length. Path properties are aggregated lazily, only when a path's
-     * properties are first read, as aggregating them along every path is far more expensive than the search
-     * itself on large networks.
+     * The search stops as soon as every target node has been reached. It records how far each node is from the
+     * source, which gives each path's length, and which node discovered it, which is enough to rebuild any path
+     * without searching again. Path properties are aggregated lazily, only when a path's properties are first
+     * read, and are rebuilt from that parent map in path length rather than by traversing the network again.
      * </p>
      */
     @Override
@@ -73,9 +73,12 @@ public class BreadthFirstPathingStrategy implements ConduitPathingStrategy {
 
         // Number of nodes on the path from the start to each node (inclusive of both ends).
         Map<ConduitNode, Integer> length = new HashMap<>();
+        // The node each node was discovered from, used to rebuild paths without searching again.
+        Map<ConduitNode, ConduitNode> parent = new HashMap<>();
         Queue<ConduitNode> queue = new ArrayDeque<>();
 
         length.put(start, 1);
+        parent.put(start, start);
         queue.add(start);
 
         // Special case: same node
@@ -92,6 +95,8 @@ public class BreadthFirstPathingStrategy implements ConduitPathingStrategy {
                     continue;
                 }
 
+                parent.put(neighbor, current);
+
                 if (targetNodes.contains(neighbor)) {
                     remainingNodes--;
                 }
@@ -107,7 +112,7 @@ public class BreadthFirstPathingStrategy implements ConduitPathingStrategy {
             // Unreachable targets were never discovered. BFS assigns the shortest length on discovery.
             if (pathLength != null) {
                 results.put(target, new ConduitConnectionPath(from, target, pathLength,
-                    () -> collectPathProperties(start, target.node(), context)));
+                    () -> collectPathProperties(start, target.node(), parent, context)));
             }
         }
 
@@ -115,31 +120,16 @@ public class BreadthFirstPathingStrategy implements ConduitPathingStrategy {
     }
 
     /**
-     * Find the shortest path between two nodes and aggregate the properties of the nodes along it.
+     * Rebuild the path found by the search from the recorded parent map and aggregate its node properties.
      */
     private Map<ConnectionPathProperty<?>, Object> collectPathProperties(
         ConduitNode start,
         ConduitNode goal,
+        Map<ConduitNode, ConduitNode> parent,
         PathfindingContext context
     ) {
-        Map<ConduitNode, ConduitNode> parent = new HashMap<>();
-        Queue<ConduitNode> queue = new ArrayDeque<>();
-
-        parent.put(start, start);
-        queue.add(start);
-
-        while (!queue.isEmpty() && !parent.containsKey(goal)) {
-            ConduitNode current = queue.poll();
-
-            for (ConduitNode neighbor : context.neighbors(current)) {
-                if (parent.putIfAbsent(neighbor, current) == null) {
-                    queue.add(neighbor);
-                }
-            }
-        }
-
         if (!parent.containsKey(goal)) {
-            // The network changed since the path was found, there is nothing to aggregate.
+            // The path was never discovered, there is nothing to aggregate.
             return Map.of();
         }
 
@@ -148,7 +138,12 @@ public class BreadthFirstPathingStrategy implements ConduitPathingStrategy {
         ConduitNode node = goal;
         while (!node.equals(start)) {
             path.add(node);
-            node = parent.get(node);
+            var next = parent.get(node);
+            if (next == null) {
+                // The parent map is incomplete, so there is nothing to aggregate.
+                return Map.of();
+            }
+            node = next;
         }
         path.add(start);
         Collections.reverse(path);

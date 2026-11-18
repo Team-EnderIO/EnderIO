@@ -770,6 +770,9 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
         // Always recompute what conduits can tick - it's cheap to do.
         areTickableConduitsValid = false;
 
+        // Paths may have changed, so cached paths are now stale.
+        topologyVersion = ++versionCounter;
+
         // Increment node count if loaded (constructor will initialize the values)
         if (nodeCountByConduit != null) {
             nodeCountByConduit.compute(node.conduit(), (k, count) -> count == null ? 1 : count + 1);
@@ -787,6 +790,18 @@ public class ConduitNetworkImpl extends Network<ConduitNetworkImpl, ConduitNodeI
 
         addNodeToPositionMaps(node, false);
         dirtyNodes.add(node);
+    }
+
+    @Override
+    protected void onNodesConnected(ConduitNodeImpl node1, ConduitNodeImpl node2) {
+        // Paths may have changed, so cached paths are now stale.
+        topologyVersion = ++versionCounter;
+    }
+
+    @Override
+    protected void onNodesDisconnected(ConduitNodeImpl node1, ConduitNodeImpl node2) {
+        // Paths may have changed, so cached paths are now stale.
+        topologyVersion = ++versionCounter;
     }
 
     @Override
