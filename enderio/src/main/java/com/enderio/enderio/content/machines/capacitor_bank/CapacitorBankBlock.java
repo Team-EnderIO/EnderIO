@@ -5,6 +5,7 @@ import com.enderio.core.common.energy.ItemStackEnergy;
 import com.enderio.core.common.util.TooltipUtil;
 import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.foundation.block.EIOEntityBlock;
+import com.enderio.enderio.foundation.block.entity.multienergy.CapacityTier;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
@@ -12,9 +13,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -39,14 +38,14 @@ public class CapacitorBankBlock extends EIOEntityBlock<CapacitorBankBlockEntity>
 
     public static final ResourceLocation PLACE_ADVANCEMENT_ID = EnderIO.rl("place_capacitor_bank");
 
-    private final CapacitorTier tier;
+    private final CapacityTier tier;
 
-    public CapacitorBankBlock(Supplier<BlockEntityType<? extends CapacitorBankBlockEntity>> blockEntityTypeSupplier, Properties properties, CapacitorTier tier) {
+    public CapacitorBankBlock(Supplier<BlockEntityType<? extends CapacitorBankBlockEntity>> blockEntityTypeSupplier, Properties properties, CapacityTier tier) {
         super(blockEntityTypeSupplier, properties);
         this.tier = tier;
     }
 
-    public CapacitorTier getTier() {
+    public CapacityTier getTier() {
         return tier;
     }
 
