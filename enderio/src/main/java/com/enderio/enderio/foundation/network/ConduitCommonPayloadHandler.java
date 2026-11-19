@@ -10,7 +10,8 @@ public class ConduitCommonPayloadHandler {
     public void handle(SetConduitConnectionConfigPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (packet.containerId() == context.player().containerMenu.containerId) {
-                if (!context.player().isSpectator() && context.player().containerMenu instanceof ConduitMenu menu) {
+                if (!context.player().isSpectator() && context.player().containerMenu instanceof ConduitMenu menu
+                        && menu.stillValid(context.player())) {
                     menu.handleConnectionConfigUpdate(packet);
                 }
             }

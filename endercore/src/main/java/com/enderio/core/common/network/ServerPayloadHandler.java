@@ -16,9 +16,17 @@ public class ServerPayloadHandler {
         return INSTANCE;
     }
 
+    @SuppressWarnings("removal")
     public void handleDataSlotChange(ClientboundDataSlotChange change, IPayloadContext context) {
         context.enqueueWork(() -> {
-            var level = context.player().level();
+            var player = context.player();
+            var level = player.level();
+
+            // The player must be within interaction range of the block
+            if (!level.hasChunkAt(change.pos()) || !player.canInteractWithBlock(change.pos(), player.blockInteractionRange())) {
+                return;
+            }
+
             BlockEntity be = level.getBlockEntity(change.pos());
             if (be instanceof EnderBlockEntity enderBlockEntity) {
                 var buf = new RegistryFriendlyByteBuf(Unpooled.wrappedBuffer(change.updateData()),
@@ -35,7 +43,8 @@ public class ServerPayloadHandler {
     public void handleSetSyncSlotDataPacket(ServerboundSetSyncSlotDataPacket packet, IPayloadContext context) {
         context.enqueueWork(() -> {
             if (context.player().containerMenu.containerId == packet.containerId()) {
-                if (context.player().containerMenu instanceof BaseEnderMenu enderMenu) {
+                if (context.player().containerMenu instanceof BaseEnderMenu enderMenu
+                        && enderMenu.stillValid(context.player())) {
                     enderMenu.serverHandleIncomingPayload(packet.index(), packet.payload());
                 }
             }
