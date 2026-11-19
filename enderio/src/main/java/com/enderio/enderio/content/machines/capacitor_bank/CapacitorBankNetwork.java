@@ -2,6 +2,7 @@ package com.enderio.enderio.content.machines.capacitor_bank;
 
 import com.enderio.core.common.graph.Network;
 import com.enderio.enderio.api.io.RedstoneControl;
+import com.enderio.enderio.foundation.block.entity.multienergy.CapacityTier;
 import com.enderio.enderio.foundation.network.packets.ClientBoundRemoveCapacitorBankPacket;
 import com.enderio.enderio.foundation.network.packets.ClientBoundSyncCapacitorBankPacket;
 import com.mojang.serialization.Codec;
@@ -187,7 +188,7 @@ public class CapacitorBankNetwork extends Network<CapacitorBankNetwork, Capacito
      * @param tier the Capacitor bank tier
      * @return The energy for the capacitor bank
      */
-    public int getEnergyForNode(CapacitorTier tier) {
+    public int getEnergyForNode(CapacityTier tier) {
         long energy = getTotalEnergyStored() / (nodes().size() + 1);
         int toExtract = Math.toIntExact(Math.min(tier.getStorageCapacity(), energy));
         this.totalEnergyStored -= toExtract;

@@ -8,6 +8,7 @@ import com.enderio.enderio.foundation.MachineNBTKeys;
 import com.enderio.enderio.foundation.block.EIOBlockEntity;
 import com.enderio.enderio.foundation.block.entity.Wrenchable;
 import com.enderio.enderio.foundation.block.entity.legacy.LegacyMachineBlockEntity;
+import com.enderio.enderio.foundation.block.entity.multienergy.CapacityTier;
 import com.enderio.enderio.foundation.block.legacy.LegacyMachineBlock;
 import com.enderio.enderio.foundation.io.IOConfig;
 import com.enderio.enderio.foundation.network.packets.ServerboundCycleIOConfigPacket;
@@ -64,7 +65,7 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
 
     private IOConfig ioConfig = IOConfig.empty();
 
-    private final CapacitorTier tier;
+    private final CapacityTier tier;
     private CapacitorBankNode node;
     private CapacitorBankNetwork oldNetwork;
     private int legacyEnergy = 0;
@@ -90,12 +91,12 @@ public class CapacitorBankBlockEntity extends EIOBlockEntity implements MenuProv
     private RedstoneControl redstoneControl = RedstoneControl.ALWAYS_ACTIVE;
     private boolean isRedstoneBlocked;
 
-    public CapacitorBankBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, CapacitorTier tier) {
+    public CapacitorBankBlockEntity(BlockEntityType<?> type, BlockPos worldPosition, BlockState blockState, CapacityTier tier) {
         super(type, worldPosition, blockState);
         this.tier = tier;
     }
 
-    public CapacitorTier tier() {
+    public CapacityTier tier() {
         return tier;
     }
 
