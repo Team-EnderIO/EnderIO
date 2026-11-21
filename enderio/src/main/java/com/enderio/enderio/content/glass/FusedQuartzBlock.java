@@ -2,7 +2,9 @@ package com.enderio.enderio.content.glass;
 
 import com.enderio.enderio.config.base.BaseConfig;
 import com.enderio.enderio.foundation.lang.EIOCommonLang;
+import com.enderio.enderio.foundation.tag.EIOTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
@@ -23,10 +25,12 @@ public class FusedQuartzBlock extends TransparentBlock {
     // TODO: Connected textures
     private final GlassIdentifier glassIdentifier;
     private final String descriptionId;
+    private final @Nullable DyeColor color;
 
     public FusedQuartzBlock(Properties props, GlassIdentifier glassIdentifier, @Nullable DyeColor color) {
         super(props);
         this.glassIdentifier = glassIdentifier;
+        this.color = color;
 
         String baseName = glassIdentifier.explosionResistance() ? "fused_quartz" : "clear_glass";
         String lightingName = glassIdentifier.lighting() != GlassLighting.NONE ? "_" + glassIdentifier.lighting().shortName() : "";
@@ -84,6 +88,14 @@ public class FusedQuartzBlock extends TransparentBlock {
             }
         }
         return super.getCollisionShape(state, level, pos, context);
+    }
+
+    @Override
+    protected boolean skipRendering(BlockState state, BlockState adjacentBlockState, Direction side) {
+        if (color != null) {
+            return adjacentBlockState.is(EIOTags.Blocks.CTM_GLASS_COLOR.get(this.color)) || super.skipRendering(state, adjacentBlockState, side);
+        }
+        return adjacentBlockState.is(EIOTags.Blocks.CTM_CLEAR_GLASS) || super.skipRendering(state, adjacentBlockState, side);
     }
 
     public GlassIdentifier glassIdentifier() {

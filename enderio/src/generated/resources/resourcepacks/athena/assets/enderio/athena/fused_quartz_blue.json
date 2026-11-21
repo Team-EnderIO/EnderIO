@@ -1,5 +1,9 @@
 {
   "athena:loader": "athena:ctm",
+  "connect_to": {
+    "type": "tag",
+    "tag": "enderio:ctm_blocks/glass_blocks/blue"
+  },
   "ctm_textures": {
     "center": "enderio:block/ctm/fused_quartz/center",
     "empty": "enderio:block/ctm/fused_quartz/empty",

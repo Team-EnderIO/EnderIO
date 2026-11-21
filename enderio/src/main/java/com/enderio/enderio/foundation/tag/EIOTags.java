@@ -4,6 +4,7 @@ import com.enderio.enderio.EnderIO;
 import com.enderio.enderio.content.glass.GlassCollisionPredicate;
 import com.enderio.enderio.content.glass.GlassIdentifier;
 import com.enderio.enderio.content.glass.GlassLighting;
+import net.minecraft.Util;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.BlockTags;
@@ -11,6 +12,7 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluid;
@@ -166,6 +168,16 @@ public class EIOTags {
         public static final TagKey<Block> ENLIGHTENED_FUSED_QUARTZ = commonTag("glass_blocks/enlighted_fused_quartz");
         public static final TagKey<Block> DARK_FUSED_QUARTZ = commonTag("glass_blocks/dark_fused_quartz");
         public static final TagKey<Block> CLEAR_GLASS = commonTag("glass_blocks/clear_glass");
+
+        public static final Map<DyeColor, TagKey<Block>> CTM_GLASS_COLOR = Util.make(() -> {
+            HashMap<DyeColor, TagKey<Block>> map = new HashMap<>();
+            for (DyeColor color : DyeColor.values()) {
+                map.put(color, tag("ctm_blocks/glass_blocks/" + color.getName()));
+            }
+            return map;
+        });
+        public static final TagKey<Block> CTM_CLEAR_GLASS = tag("ctm_blocks/glass_blocks/clear_glass");
+
 
         public static final TagKey<Block> BLOCKS_CONDUCTIVE_ALLOY = commonTag("storage_blocks/conductive_alloy");
         public static final TagKey<Block> BLOCKS_DARK_STEEL = commonTag("storage_blocks/dark_steel");
