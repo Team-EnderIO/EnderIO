@@ -8,8 +8,10 @@ import net.minecraft.data.CachedOutput;
 import net.minecraft.data.DataProvider;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.level.block.Block;
 
+import javax.annotation.Nullable;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -50,11 +52,13 @@ public abstract class AthenaDefinitionProvider implements DataProvider {
         return "Athena Definitions - " + modId;
     }
 
-    public record Athena(ResourceLocation loader, Map<String, ResourceLocation> textures, int tint, String renderType) {
+    public record Athena(ResourceLocation loader, Map<String, ResourceLocation> textures, int tint, String renderType, AthenaConnection connectTo) {
         public static Codec<Athena> CODEC = RecordCodecBuilder.create(instance -> instance
             .group(ResourceLocation.CODEC.fieldOf("athena:loader").forGetter(Athena::loader),
                 Codec.unboundedMap(Codec.STRING, ResourceLocation.CODEC).fieldOf("ctm_textures").forGetter(Athena::textures),
-                Codec.INT.fieldOf("tint").forGetter(Athena::tint), Codec.STRING.fieldOf("render_type").forGetter(Athena::renderType))
+                Codec.INT.fieldOf("tint").forGetter(Athena::tint),
+                Codec.STRING.fieldOf("render_type").forGetter(Athena::renderType),
+                AthenaConnection.CONNECTS_TO_CODEC.forGetter(Athena::connectTo))
             .apply(instance, Athena::new));
     }
 
@@ -65,14 +69,14 @@ public abstract class AthenaDefinitionProvider implements DataProvider {
     }
 
     public void registerSimple(Block block, ResourceLocation center, ResourceLocation empty, ResourceLocation horizontal, ResourceLocation vertical,
-        ResourceLocation particle, int tint, String renderType) {
+        ResourceLocation particle, int tint, String renderType, @Nullable AthenaConnection connectTo) {
         Map<String, ResourceLocation> map = new HashMap<>();
         map.put("center", center);
         map.put("empty", empty);
         map.put("horizontal", horizontal);
         map.put("vertical", vertical);
         map.put("particle", particle);
-        Athena definition = new Athena(ResourceLocation.parse("athena:ctm"), map, tint, renderType);
+        Athena definition = new Athena(ResourceLocation.parse("athena:ctm"), map, tint, renderType, connectTo);
         register(block, definition);
     }
 }

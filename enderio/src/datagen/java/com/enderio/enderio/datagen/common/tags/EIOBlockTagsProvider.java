@@ -332,5 +332,13 @@ public class EIOBlockTagsProvider extends BlockTagsProvider {
                 }
             }
         }
+
+        for (var glassBlocks : EIOBlocks.GLASS_BLOCKS.values()) {
+            for (var entry : glassBlocks.COLORS.entrySet()) {
+                tag(EIOTags.Blocks.CTM_GLASS_COLOR.get(entry.getKey())).add(entry.getValue().value());
+            }
+
+            tag(EIOTags.Blocks.CTM_CLEAR_GLASS).add(glassBlocks.CLEAR.value());
+        }
     }
 }

@@ -5,7 +5,10 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.neoforge.client.model.generators.IGeneratedBlockState;
 import net.neoforged.neoforge.client.model.generators.VariantBlockStateBuilder;
 
+import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -17,6 +20,8 @@ public class AthenaVariantBlockStateBuilder implements IGeneratedBlockState {
     private final Map<String, ResourceLocation> textures = new LinkedHashMap<>();
     private String renderType;
     private Integer tint;
+    @Nullable
+    private AthenaConnection connectTo = null;
 
     public AthenaVariantBlockStateBuilder(VariantBlockStateBuilder variants) {
         this.variants = variants;
@@ -46,6 +51,11 @@ public class AthenaVariantBlockStateBuilder implements IGeneratedBlockState {
         return this;
     }
 
+    public AthenaVariantBlockStateBuilder connection(@Nullable AthenaConnection connectTo) {
+        this.connectTo = connectTo;
+        return this;
+    }
+
     @Override
     public JsonObject toJson() {
         JsonObject json = variants.toJson();
@@ -58,6 +68,10 @@ public class AthenaVariantBlockStateBuilder implements IGeneratedBlockState {
         }
         if (tint != null) {
             json.addProperty("tint", tint);
+        }
+        if (connectTo != null) {
+            json.add("connect_to", connectTo.toJson());
+
         }
         return json;
     }

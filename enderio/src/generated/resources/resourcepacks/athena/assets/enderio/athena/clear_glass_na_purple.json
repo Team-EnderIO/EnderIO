@@ -1,5 +1,9 @@
 {
   "athena:loader": "athena:ctm",
+  "connect_to": {
+    "type": "tag",
+    "tag": "enderio:ctm_blocks/glass_blocks/purple"
+  },
   "ctm_textures": {
     "center": "enderio:block/ctm/clear_glass/center",
     "empty": "enderio:block/ctm/clear_glass/empty",
